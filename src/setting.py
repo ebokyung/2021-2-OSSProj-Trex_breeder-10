@@ -29,7 +29,7 @@ rheight = resized_screen.get_height()
 button_offset = 0.25
 
 clock = pygame.time.Clock()
-pygame.display.set_caption("T-Rex Rush by_OldKokiri")
+pygame.display.set_caption("Rabbit's Adventure by_MilkDragon")
 
 bgm_on=True
 on_pushtime=0
