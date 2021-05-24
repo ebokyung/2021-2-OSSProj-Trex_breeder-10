@@ -171,7 +171,7 @@ def gameplay():
     gameOver = False
     gameQuit = False
     ###
-    life = 3
+    life = 5
     ###
     paused = False
     playerDino = Dino(dino_size[0], dino_size[1])
