@@ -192,7 +192,7 @@ def gameplay():
     shield_items = pygame.sprite.Group()
     life_items = pygame.sprite.Group()
     slow_items = pygame.sprite.Group()
-    highjump_items = pygame.sprite.Group()
+
 
     Cactus.containers = cacti
     fire_Cactus.containers = fire_cacti
@@ -201,7 +201,7 @@ def gameplay():
     ShieldItem.containers = shield_items
     LifeItem.containers = life_items
     SlowItem.containers = slow_items
-    HighJumpItem.containers = highjump_items
+
 
     # BUTTON IMG LOAD
     # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
@@ -216,6 +216,14 @@ def gameplay():
     HI_image.blit(temp_images[11], temp_rect)
     HI_rect.top = height * 0.05
     HI_rect.left = width * 0.73
+
+    #
+    jumpingx2 = False
+
+
+
+
+
 
     while not gameQuit:
         while startMenu:
@@ -247,9 +255,17 @@ def gameplay():
                             paused = not paused
                             paused = pausing()
 
+                        # jumping x2 ( press key f)
+                        if event.key == pygame.K_f:
+                            jumpingx2=True
+
                     if event.type == pygame.KEYUP:
                         if event.key == pygame.K_DOWN:
                             playerDino.isDucking = False
+
+                        ## jumgpingx2
+                        if event.key == pygame.K_f:
+                            jumpingx2 = False
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         if pygame.mouse.get_pressed() == (1, 0, 0) and playerDino.rect.bottom == int(0.98 * height):
@@ -271,6 +287,12 @@ def gameplay():
                         checkscrsize(event.w, event.h)
 
             if not paused:
+
+                if jumpingx2 :
+                    if  playerDino.rect.bottom == int(height * 0.98):
+                        playerDino.isJumping = True
+                        playerDino.movement[1] = -1 * playerDino.superJumpSpeed
+
                 for c in cacti:
                     c.movement[0] = -1 * gamespeed
                     if not playerDino.collision_immune:
@@ -372,15 +394,7 @@ def gameplay():
                     elif k.rect.right < 0:
                         k.kill()
 
-                for h in highjump_items:
-                    h.movement[0] = -1 * gamespeed
-                    if pygame.sprite.collide_mask(playerDino, h) and playerDino.rect.bottom != int(height * 0.98):
-                        if pygame.mixer.get_init() is not None:
-                            jump_sound.play()
-                        playerDino.isJumping = True
-                        playerDino.movement[1] = -1 * playerDino.superJumpSpeed
-                    if h.rect.right < 0:
-                        h.kill()
+
 
                 CACTUS_INTERVAL = 50
                 PTERA_INTERVAL = 300
@@ -388,7 +402,7 @@ def gameplay():
                 SHIELD_INTERVAL = 500
                 LIFE_INTERVAL = 1000
                 SLOW_INTERVAL = 1000
-                HIGHJUMP_INTERVAL = 300
+
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
 
@@ -437,15 +451,6 @@ def gameplay():
                             last_obstacle.empty()
                             last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
 
-                if len(highjump_items) == 0 and random.randrange(
-                        HIGHJUMP_INTERVAL) == MAGIC_NUM and counter > HIGHJUMP_INTERVAL:
-                    for l in last_obstacle:
-                        if l.rect.right < OBJECT_REFRESH_LINE:
-                            last_obstacle.empty()
-                            last_obstacle.add(HighJumpItem(gamespeed, object_size[0], int(object_size[1] / 2)))
-
-                            last_obstacle.empty()
-                            last_obstacle.add(Cactus(gamespeed, int(object_size[0] * 2.5), int(object_size[1] * 1.5)))
 
                 playerDino.update()
                 cacti.update()
@@ -454,7 +459,7 @@ def gameplay():
                 clouds.update()
                 shield_items.update()
                 life_items.update()
-                highjump_items.update()
+
                 new_ground.update()
                 scb.update(playerDino.score)
                 highsc.update(high_score)
@@ -479,7 +484,7 @@ def gameplay():
                     shield_items.draw(screen)
                     life_items.draw(screen)
                     slow_items.draw(screen)
-                    highjump_items.draw(screen)
+
                     playerDino.draw()
                     resized_screen.blit(
                         pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
