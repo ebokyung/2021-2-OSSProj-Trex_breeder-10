@@ -10,8 +10,7 @@ db = InterfDB("db/score.db")
 
 ## 시작 화면 ##
 def introscreen():
-    global on_pushtime;
-    global off_pushtime
+    global on_pushtime; global off_pushtime
     global bgm_on
     global resized_screen, full_screen
     global high_score
@@ -19,19 +18,19 @@ def introscreen():
     temp_dino = Dino(dino_size[0], dino_size[1])
     temp_dino.isBlinking = True
     gameStart = False
-    btnpush_interval = 500  # ms
-    introscreen_txt_size1 = 15
+    btnpush_interval = 500 #ms
+    introscreen_txt_size1=15
 
     full_screen_txt = textsize(introscreen_txt_size1).render("FULL SCREEN", True, white)
     full_screen_txt_rect = full_screen_txt.get_rect()
-    full_screen_txt_rect.bottomleft = (width * 0.87, height * 0.05)
+    full_screen_txt_rect.bottomleft = (width*0.87, height*0.05)
 
     ###IMGLOAD###
-    # BACKGROUND IMG LOAD
+    #BACKGROUND IMG LOAD
     temp_ground, temp_ground_rect = load_sprite_sheet('ground.png', 10, 1, -1, -1, -1)
     logo, logo_rect = load_image('logo.png', 360, 60, -1)
     Background, Background_rect = load_image('introscreenBG.png', width, height, -1)
-    Background_rect.left = width * 0
+    Background_rect.left = width*0
     Background_rect.bottom = height
 
     r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 240, 60, -1))
@@ -40,27 +39,26 @@ def introscreen():
     btn_board, btn_board_rect = load_image('btn_board.png', 240, 60, -1)
     r_btn_credit, r_btn_credit_rect = load_image(*resize('btn_credit.png', 240, 60, -1))
     btn_credit, btn_credit_rect = load_image('btn_credit.png', 240, 60, -1)
-    # init_btn&bgm_btn
-    btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1);
-    btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
+    #init_btn&bgm_btn
+    btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1) ; btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
     r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
     init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
     r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
-
+    
     full_screen_on, full_screen_on_rect = load_image('full_screen_on.png', 120, 40, -1)
     full_screen_off, full_screen_off_rect = load_image('full_screen_off.png', 120, 40, -1)
     r_full_screen_on, r_full_screen_on_rect = load_image(*resize('full_screen_on.png', 120, 30, -1))
     r_full_screen_off, r_full_screen_off_rect = load_image(*resize('full_screen_off.png', 120, 30, -1))
 
     ###IMGPOS###
-    # BACKGROUND IMG POS
-    temp_ground_rect.bottomleft = (width / 20, height)
-    logo_rect.center = (width * 0.22, height * 0.3)
-    Background_rect.bottomleft = (width * 0, height)
-    # BUTTONPOS
-    btn_bgm_on_rect.center = (width * 0.3, height * (0.33 + 2 * button_offset))
-    init_btn_rect.center = (width * 0.4, height * (0.33 + 2 * button_offset))
-    full_screen_on_rect.bottomleft = (width * 0.85, height * 0.15)
+    #BACKGROUND IMG POS
+    temp_ground_rect.bottomleft = (width/20, height)
+    logo_rect.center = (width * 0.22, height * 0.3) 
+    Background_rect.bottomleft = (width*0, height)
+    #BUTTONPOS
+    btn_bgm_on_rect.center = (width*0.3, height * (0.33+2*button_offset))
+    init_btn_rect.center = (width * 0.4, height * (0.33+2*button_offset))
+    full_screen_on_rect.bottomleft = (width*0.85, height*0.15)
 
     while not gameStart:
         if pygame.display.get_surface() == None:
@@ -68,6 +66,36 @@ def introscreen():
             return True
         else:
             for event in pygame.event.get():
+                # 이두용이 작성1 시작:
+                if event.type == pygame.VIDEORESIZE and not full_screen:
+                    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 240, 60, -1))
+                    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 240, 60, -1)
+                    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 240, 60, -1))
+                    btn_board, btn_board_rect = load_image('btn_board.png', 240, 60, -1)
+                    r_btn_credit, r_btn_credit_rect = load_image(*resize('btn_credit.png', 240, 60, -1))
+                    btn_credit, btn_credit_rect = load_image('btn_credit.png', 240, 60, -1)
+                    #init_btn&bgm_btn
+                    btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1) ; btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
+                    r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
+                    init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
+                    r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
+                    
+                    full_screen_on, full_screen_on_rect = load_image('full_screen_on.png', 120, 40, -1)
+                    full_screen_off, full_screen_off_rect = load_image('full_screen_off.png', 120, 40, -1)
+                    r_full_screen_on, r_full_screen_on_rect = load_image(*resize('full_screen_on.png', 120, 30, -1))
+                    r_full_screen_off, r_full_screen_off_rect = load_image(*resize('full_screen_off.png', 120, 30, -1))
+
+                    ###IMGPOS###
+                    #BACKGROUND IMG POS
+                    temp_ground_rect.bottomleft = (width/20, height)
+                    logo_rect.center = (width * 0.22, height * 0.3) 
+                    Background_rect.bottomleft = (width*0, height)
+                    #BUTTONPOS
+                    btn_bgm_on_rect.center = (width*0.3, height * (0.33+2*button_offset))
+                    init_btn_rect.center = (width * 0.4, height * (0.33+2*button_offset))
+                    full_screen_on_rect.bottomleft = (width*0.85, height*0.15)
+                    #이두용이 작성1 끝.
+
                 if event.type == pygame.QUIT:
                     return True
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -84,56 +112,93 @@ def introscreen():
                         if r_btn_credit_rect.collidepoint(x, y):
                             credit()
 
-                        if r_full_screen_on_rect.collidepoint(x, y):
+                        if r_full_screen_on_rect.collidepoint(x,y):
                             full_screen = not full_screen
+
+                            # 풀스크린이 아닌 경우: 풀스크린으로.
                             if full_screen:
+
                                 resized_screen = pygame.display.set_mode((monitor_size), pygame.FULLSCREEN)
+                                # 이두용이 작성2 시작.
+                                print("resized_screen: (",resized_screen.get_width(),",",resized_screen.get_height(),")")
+                                r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 240, 60, -1))
+                                btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 240, 60, -1)
+                                r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 240, 60, -1))
+                                btn_board, btn_board_rect = load_image('btn_board.png', 240, 60, -1)
+                                r_btn_credit, r_btn_credit_rect = load_image(*resize('btn_credit.png', 240, 60, -1))
+                                btn_credit, btn_credit_rect = load_image('btn_credit.png', 240, 60, -1)
+                                #init_btn&bgm_btn
+                                btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1) ; btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
+                                r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
+                                init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
+                                r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
+                                
+                                full_screen_on, full_screen_on_rect = load_image('full_screen_on.png', 120, 40, -1)
+                                full_screen_off, full_screen_off_rect = load_image('full_screen_off.png', 120, 40, -1)
+                                r_full_screen_on, r_full_screen_on_rect = load_image(*resize('full_screen_on.png', 120, 30, -1))
+                                r_full_screen_off, r_full_screen_off_rect = load_image(*resize('full_screen_off.png', 120, 30, -1))
+                                ###IMGPOS###
+                                #BACKGROUND IMG POS
+                                temp_ground_rect.bottomleft = (width/20, height)
+                                logo_rect.center = (width * 0.22, height * 0.3) 
+                                Background_rect.bottomleft = (width*0, height)
+                                #BUTTONPOS
+                                btn_bgm_on_rect.center = (width*0.3, height * (0.33+2*button_offset))
+                                init_btn_rect.center = (width * 0.4, height * (0.33+2*button_offset))
+                                full_screen_on_rect.bottomleft = (width*0.85, height*0.15)
+                                # 
+                                
+                                # 이두용이 작성2 끝. 
+                            
+                            # 풀스크린인 경우: 원래 사이즈로.
                             else:
-                                full_screen_issue()
+                                # full_screen_issue()
+                                scr_size=(900, 300)
+                                resized_screen = pygame.display.set_mode((scr_size), RESIZABLE)
+                                resized_screen = pygame.display.set_mode((scr_size), RESIZABLE)
+                                # print("2.",resized_screen.get_size())
+
 
                         if r_btn_bgm_on_rect.collidepoint(x, y) and bgm_on:
                             off_pushtime = pygame.time.get_ticks()
-                            if off_pushtime - on_pushtime > btnpush_interval:
-                                bgm_on = False
+                            if off_pushtime-on_pushtime>btnpush_interval:
+                                bgm_on=False
 
                         if r_btn_bgm_on_rect.collidepoint(x, y) and not bgm_on:
                             on_pushtime = pygame.time.get_ticks()
-                            if on_pushtime - off_pushtime > btnpush_interval:
-                                bgm_on = True
+                            if on_pushtime-off_pushtime>btnpush_interval:
+                                bgm_on=True
 
                         if r_init_btn_rect.collidepoint(x, y):
                             db.query_db("delete from user;")
                             db.commit()
                             high_score = 0
 
-                if event.type == pygame.VIDEORESIZE and not full_screen:
-                    checkscrsize(event.w, event.h)
+                # if event.type == pygame.VIDEORESIZE and not full_screen:
+                    # checkscrsize(event.w, event.h)
 
         temp_dino.update()
 
         if pygame.display.get_surface() != None:
-
+            
             screen.fill(background_col)
             screen.blit(temp_ground[0], temp_ground_rect)
             r_btn_gamestart_rect.centerx, r_btn_board_rect.centerx, r_btn_credit_rect.centerx = resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72
-            r_btn_gamestart_rect.centery, r_btn_board_rect.centery, r_btn_credit_rect.centery = resized_screen.get_height() * 0.33, resized_screen.get_height() * (
-                        0.33 + button_offset), resized_screen.get_height() * (0.33 + 2 * button_offset)
+            r_btn_gamestart_rect.centery, r_btn_board_rect.centery, r_btn_credit_rect.centery = resized_screen.get_height() * 0.33, resized_screen.get_height() * (0.33+button_offset), resized_screen.get_height() * (0.33+2*button_offset)
             r_init_btn_rect.centerx, r_init_btn_rect.centery = resized_screen.get_width() * 0.4, r_btn_credit_rect.centery
             screen.blit(Background, Background_rect)
             disp_intro_buttons(btn_gamestart, btn_board, btn_credit)
             screen.blit(init_btn_image, init_btn_rect)
-            # fullscreen btn
+            #fullscreen btn
             if full_screen:
                 screen.blit(full_screen_on, full_screen_on_rect)
-                r_full_screen_on_rect.bottomleft = (
-                resized_screen.get_width() * 0.85, resized_screen.get_height() * 0.15)
+                r_full_screen_on_rect.bottomleft = (resized_screen.get_width() * 0.85, resized_screen.get_height() * 0.15)
                 screen.blit(full_screen_txt, full_screen_txt_rect.bottomleft)
             if not full_screen:
                 screen.blit(full_screen_off, full_screen_on_rect)
-                r_full_screen_on_rect.bottomleft = (
-                resized_screen.get_width() * 0.85, resized_screen.get_height() * 0.15)
+                r_full_screen_on_rect.bottomleft = (resized_screen.get_width() * 0.85, resized_screen.get_height() * 0.15)
                 screen.blit(full_screen_txt, full_screen_txt_rect.bottomleft)
-            # bgm on/off btn
+            #bgm on/off btn
             if bgm_on:
                 screen.blit(btn_bgm_on, btn_bgm_on_rect)
                 r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.3, r_btn_credit_rect.centery
@@ -142,11 +207,10 @@ def introscreen():
                 r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.3, r_btn_credit_rect.centery
             if temp_dino.isBlinking:
                 screen.blit(logo, logo_rect)
-                # screen.blit(callout, callout_rect)
+                #screen.blit(callout, callout_rect)
             temp_dino.draw()
             resized_screen.blit(
-                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-                resized_screen_centerpos)
+                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())), resized_screen_centerpos)
             pygame.display.update()
 
         clock.tick(FPS)
@@ -156,6 +220,7 @@ def introscreen():
 
     pygame.quit()
     quit()
+
 
 ## 게임 작동 ##
 def gameplay():
@@ -590,14 +655,15 @@ def gameplay():
 def board():
     global resized_screen
     gameQuit = False
-    scroll_y = 0
+    scroll_y=0
+    # 10
     max_per_screen = 10
     results = db.query_db("select username, score from user order by score desc;")
-    screen_board_height = resized_screen.get_height() + (len(results) // max_per_screen) * resized_screen.get_height()
+    screen_board_height = resized_screen.get_height()+(len(results)//max_per_screen)*resized_screen.get_height()
     screen_board = pygame.surface.Surface((
         resized_screen.get_width(),
         screen_board_height
-    ))
+        ))
 
     title_image, title_rect = load_image("ranking.png", 360, 75, -1)
     title_rect.centerx = width * 0.5
@@ -619,7 +685,7 @@ def board():
                 screen_board.blit(top_i_surface, (width * 0.25, height * (0.55 + 0.1 * i)))
                 screen_board.blit(name_inform_surface, (width * 0.4, height * 0.40))
                 screen_board.blit(score_inform_surface, (width * 0.6, height * 0.40))
-                screen_board.blit(txt_surface, (width * 0.4, height * (0.55 + 0.1 * i)))
+                screen_board.blit(txt_surface, (width*0.4, height * (0.55 + 0.1 * i)))
                 screen_board.blit(score_surface, (width * 0.6, height * (0.55 + 0.1 * i)))
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -629,11 +695,10 @@ def board():
                         gameQuit = True
                         introscreen()
                     if event.key == pygame.K_UP: scroll_y = min(scroll_y + 15, 0)
-                    if event.key == pygame.K_DOWN: scroll_y = max(scroll_y - 15,
-                                                                  -(len(results) // max_per_screen) * scr_size[1])
+                    if event.key == pygame.K_DOWN: scroll_y = max(scroll_y - 15, -(len(results)//max_per_screen)*scr_size[1])
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 4: scroll_y = min(scroll_y + 15, 0)
-                    if event.button == 5: scroll_y = max(scroll_y - 15, -(len(results) // max_per_screen) * scr_size[1])
+                    if event.button == 5: scroll_y = max(scroll_y - 15, -(len(results)//max_per_screen)*scr_size[1])
                     if event.button == 1:
                         gameQuit = True
                         introscreen()
@@ -642,8 +707,7 @@ def board():
 
             screen.blit(screen_board, (0, scroll_y))
             resized_screen.blit(
-                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-                resized_screen_centerpos)
+                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())), resized_screen_centerpos)
             pygame.display.update()
         clock.tick(FPS)
 

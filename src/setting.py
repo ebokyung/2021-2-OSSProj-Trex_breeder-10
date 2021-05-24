@@ -6,6 +6,7 @@ from pygame import *
 
 
 
+
 pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.init()
 gamername=''
@@ -29,7 +30,7 @@ rheight = resized_screen.get_height()
 button_offset = 0.25
 
 clock = pygame.time.Clock()
-pygame.display.set_caption("Rabbit's Adventure by_MilkDragon")
+pygame.display.set_caption("T-Rex Rush by_OldKokiri")
 
 bgm_on=True
 on_pushtime=0
@@ -38,7 +39,7 @@ jump_sound = pygame.mixer.Sound('sprites/jump.wav')
 die_sound = pygame.mixer.Sound('sprites/die.wav')
 checkPoint_sound = pygame.mixer.Sound('sprites/checkPoint.wav')
 #background_music = pygame.mixer.Sound('sprites/t-rex_bgm1.mp3')
-#pygame.mixer.music.load('sprites/t-rex_bgm1.mp3')
+pygame.mixer.music.load('sprites/t-rex_bgm1.mp3')
 
 dino_size = [44, 47]
 object_size = [40, 40]
@@ -166,10 +167,9 @@ def extractDigits(number):
 
 def resize(name, w, h, color):
         global width, height, resized_screen
+        print("resized_screen: (",resized_screen.get_width(),",",resized_screen.get_height(),")")
         return (name, w*resized_screen.get_width()//width, h*resized_screen.get_height()//height, color)
 
 def textsize(size):
     font = pygame.font.Font('DungGeunMo.ttf', size)
     return font
-
-
