@@ -187,6 +187,7 @@ def gameplay():
     cacti = pygame.sprite.Group()
     fire_cacti = pygame.sprite.Group()
     pteras = pygame.sprite.Group()
+    stones = pygame.sprite.Group() #add stones
     clouds = pygame.sprite.Group()
     last_obstacle = pygame.sprite.Group()
     shield_items = pygame.sprite.Group()
@@ -201,7 +202,7 @@ def gameplay():
     ShieldItem.containers = shield_items
     LifeItem.containers = life_items
     SlowItem.containers = slow_items
-
+    Stone.containers = stones # add stone containers
 
     # BUTTON IMG LOAD
     # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
@@ -344,6 +345,18 @@ def gameplay():
                         if immune_time - collision_time > collision_immune_time:
                             playerDino.collision_immune = False
 
+                for s in stones:
+                    s.movement[0] = -1 * gamespeed
+                    if not playerDino.collision_immune:
+                        if pygame.sprite.collide_mask(playerDino, s):
+                            playerDino.collision_immune = True
+                            life -= 1
+                            collision_time = pygame.time.get_ticks()
+                            if life == 0:
+                                playerDino.isDead = True
+                            if pygame.mixer.get_init() is not None:
+                                die_sound.play()
+
                 if not playerDino.isSuper:
                     for s in shield_items:
                         s.movement[0] = -1 * gamespeed
@@ -395,7 +408,7 @@ def gameplay():
                         k.kill()
 
 
-
+                STONE_INTERVAL = 50
                 CACTUS_INTERVAL = 50
                 PTERA_INTERVAL = 300
                 CLOUD_INTERVAL = 300
@@ -421,6 +434,13 @@ def gameplay():
                         if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL * 5) == MAGIC_NUM:
                             last_obstacle.empty()
                             last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
+
+                if len(stones) < 2:
+                    for l in last_obstacle:
+                        if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
+                            last_obstacle.empty()
+                            last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
+
 
                 if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
                     for l in last_obstacle:
@@ -455,6 +475,7 @@ def gameplay():
                 playerDino.update()
                 cacti.update()
                 fire_cacti.update()
+                stones.update()
                 pteras.update()
                 clouds.update()
                 shield_items.update()
@@ -480,6 +501,7 @@ def gameplay():
                         screen.blit(HI_image, HI_rect)
                     cacti.draw(screen)
                     fire_cacti.draw(screen)
+                    stones.draw(screen)
                     pteras.draw(screen)
                     shield_items.draw(screen)
                     life_items.draw(screen)
