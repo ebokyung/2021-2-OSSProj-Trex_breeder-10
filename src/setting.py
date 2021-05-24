@@ -38,7 +38,7 @@ jump_sound = pygame.mixer.Sound('sprites/jump.wav')
 die_sound = pygame.mixer.Sound('sprites/die.wav')
 checkPoint_sound = pygame.mixer.Sound('sprites/checkPoint.wav')
 #background_music = pygame.mixer.Sound('sprites/t-rex_bgm1.mp3')
-pygame.mixer.music.load('sprites/t-rex_bgm1.mp3')
+#pygame.mixer.music.load('sprites/t-rex_bgm1.mp3')
 
 dino_size = [44, 47]
 object_size = [40, 40]
