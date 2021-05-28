@@ -1,5 +1,5 @@
 __author__ = "Shivam Shekhar"
-made_by = "OldKokiri-6"
+made_by = "MilkDragon-6"
 
 
 from src.game import *
