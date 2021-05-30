@@ -44,6 +44,10 @@ def introscreen():
     r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
     init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
     r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
+    # gamerule btn 추가
+    btn_gamerule, btn_gamerule_rect=load_image('btn_gamerule.png',60,60,-1)
+    r_btn_gamerule, r_btn_gamerule_rect=load_image(*resize('btn_gamerule.png',60,60,-1))
+    #
     
     full_screen_on, full_screen_on_rect = load_image('full_screen_on.png', 120, 40, -1)
     full_screen_off, full_screen_off_rect = load_image('full_screen_off.png', 120, 40, -1)
@@ -59,6 +63,9 @@ def introscreen():
     btn_bgm_on_rect.center = (width*0.3, height * (0.33+2*button_offset))
     init_btn_rect.center = (width * 0.4, height * (0.33+2*button_offset))
     full_screen_on_rect.bottomleft = (width*0.85, height*0.15)
+    # gamerule BUTTONPOS
+    btn_gamerule_rect.center = (width*0.2, height * (0.33+2*button_offset))
+    # 
 
     while not gameStart:
         if pygame.display.get_surface() == None:
@@ -174,6 +181,10 @@ def introscreen():
                             db.commit()
                             high_score = 0
 
+                        # gamerule 
+                        if r_btn_gamerule_rect.collidepoint(x,y):
+                            gamerule()
+
                 # if event.type == pygame.VIDEORESIZE and not full_screen:
                     # checkscrsize(event.w, event.h)
 
@@ -186,9 +197,19 @@ def introscreen():
             r_btn_gamestart_rect.centerx, r_btn_board_rect.centerx, r_btn_credit_rect.centerx = resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72
             r_btn_gamestart_rect.centery, r_btn_board_rect.centery, r_btn_credit_rect.centery = resized_screen.get_height() * 0.33, resized_screen.get_height() * (0.33+button_offset), resized_screen.get_height() * (0.33+2*button_offset)
             r_init_btn_rect.centerx, r_init_btn_rect.centery = resized_screen.get_width() * 0.4, r_btn_credit_rect.centery
+            
+            # r_gamerule btn
+            r_btn_gamerule_rect.centerx,r_btn_gamerule_rect.centery=resized_screen.get_width() * 0.2, r_btn_credit_rect.centery
+            # 
+
             screen.blit(Background, Background_rect)
             disp_intro_buttons(btn_gamestart, btn_board, btn_credit)
             screen.blit(init_btn_image, init_btn_rect)
+
+            # gamerule btn 
+            screen.blit(btn_gamerule,btn_gamerule_rect)
+            # 
+
             #fullscreen btn
             if full_screen:
                 screen.blit(full_screen_on, full_screen_on_rect)
@@ -228,6 +249,8 @@ class obj(pygame.sprite.Sprite):
         self.x = 0
         self.y = 0
         self.move = 0
+        self.xmove = 0
+        self.ymove = 0
         self.rect=None
     def put_img(self, address):
         if address[-3:] == "png":
@@ -312,14 +335,25 @@ def gameplay():
     isDown=False
     boomCount=0
     # 
+
+    # 방향키 구현
+    goLeft=False
+    goRight=False
+    # 
+
+    # 보스몬스터 변수설정
+    isPkingTime=False
+    isPkingAlive=True
+    pking=PteraKing()
+    pm_list = []
+    pm_vector = []
+    pm_pattern0_count = 0
+    pm_pattern1_count = 0
+    pking_appearance_score = 100
+    # 
     
     #
     jumpingx2 = False
-
-
-
-
-
 
     while not gameQuit:
         while startMenu:
@@ -347,12 +381,20 @@ def gameplay():
                             if not (playerDino.isJumping and playerDino.isDead):
                                 playerDino.isDucking = True
 
+                        if event.key == pygame.K_LEFT:
+                            # print("left")
+                            goLeft=True
+
+                        if event.key == pygame.K_RIGHT:
+                            # print("right")
+                            goRight=True
+
                         if event.key == pygame.K_ESCAPE:
                             paused = not paused
                             paused = pausing()
 
                         # jumping x2 ( press key f)
-                        if event.key == pygame.K_f:
+                        if event.key == pygame.K_s:
                             jumpingx2=True
 
                         # 2. a키를 누르면, 미사일이 나갑니다.
@@ -370,8 +412,16 @@ def gameplay():
                             space_go = False
                         # 
 
+                        # 방향키 추가
+                        if event.key == pygame.K_LEFT:
+                            goLeft=False
+                        
+                        if event.key == pygame.K_RIGHT:
+                            goRight=False
+                        # 
+
                         ## jumgpingx2
-                        if event.key == pygame.K_f:
+                        if event.key == pygame.K_s:
                             jumpingx2 = False
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -394,6 +444,14 @@ def gameplay():
                         checkscrsize(event.w, event.h)
 
             if not paused:
+
+                # 방향키 추가 (현재 여기 근데 수정더):
+                if goLeft:
+                    playerDino.rect.left= playerDino.rect.left -(gamespeed)
+
+                if goRight:
+                    playerDino.rect.left = playerDino.rect.left + gamespeed
+                # 
 
                 # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다. 
                 if (space_go==True) and (int(bk%15)==0):
@@ -427,6 +485,58 @@ def gameplay():
                     if  playerDino.rect.bottom == int(height * 0.98):
                         playerDino.isJumping = True
                         playerDino.movement[1] = -1 * playerDino.superJumpSpeed
+
+                # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일.
+                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 20) == 0):
+                    pm=obj()
+                    pm.put_img("./sprites/pking bullet.png")
+                    pm.change_size(15,15)
+                    pm.x = round(pking.rect.centerx)
+                    pm.y = round(pking.rect.centery)
+                    pm.xmove = random.randint(0,15) 
+                    pm.ymove = random.randint(1,3) 
+
+                    pm_list.append(pm)
+                pm_pattern0_count += 1
+                pd_list = []
+
+                for i in range(len(pm_list)):
+                    pm = pm_list[i]
+                    pm.x -= pm.xmove
+                    pm.y += pm.ymove
+                    if pm.y > height or pm.x < 0:
+                        pd_list.append(i)
+                pd_list.reverse()
+                for d in pd_list:
+                    del pm_list[d]
+                    
+
+                #  
+                
+                # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
+                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
+                    # print(pm_list)
+                    pm=obj()
+                    pm.put_img("./sprites/pking bullet.png")
+                    pm.change_size(15,15)
+                    pm.x = round(pking.rect.centerx)
+                    pm.y = round(pking.rect.centery)
+                    pm.move = 3
+                    pm_list.append(pm)
+                pm_pattern1_count += 1
+                pd_list = []
+                
+                for i in range(len(pm_list)):
+                    pm=pm_list[i]
+                    pm.y +=pm.move
+                    if pm.y>height or pm.x < 0:
+                        pd_list.append(i)
+                
+                pd_list.reverse()
+                for d in pd_list:
+                    del pm_list[d]
+                # 
+
 
                 for c in cacti:
                     c.movement[0] = -1 * gamespeed
@@ -576,58 +686,117 @@ def gameplay():
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
 
-                if len(cacti) < 2:
-                    if len(cacti) == 0:
-                        last_obstacle.empty()
-                        last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
+                # print(pking.hp)
+                if (isPkingAlive)and(playerDino.score>pking_appearance_score):
+                    isPkingTime=True
+                else:
+                    isPkingTime = False
+
+                if isPkingTime:
+                    if len(cacti) < 2:
+                        if len(cacti) == 0:
+                            last_obstacle.empty()
+                            last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
                     else:
                         for l in last_obstacle:
                             if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL) == MAGIC_NUM:
                                 last_obstacle.empty()
                                 last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
 
-                if len(fire_cacti) < 2:
-                    for l in last_obstacle:
-                        if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL * 5) == MAGIC_NUM:
+                    if len(fire_cacti) < 2:
+                        for l in last_obstacle:
+                            if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL*5) == MAGIC_NUM:
+                                last_obstacle.empty()
+                                last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
+                
+                    if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
+                        Cloud(width, random.randrange(height / 5, height / 2))
+
+                    if (len(m_list)==0):
+                        pass
+                    else:
+                        if (m.x>=pking.rect.left)and(m.x<=pking.rect.right)and(m.y>pking.rect.top)and(m.y<pking.rect.bottom):
+                            isDown=True
+                            boom=obj()
+                            boom.put_img("./sprites/boom.png")
+                            boom.change_size(200,100)
+                            boom.x=pking.rect.centerx-round(pking.rect.width)
+                            boom.y=pking.rect.centery-round(pking.rect.height/2)
+                            pking.hp -= 1
+                            m_list.remove(m)
+                            
+                            if pking.hp <= 0:
+                                pking.kill()
+                                isPkingAlive=False
+                    
+                    # 
+                    if (len(pm_list)==0):
+                        pass
+                    else:
+                        # print("x: ",pm.x,"y: ",pm.y)
+                        for pm in pm_list:
+                            if (pm.x>=playerDino.rect.left)and(pm.x<=playerDino.rect.right)and(pm.y>playerDino.rect.top)and(pm.y<playerDino.rect.bottom):
+                                print("공격에 맞음.")
+                                # if pygame.sprite.collide_mask(playerDino, pm):
+                                playerDino.collision_immune = True
+                                life -= 1
+                                collision_time = pygame.time.get_ticks()
+                                if life == 0:
+                                    playerDino.isDead = True
+                                pm_list.remove(pm)
+                    # 
+                else:
+                    if len(cacti) < 2:
+                        if len(cacti) == 0:
                             last_obstacle.empty()
-                            last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
+                            last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
+                        else:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL) == MAGIC_NUM:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
 
-                if len(stones) < 2:
-                    for l in last_obstacle:
-                        if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
-                            last_obstacle.empty()
-                            last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
+                    if len(fire_cacti) < 2:
+                        for l in last_obstacle:
+                            if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL * 5) == MAGIC_NUM:
+                                last_obstacle.empty()
+                                last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
+
+                    if len(stones) < 2:
+                        for l in last_obstacle:
+                            if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
+                                last_obstacle.empty()
+                                last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
 
 
-                if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
-                    for l in last_obstacle:
-                        if l.rect.right < OBJECT_REFRESH_LINE:
-                            last_obstacle.empty()
-                            last_obstacle.add(Ptera(gamespeed, ptera_size[0], ptera_size[1]))
+                    if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
+                        for l in last_obstacle:
+                            if l.rect.right < OBJECT_REFRESH_LINE:
+                                last_obstacle.empty()
+                                last_obstacle.add(Ptera(gamespeed, ptera_size[0], ptera_size[1]))
 
-                if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
-                    Cloud(width, random.randrange(height / 5, height / 2))
+                    if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
+                        Cloud(width, random.randrange(height / 5, height / 2))
 
-                if len(shield_items) == 0 and random.randrange(
-                        SHIELD_INTERVAL) == MAGIC_NUM and counter > SHIELD_INTERVAL:
-                    for l in last_obstacle:
-                        if l.rect.right < OBJECT_REFRESH_LINE:
-                            last_obstacle.empty()
-                            last_obstacle.add(ShieldItem(gamespeed, object_size[0], object_size[1]))
+                    if len(shield_items) == 0 and random.randrange(
+                            SHIELD_INTERVAL) == MAGIC_NUM and counter > SHIELD_INTERVAL:
+                        for l in last_obstacle:
+                            if l.rect.right < OBJECT_REFRESH_LINE:
+                                last_obstacle.empty()
+                                last_obstacle.add(ShieldItem(gamespeed, object_size[0], object_size[1]))
 
-                if len(life_items) == 0 and random.randrange(
-                        LIFE_INTERVAL) == MAGIC_NUM and counter > LIFE_INTERVAL * 2:
-                    for l in last_obstacle:
-                        if l.rect.right < OBJECT_REFRESH_LINE:
-                            last_obstacle.empty()
-                            last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
+                    if len(life_items) == 0 and random.randrange(
+                            LIFE_INTERVAL) == MAGIC_NUM and counter > LIFE_INTERVAL * 2:
+                        for l in last_obstacle:
+                            if l.rect.right < OBJECT_REFRESH_LINE:
+                                last_obstacle.empty()
+                                last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
 
-                if len(slow_items) == 0 and random.randrange(SLOW_INTERVAL) == MAGIC_NUM and counter > SLOW_INTERVAL:
-                    for l in last_obstacle:
-                        if l.rect.right < OBJECT_REFRESH_LINE:
-                            last_obstacle.empty()
-                            last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
-
+                    if len(slow_items) == 0 and random.randrange(SLOW_INTERVAL) == MAGIC_NUM and counter > SLOW_INTERVAL:
+                        for l in last_obstacle:
+                            if l.rect.right < OBJECT_REFRESH_LINE:
+                                last_obstacle.empty()
+                                last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
 
                 playerDino.update()
                 cacti.update()
@@ -644,6 +813,11 @@ def gameplay():
                 speed_indicator.update(gamespeed - 3)
                 heart.update(life)
                 slow_items.update()
+
+                # 보스몬스터 타임이면, 
+                if isPkingTime:
+                    pking.update()
+                # 
 
                 if pygame.display.get_surface() != None:
                     screen.fill(background_col)
@@ -663,6 +837,15 @@ def gameplay():
                     shield_items.draw(screen)
                     life_items.draw(screen)
                     slow_items.draw(screen)
+
+                    # pkingtime이면, 보스몬스터를 보여줘라.
+                    if isPkingTime:
+                        # print(pking.pattern_idx)
+                        pking.draw()
+                        # 보스 익룡이 쏘는 미사일을 보여준다.
+                        for pm in pm_list:
+                            pm.show() 
+                    # 
 
                    # 5. 미사일 배열에 저장된 미사일들을 게임 스크린에 그려줍니다.
                     for m in m_list:
@@ -819,6 +1002,49 @@ def board():
     pygame.quit()
     quit()
 
+def gamerule():
+    global resized_screen
+    gameQuit = False
+    max_per_screen = 10
+    screen_board_height = resized_screen.get_height()
+    screen_board = pygame.surface.Surface((
+        resized_screen.get_width(),
+        screen_board_height
+        ))
+    
+    gamerule_image, gamerule_rect= load_image("gamerule.png",800,300,-1)
+    gamerule_rect.centerx=width*0.5
+    gamerule_rect.centery=height*0.5
+
+    while not gameQuit:
+        if pygame.display.get_surface() is None:
+            gameQuit = True
+        else:
+            screen_board.fill(background_col)
+            screen_board.blit(gamerule_image,gamerule_rect)
+            
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    gameQuit = True
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
+                        gameQuit = True
+                        introscreen()
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    if event.button == 1:
+                        gameQuit = True
+                        introscreen()
+                if event.type == pygame.VIDEORESIZE:
+                    checkscrsize(event.w, event.h)
+
+            screen.blit(screen_board, (0,0))
+            resized_screen.blit(
+                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())), resized_screen_centerpos)
+            pygame.display.update()
+        clock.tick(FPS)
+
+    pygame.quit()
+    quit()
 
 def pausing():
     global resized_screen
