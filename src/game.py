@@ -221,6 +221,27 @@ def introscreen():
     pygame.quit()
     quit()
 
+# 0. 이클래스는 미사일을 쉽게 만들기 위한 미사일 클래스입니다.
+class obj(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.x = 0
+        self.y = 0
+        self.move = 0
+        self.rect=None
+    def put_img(self, address):
+        if address[-3:] == "png":
+            self.img = pygame.image.load(address).convert_alpha()
+            self.rect = self.img.get_rect
+        else :
+            self.img = pygame.image.load(address)
+        self.sx, self.sy = self.img.get_size()
+    def change_size(self, sx, sy):
+        self.img = pygame.transform.scale(self.img, (sx, sy))
+        self.sx, self.sy = self.img.get_size()
+    def show(self):
+        screen.blit(self.img, (self.x,self.y))
+# 
 
 ## 게임 작동 ##
 def gameplay():
@@ -283,6 +304,15 @@ def gameplay():
     HI_rect.top = height * 0.05
     HI_rect.left = width * 0.73
 
+    # 1. 미사일 발사.
+    space_go=False
+    m_list=[]
+    bk=0
+    # 익룡이 격추되었을때
+    isDown=False
+    boomCount=0
+    # 
+    
     #
     jumpingx2 = False
 
@@ -325,9 +355,20 @@ def gameplay():
                         if event.key == pygame.K_f:
                             jumpingx2=True
 
+                        # 2. a키를 누르면, 미사일이 나갑니다.
+                        if event.key == pygame.K_a:
+                            space_go=True
+                            bk=0
+                        # 
+
                     if event.type == pygame.KEYUP:
                         if event.key == pygame.K_DOWN:
                             playerDino.isDucking = False
+
+                        # 3.a키에서 손을 떼면, 미사일이 발사 되지 않습니다.
+                        if event.key == pygame.K_a:
+                            space_go = False
+                        # 
 
                         ## jumgpingx2
                         if event.key == pygame.K_f:
@@ -353,6 +394,34 @@ def gameplay():
                         checkscrsize(event.w, event.h)
 
             if not paused:
+
+                # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다. 
+                if (space_go==True) and (int(bk%15)==0):
+                    # print(bk)
+                    mm=obj()
+                    mm.put_img("./sprites/bullet3.png")
+                    mm.change_size(10,10)
+                    if playerDino.isDucking ==False:
+                        mm.x = round(playerDino.rect.centerx)
+                        mm.y = round(playerDino.rect.top*1.035)
+                    if playerDino.isDucking ==True:
+                        mm.x = round(playerDino.rect.centerx)
+                        mm.y = round(playerDino.rect.centery*1.01)
+                    mm.move = 15
+                    m_list.append(mm)
+                bk=bk+1
+                d_list=[]
+                
+                for i in range(len(m_list)):
+                    m=m_list[i]
+                    m.x +=m.move
+                    if m.x>width:
+                        d_list.append(i)
+                
+                d_list.reverse()
+                for d in d_list:
+                    del m_list[d]
+                # 
 
                 if jumpingx2 :
                     if  playerDino.rect.bottom == int(height * 0.98):
@@ -395,6 +464,27 @@ def gameplay():
 
                 for p in pteras:
                     p.movement[0] = -1 * gamespeed
+
+                    # 7. 익룡이 미사일에 맞으면 익룡과 미사일 모두 사라집니다.
+            
+                    if (len(m_list)==0):
+                        pass
+                    else:
+                        if (m.x>=p.rect.left)and(m.x<=p.rect.right)and(m.y>p.rect.top)and(m.y<p.rect.bottom):
+                            print("격추 성공")
+                            isDown=True
+                            boom=obj()
+                            boom.put_img("./sprites/boom.png")
+                            boom.change_size(200,100)
+                            boom.x=p.rect.centerx-round(p.rect.width)*2.5
+                            boom.y=p.rect.centery-round(p.rect.height)*1.5
+                            playerDino.score+=30  
+                            p.kill()
+                            # 여기만 바꿈
+                            m_list.remove(m)
+                            # 
+                    #  
+
                     if not playerDino.collision_immune:
                         if pygame.sprite.collide_mask(playerDino, p):
                             playerDino.collision_immune = True
@@ -475,7 +565,9 @@ def gameplay():
 
                 STONE_INTERVAL = 50
                 CACTUS_INTERVAL = 50
-                PTERA_INTERVAL = 300
+                # 익룡을 더 자주 등장시키기 위해 12로 수정했습니다. (원래값은 300)
+                PTERA_INTERVAL = 12
+                # 
                 CLOUD_INTERVAL = 300
                 SHIELD_INTERVAL = 500
                 LIFE_INTERVAL = 1000
@@ -571,6 +663,19 @@ def gameplay():
                     shield_items.draw(screen)
                     life_items.draw(screen)
                     slow_items.draw(screen)
+
+                   # 5. 미사일 배열에 저장된 미사일들을 게임 스크린에 그려줍니다.
+                    for m in m_list:
+                        m.show()
+                        # print(type(mm.x))
+                    if isDown :
+                        boom.show()
+                        boomCount+=1
+                        # boomCount가 5가 될 때까지 boom이미지를 계속 보여준다.
+                        if boomCount>10:
+                            boomCount=0
+                            isDown=False
+                    #
 
                     playerDino.draw()
                     resized_screen.blit(
