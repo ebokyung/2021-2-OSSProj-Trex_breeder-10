@@ -2,9 +2,42 @@ from src.setting import *
 
 
 class Dino():
-    def __init__(self, sizex=-1, sizey=-1):
-        self.images, self.rect = load_sprite_sheet('dino.png', 6, 1, sizex, sizey, -1)
-        self.images1, self.rect1 = load_sprite_sheet('dino_ducking.png', 2, 1, 59, sizey, -1)
+    def __init__(self, sizex=-1, sizey=-1,type = None):
+        
+        # 디노의 타입을 결정합니다. 
+        self.type = type
+
+        if type == 'ORIGINAL':
+            self.images, self.rect = load_sprite_sheet('dino.png', 6, 1, sizex, sizey, -1)
+            # self.images, self.rect = load_sprite_sheet('pinkdino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('dino_ducking.png', 2, 1, 59, sizey, -1)
+            # self.images1, self.rect1 = load_sprite_sheet('pinkdino_ducking.png', 2, 1, 59, sizey, -1)
+        elif type == 'PINK':
+            self.images, self.rect = load_sprite_sheet('pink_dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('pink_dino_ducking.png', 2, 1, 59, sizey, -1)
+        elif type == 'RED':
+            self.images, self.rect = load_sprite_sheet('red_dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('red_dino_ducking.png', 2, 1, 59, sizey, -1)    
+        elif type == 'ORANGE':
+            self.images, self.rect = load_sprite_sheet('orange_dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('orange_dino_ducking.png', 2, 1, 59, sizey, -1) 
+        elif type == 'YELLOW':
+            self.images, self.rect = load_sprite_sheet('yellow_dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('yellow_dino_ducking.png', 2, 1, 59, sizey, -1)
+        elif type == 'GREEN':
+            self.images, self.rect = load_sprite_sheet('green_dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('green_dino_ducking.png', 2, 1, 59, sizey, -1)
+        elif type == 'PURPLE':
+            self.images, self.rect = load_sprite_sheet('purple_dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('purple_dino_ducking.png', 2, 1, 59, sizey, -1)  
+        elif type == 'BLACK':
+            self.images, self.rect = load_sprite_sheet('black_dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('black_dino_ducking.png', 2, 1, 59, sizey, -1)    
+        else: 
+            self.images, self.rect = load_sprite_sheet('dino.png', 6, 1, sizex, sizey, -1)
+            self.images1, self.rect1 = load_sprite_sheet('dino_ducking.png', 2, 1, 59, sizey, -1)
+        # 
+
         self.rect.bottom = int(0.98*height)
         self.rect.left = width/15
         self.image = self.images[0]
