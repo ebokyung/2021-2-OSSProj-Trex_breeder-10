@@ -10,7 +10,7 @@ from pygame import *
 pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.init()
 gamername=''
-scr_size = (width, height) = (900, 300)
+scr_size = (width, height) = (800, 400)
 FPS = 60
 gravity = 0.65
 font = pygame.font.Font('DungGeunMo.ttf', 32)
@@ -20,6 +20,12 @@ monitor_size = (monitor_width, monitor_height) = (pygame.display.Info().current_
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
+green = (0,200,0)
+orange = (255,127,0)
+blue = (0,0,225)
+bright_red = (255,0,0)
+bright_green = (0,255,0)
+bright_orange = (255,215,0)
 
 high_score = 0
 resized_screen = pygame.display.set_mode((scr_size), RESIZABLE)
@@ -27,10 +33,10 @@ screen = resized_screen.copy()
 resized_screen_centerpos = (0,0)
 rwidth = resized_screen.get_width()
 rheight = resized_screen.get_height()
-button_offset = 0.25
+button_offset = 0.18
 
 clock = pygame.time.Clock()
-pygame.display.set_caption("T-Rex Rush by_MilkDragon")
+pygame.display.set_caption("Milk Dragon's Adventure by_MilkDragon")
 
 bgm_on=True
 on_pushtime=0
@@ -48,6 +54,7 @@ collision_immune_time = 500
 shield_time = 2000
 speed_up_limit_count = 700
 
+# 게임 내 image를 넣을 때 쓰는 함수
 def load_image(
     name,
     sizex=-1,
@@ -67,7 +74,6 @@ def load_image(
         image = pygame.transform.scale(image, (sizex, sizey))
 
     return (image, image.get_rect())
-
 
 def load_sprite_sheet(
         sheetname,
@@ -109,33 +115,17 @@ def load_sprite_sheet(
 
     return sprites, sprite_rect
 
-
-def disp_gameOver_msg(gameover_image):
-    # retbutton_rect = retbutton_image.get_rect()
-    # retbutton_rect.centerx = width / 2
-    # retbutton_rect.top = height*0.52
-
-    gameover_rect = gameover_image.get_rect()
-    gameover_rect.centerx = width / 2
-    gameover_rect.centery = height*0.35
-
-    # screen.blit(retbutton_image, retbutton_rect)
-    screen.blit(gameover_image, gameover_rect)
-
-
 def disp_intro_buttons(btn_gamestart,btn_board,btn_credit):
     btn_gamestart_rect = btn_gamestart.get_rect()
     btn_board_rect = btn_board.get_rect()
     btn_credit_rect = btn_credit.get_rect()
 
     btn_gamestart_rect.centerx, btn_board_rect.centerx, btn_credit_rect.centerx = width * 0.72, width * 0.72, width * 0.72
-    btn_gamestart_rect.centery, btn_board_rect.centery, btn_credit_rect.centery = height * 0.33, height * (0.33+button_offset), height * (0.33+2*button_offset)
+    btn_gamestart_rect.centery, btn_board_rect.centery, btn_credit_rect.centery = height * 0.5, height * (0.5+button_offset), height * (0.5+2*button_offset)
     
     screen.blit(btn_gamestart, btn_gamestart_rect)
     screen.blit(btn_board, btn_board_rect)
     screen.blit(btn_credit, btn_credit_rect)
-
-# def imgresizer(img, rect):
     
 
 def checkscrsize(eventw, eventh):
