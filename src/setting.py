@@ -54,6 +54,7 @@ collision_immune_time = 500
 shield_time = 2000
 speed_up_limit_count = 700
 
+
 # 게임 내 image를 넣을 때 쓰는 함수
 def load_image(
     name,
@@ -115,18 +116,26 @@ def load_sprite_sheet(
 
     return sprites, sprite_rect
 
-def disp_intro_buttons(btn_gamestart,btn_board,btn_credit):
+def disp_gameOver_msg(gameover_image):
+
+    gameover_rect = gameover_image.get_rect()
+    gameover_rect.centerx = width / 2
+    gameover_rect.centery = height*0.35
+
+    screen.blit(gameover_image, gameover_rect)
+
+def disp_intro_buttons(btn_gamestart, btn_board, btn_option):
     btn_gamestart_rect = btn_gamestart.get_rect()
     btn_board_rect = btn_board.get_rect()
-    btn_credit_rect = btn_credit.get_rect()
+    btn_option_rect = btn_option.get_rect()
 
-    btn_gamestart_rect.centerx, btn_board_rect.centerx, btn_credit_rect.centerx = width * 0.72, width * 0.72, width * 0.72
-    btn_gamestart_rect.centery, btn_board_rect.centery, btn_credit_rect.centery = height * 0.5, height * (0.5+button_offset), height * (0.5+2*button_offset)
+    btn_gamestart_rect.centerx, btn_board_rect.centerx, btn_option_rect.centerx = width * 0.72, width * 0.72, width * 0.72
+    btn_gamestart_rect.centery, btn_board_rect.centery, btn_option_rect.centery = height * 0.5, height * (0.5+button_offset), height * (0.5+2*button_offset)
     
     screen.blit(btn_gamestart, btn_gamestart_rect)
     screen.blit(btn_board, btn_board_rect)
-    screen.blit(btn_credit, btn_credit_rect)
-    
+    screen.blit(btn_option, btn_option_rect)
+
 
 def checkscrsize(eventw, eventh):
     if (eventw < width and eventh < height) or eventw < width or eventh < height: #최소해상도
