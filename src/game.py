@@ -10,10 +10,7 @@ db = InterfDB("db/score.db")
 
 ## 시작 화면 ##
 def introscreen():
-    global on_pushtime; global off_pushtime
-    global bgm_on
-    global resized_screen, full_screen
-    global high_score
+    global resized_screen
 
     # temp_dino를 전역변수로 설정합니다.
     global temp_dino
@@ -22,65 +19,21 @@ def introscreen():
     dino_type = ['ORIGINAL','RED','ORANGE','YELLOW','GREEN','PURPLE','BLACK','PINK']
     type_idx = 0
     click_count = 0
-    # 
-
-    pygame.mixer.music.stop()
+    #
     temp_dino = Dino(dino_size[0], dino_size[1])
     temp_dino.isBlinking = True
     gameStart = False
-    btnpush_interval = 500 #ms
-    introscreen_txt_size1=15
 
-    full_screen_txt = textsize(introscreen_txt_size1).render("FULL SCREEN", True, white)
-    full_screen_txt_rect = full_screen_txt.get_rect()
-    full_screen_txt_rect.bottomleft = (width*0.87, height*0.05)
-
-    ###IMGLOAD###
-    #BACKGROUND IMG LOAD
-    temp_ground, temp_ground_rect = load_sprite_sheet('ground.png', 10, 1, -1, -1, -1)
-    logo, logo_rect = load_image('logo.png', 360, 60, -1)
-    Background, Background_rect = load_image('introscreenBG.png', width, height, -1)
-    Background_rect.left = width*0
-    Background_rect.bottom = height
-
-    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 240, 60, -1))
-    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 240, 60, -1)
-    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 240, 60, -1))
-    btn_board, btn_board_rect = load_image('btn_board.png', 240, 60, -1)
-    r_btn_credit, r_btn_credit_rect = load_image(*resize('btn_credit.png', 240, 60, -1))
-    btn_credit, btn_credit_rect = load_image('btn_credit.png', 240, 60, -1)
-    #init_btn&bgm_btn
-    btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1) ; btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
-    r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
-    init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
-    r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
-    # gamerule btn 추가
-    btn_gamerule, btn_gamerule_rect=load_image('btn_gamerule.png',60,60,-1)
-    r_btn_gamerule, r_btn_gamerule_rect=load_image(*resize('btn_gamerule.png',60,60,-1))
-    #
-
-    # character_change btn 추가
-    btn_gamerule, btn_gamerule_rect=load_image('btn_gamerule.png',60,60,-1)
-    r_btn_gamerule, r_btn_gamerule_rect=load_image(*resize('btn_gamerule.png',60,60,-1))
-    # 
-    
-    full_screen_on, full_screen_on_rect = load_image('full_screen_on.png', 120, 40, -1)
-    full_screen_off, full_screen_off_rect = load_image('full_screen_off.png', 120, 40, -1)
-    r_full_screen_on, r_full_screen_on_rect = load_image(*resize('full_screen_on.png', 120, 30, -1))
-    r_full_screen_off, r_full_screen_off_rect = load_image(*resize('full_screen_off.png', 120, 30, -1))
-
-    ###IMGPOS###
-    #BACKGROUND IMG POS
-    temp_ground_rect.bottomleft = (width/20, height)
-    logo_rect.center = (width * 0.22, height * 0.3) 
-    Background_rect.bottomleft = (width*0, height)
-    #BUTTONPOS
-    btn_bgm_on_rect.center = (width*0.3, height * (0.33+2*button_offset))
-    init_btn_rect.center = (width * 0.4, height * (0.33+2*button_offset))
-    full_screen_on_rect.bottomleft = (width*0.85, height*0.15)
-    # gamerule BUTTONPOS
-    btn_gamerule_rect.center = (width*0.2, height * (0.33+2*button_offset))
-    # 
+    ###이미지 로드###
+    # 배경 이미지
+    Background, Background_rect = load_image('intro_bg.png', width, height, -1)
+    # 버튼 이미지
+    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 150, 50, -1))
+    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 150, 50, -1)
+    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 150, 50, -1))
+    btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
+    r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
+    btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
 
     while not gameStart:
         if pygame.display.get_surface() == None:
@@ -90,36 +43,21 @@ def introscreen():
             for event in pygame.event.get():
                 # 이두용이 작성1 시작:
                 if event.type == pygame.VIDEORESIZE and not full_screen:
-                    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 240, 60, -1))
-                    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 240, 60, -1)
-                    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 240, 60, -1))
-                    btn_board, btn_board_rect = load_image('btn_board.png', 240, 60, -1)
-                    r_btn_credit, r_btn_credit_rect = load_image(*resize('btn_credit.png', 240, 60, -1))
-                    btn_credit, btn_credit_rect = load_image('btn_credit.png', 240, 60, -1)
-                    #init_btn&bgm_btn
-                    btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1) ; btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
-                    r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
-                    init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
-                    r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
-                    
-                    full_screen_on, full_screen_on_rect = load_image('full_screen_on.png', 120, 40, -1)
-                    full_screen_off, full_screen_off_rect = load_image('full_screen_off.png', 120, 40, -1)
-                    r_full_screen_on, r_full_screen_on_rect = load_image(*resize('full_screen_on.png', 120, 30, -1))
-                    r_full_screen_off, r_full_screen_off_rect = load_image(*resize('full_screen_off.png', 120, 30, -1))
+                    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 150, 50, -1))
+                    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 150, 50, -1)
+                    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 150, 50, -1))
+                    btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
+                    r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
+                    btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
 
                     ###IMGPOS###
                     #BACKGROUND IMG POS
-                    temp_ground_rect.bottomleft = (width/20, height)
-                    logo_rect.center = (width * 0.22, height * 0.3) 
                     Background_rect.bottomleft = (width*0, height)
-                    #BUTTONPOS
-                    btn_bgm_on_rect.center = (width*0.3, height * (0.33+2*button_offset))
-                    init_btn_rect.center = (width * 0.4, height * (0.33+2*button_offset))
-                    full_screen_on_rect.bottomleft = (width*0.85, height*0.15)
                     #이두용이 작성1 끝.
 
                 if event.type == pygame.QUIT:
                     return True
+                # 버튼 클릭했을 때 event
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         x, y = event.pos
@@ -131,8 +69,8 @@ def introscreen():
                         if r_btn_board_rect.collidepoint(x, y):
                             board()
 
-                        if r_btn_credit_rect.collidepoint(x, y):
-                            credit()
+                        if r_btn_option_rect.collidepoint(x, y):
+                            option()
 
                         # temp_dino를 누르는 경우: 
                         if temp_dino.rect.collidepoint(x, y):
@@ -140,121 +78,22 @@ def introscreen():
                             type_idx = click_count % len(dino_type)
                             temp_dino = Dino(dino_size[0], dino_size[1],type = dino_type[type_idx])
                             temp_dino.isBlinking = True
-                        # 
-
-                        if r_full_screen_on_rect.collidepoint(x,y):
-                            full_screen = not full_screen
-
-                            # 풀스크린이 아닌 경우: 풀스크린으로.
-                            if full_screen:
-
-                                resized_screen = pygame.display.set_mode((monitor_size), pygame.FULLSCREEN)
-                                # 이두용이 작성2 시작.
-                                print("resized_screen: (",resized_screen.get_width(),",",resized_screen.get_height(),")")
-                                r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 240, 60, -1))
-                                btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 240, 60, -1)
-                                r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 240, 60, -1))
-                                btn_board, btn_board_rect = load_image('btn_board.png', 240, 60, -1)
-                                r_btn_credit, r_btn_credit_rect = load_image(*resize('btn_credit.png', 240, 60, -1))
-                                btn_credit, btn_credit_rect = load_image('btn_credit.png', 240, 60, -1)
-                                #init_btn&bgm_btn
-                                btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1) ; btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
-                                r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
-                                init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
-                                r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
-                                
-                                full_screen_on, full_screen_on_rect = load_image('full_screen_on.png', 120, 40, -1)
-                                full_screen_off, full_screen_off_rect = load_image('full_screen_off.png', 120, 40, -1)
-                                r_full_screen_on, r_full_screen_on_rect = load_image(*resize('full_screen_on.png', 120, 30, -1))
-                                r_full_screen_off, r_full_screen_off_rect = load_image(*resize('full_screen_off.png', 120, 30, -1))
-                                ###IMGPOS###
-                                #BACKGROUND IMG POS
-                                temp_ground_rect.bottomleft = (width/20, height)
-                                logo_rect.center = (width * 0.22, height * 0.3) 
-                                Background_rect.bottomleft = (width*0, height)
-                                #BUTTONPOS
-                                btn_bgm_on_rect.center = (width*0.3, height * (0.33+2*button_offset))
-                                init_btn_rect.center = (width * 0.4, height * (0.33+2*button_offset))
-                                full_screen_on_rect.bottomleft = (width*0.85, height*0.15)
-                                # 
-                                
-                                # 이두용이 작성2 끝. 
-                            
-                            # 풀스크린인 경우: 원래 사이즈로.
-                            else:
-                                # full_screen_issue()
-                                scr_size=(900, 300)
-                                resized_screen = pygame.display.set_mode((scr_size), RESIZABLE)
-                                resized_screen = pygame.display.set_mode((scr_size), RESIZABLE)
-                                # print("2.",resized_screen.get_size())
-
-
-                        if r_btn_bgm_on_rect.collidepoint(x, y) and bgm_on:
-                            off_pushtime = pygame.time.get_ticks()
-                            if off_pushtime-on_pushtime>btnpush_interval:
-                                bgm_on=False
-
-                        if r_btn_bgm_on_rect.collidepoint(x, y) and not bgm_on:
-                            on_pushtime = pygame.time.get_ticks()
-                            if on_pushtime-off_pushtime>btnpush_interval:
-                                bgm_on=True
-
-                        if r_init_btn_rect.collidepoint(x, y):
-                            db.query_db("delete from user;")
-                            db.commit()
-                            high_score = 0
-
-                        # gamerule 
-                        if r_btn_gamerule_rect.collidepoint(x,y):
-                            gamerule()
-
-                # if event.type == pygame.VIDEORESIZE and not full_screen:
-                    # checkscrsize(event.w, event.h)
 
         temp_dino.update()
 
+        # draw
         if pygame.display.get_surface() != None:
-            
-            screen.fill(background_col)
-            screen.blit(temp_ground[0], temp_ground_rect)
-            r_btn_gamestart_rect.centerx, r_btn_board_rect.centerx, r_btn_credit_rect.centerx = resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72
-            r_btn_gamestart_rect.centery, r_btn_board_rect.centery, r_btn_credit_rect.centery = resized_screen.get_height() * 0.33, resized_screen.get_height() * (0.33+button_offset), resized_screen.get_height() * (0.33+2*button_offset)
-            r_init_btn_rect.centerx, r_init_btn_rect.centery = resized_screen.get_width() * 0.4, r_btn_credit_rect.centery
-            
-            # r_gamerule btn
-            r_btn_gamerule_rect.centerx,r_btn_gamerule_rect.centery=resized_screen.get_width() * 0.2, r_btn_credit_rect.centery
-            # 
+
+            r_btn_gamestart_rect.centerx, r_btn_board_rect.centerx, r_btn_option_rect.centerx = resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72
+            r_btn_gamestart_rect.centery, r_btn_board_rect.centery, r_btn_option_rect.centery = resized_screen.get_height() * 0.5, resized_screen.get_height() * (0.5+button_offset), resized_screen.get_height() * (0.5+2*button_offset)
 
             screen.blit(Background, Background_rect)
-            disp_intro_buttons(btn_gamestart, btn_board, btn_credit)
-            screen.blit(init_btn_image, init_btn_rect)
+            disp_intro_buttons(btn_gamestart, btn_board, btn_option)
 
-            # gamerule btn 
-            screen.blit(btn_gamerule,btn_gamerule_rect)
-            # 
-
-            #fullscreen btn
-            if full_screen:
-                screen.blit(full_screen_on, full_screen_on_rect)
-                r_full_screen_on_rect.bottomleft = (resized_screen.get_width() * 0.85, resized_screen.get_height() * 0.15)
-                screen.blit(full_screen_txt, full_screen_txt_rect.bottomleft)
-            if not full_screen:
-                screen.blit(full_screen_off, full_screen_on_rect)
-                r_full_screen_on_rect.bottomleft = (resized_screen.get_width() * 0.85, resized_screen.get_height() * 0.15)
-                screen.blit(full_screen_txt, full_screen_txt_rect.bottomleft)
-            #bgm on/off btn
-            if bgm_on:
-                screen.blit(btn_bgm_on, btn_bgm_on_rect)
-                r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.3, r_btn_credit_rect.centery
-            if not bgm_on:
-                screen.blit(btn_bgm_off, btn_bgm_on_rect)
-                r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.3, r_btn_credit_rect.centery
-            if temp_dino.isBlinking:
-                screen.blit(logo, logo_rect)
-                #screen.blit(callout, callout_rect)
             temp_dino.draw()
             resized_screen.blit(
                 pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())), resized_screen_centerpos)
+
             pygame.display.update()
 
         clock.tick(FPS)
@@ -262,6 +101,93 @@ def introscreen():
             gameStart = True
             gameplay()
 
+    pygame.quit()
+    quit()
+
+
+def option():
+    global on_pushtime;
+    global off_pushtime
+    global bgm_on
+    global high_score
+    global resized_screen
+
+    btnpush_interval = 500  # ms
+    pygame.mixer.music.stop()
+    done = False
+    optionimg, optionimg_rect = load_image('option_bg.png', width, height, -1)
+
+    btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1);
+    btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
+    r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
+    init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
+    r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
+    btn_gamerule, btn_gamerule_rect = load_image('btn_gamerule.png', 60, 60, -1)
+    r_btn_gamerule, r_btn_gamerule_rect = load_image(*resize('btn_gamerule.png', 60, 60, -1))
+    btn_home, btn_home_rect = load_image('main_button.png', 70, 62, -1)
+    r_btn_home, r_btn_home_rect = load_image(*resize('main_button.png', 70, 62, -1))
+
+    btn_bgm_on_rect.center = (width * 0.25, height * 0.5)
+    init_btn_rect.center = (width * 0.5, height * 0.5)
+    btn_gamerule_rect.center = (width * 0.75, height * 0.5)
+    btn_home_rect.center = (width * 0.9, height * 0.15)
+
+    while not done:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                done = True
+
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    return False
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if pygame.mouse.get_pressed() == (1, 0, 0):
+                    x, y = event.pos
+                    if r_btn_home_rect.collidepoint(x, y):
+                        introscreen()
+
+                    if r_btn_bgm_on_rect.collidepoint(x, y) and bgm_on:
+                        off_pushtime = pygame.time.get_ticks()
+                        if off_pushtime - on_pushtime > btnpush_interval:
+                            bgm_on = False
+
+                    if r_btn_bgm_on_rect.collidepoint(x, y) and not bgm_on:
+                        on_pushtime = pygame.time.get_ticks()
+                        if on_pushtime - off_pushtime > btnpush_interval:
+                            bgm_on = True
+
+                    if r_init_btn_rect.collidepoint(x, y):
+                        db.query_db("delete from user;")
+                        db.commit()
+                        high_score = 0
+
+                    if r_btn_gamerule_rect.collidepoint(x, y):
+                        gamerule()
+            if event.type == pygame.VIDEORESIZE:
+                checkscrsize(event.w, event.h)
+
+        r_init_btn_rect.centerx, r_init_btn_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height() * 0.5
+        r_btn_gamerule_rect.centerx, r_btn_gamerule_rect.centery = resized_screen.get_width() * 0.75, resized_screen.get_height() * 0.5
+        r_btn_home_rect.centerx, r_btn_home_rect.centery = resized_screen.get_width() * 0.9, resized_screen.get_height() * 0.15
+
+        screen.fill(white)
+        screen.blit(optionimg, optionimg_rect)
+        screen.blit(init_btn_image, init_btn_rect)
+        screen.blit(btn_gamerule, btn_gamerule_rect)
+        screen.blit(btn_home, btn_home_rect)
+        if bgm_on:
+            screen.blit(btn_bgm_on, btn_bgm_on_rect)
+            r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.25, resized_screen.get_height() * 0.5
+        if not bgm_on:
+            screen.blit(btn_bgm_off, btn_bgm_on_rect)
+            r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.25, resized_screen.get_height() * 0.5
+
+        resized_screen.blit(
+            pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
+            resized_screen_centerpos)
+        pygame.display.update()
+
+        clock.tick(FPS)
     pygame.quit()
     quit()
 
@@ -287,7 +213,7 @@ class obj(pygame.sprite.Sprite):
         self.sx, self.sy = self.img.get_size()
     def show(self):
         screen.blit(self.img, (self.x,self.y))
-# 
+#
 
 ## 게임 작동 ##
 def gameplay():
@@ -361,12 +287,12 @@ def gameplay():
     # 익룡이 격추되었을때
     isDown=False
     boomCount=0
-    # 
+    #
 
     # 방향키 구현
     goLeft=False
     goRight=False
-    # 
+    #
 
     # 보스몬스터 변수설정
     isPkingTime=False
@@ -377,8 +303,8 @@ def gameplay():
     pm_pattern0_count = 0
     pm_pattern1_count = 0
     pking_appearance_score = 100
-    # 
-    
+    #
+
     #
     jumpingx2 = False
 
@@ -428,7 +354,7 @@ def gameplay():
                         if event.key == pygame.K_a:
                             space_go=True
                             bk=0
-                        # 
+                        #
 
                     if event.type == pygame.KEYUP:
                         if event.key == pygame.K_DOWN:
@@ -437,15 +363,15 @@ def gameplay():
                         # 3.a키에서 손을 떼면, 미사일이 발사 되지 않습니다.
                         if event.key == pygame.K_a:
                             space_go = False
-                        # 
+                        #
 
                         # 방향키 추가
                         if event.key == pygame.K_LEFT:
                             goLeft=False
-                        
+
                         if event.key == pygame.K_RIGHT:
                             goRight=False
-                        # 
+                        #
 
                         ## jumgpingx2
                         if event.key == pygame.K_s:
@@ -478,9 +404,9 @@ def gameplay():
 
                 if goRight:
                     playerDino.rect.left = playerDino.rect.left + gamespeed
-                # 
+                #
 
-                # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다. 
+                # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다.
                 if (space_go==True) and (int(bk%15)==0):
                     # print(bk)
                     mm=obj()
@@ -516,17 +442,17 @@ def gameplay():
                     m_list.append(mm)
                 bk=bk+1
                 d_list=[]
-                
+
                 for i in range(len(m_list)):
                     m=m_list[i]
                     m.x +=m.move
                     if m.x>width:
                         d_list.append(i)
-                
+
                 d_list.reverse()
                 for d in d_list:
                     del m_list[d]
-                # 
+                #
 
                 if jumpingx2 :
                     if  playerDino.rect.bottom == int(height * 0.98):
@@ -540,8 +466,8 @@ def gameplay():
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.xmove = random.randint(0,15) 
-                    pm.ymove = random.randint(1,3) 
+                    pm.xmove = random.randint(0,15)
+                    pm.ymove = random.randint(1,3)
 
                     pm_list.append(pm)
                 pm_pattern0_count += 1
@@ -556,10 +482,10 @@ def gameplay():
                 pd_list.reverse()
                 for d in pd_list:
                     del pm_list[d]
-                    
 
-                #  
-                
+
+                #
+
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
                 if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
                     # print(pm_list)
@@ -572,17 +498,17 @@ def gameplay():
                     pm_list.append(pm)
                 pm_pattern1_count += 1
                 pd_list = []
-                
+
                 for i in range(len(pm_list)):
                     pm=pm_list[i]
                     pm.y +=pm.move
                     if pm.y>height or pm.x < 0:
                         pd_list.append(i)
-                
+
                 pd_list.reverse()
                 for d in pd_list:
                     del pm_list[d]
-                # 
+                #
 
 
                 for c in cacti:
@@ -623,7 +549,7 @@ def gameplay():
                     p.movement[0] = -1 * gamespeed
 
                     # 7. 익룡이 미사일에 맞으면 익룡과 미사일 모두 사라집니다.
-            
+
                     if (len(m_list)==0):
                         pass
                     else:
@@ -635,12 +561,12 @@ def gameplay():
                             boom.change_size(200,100)
                             boom.x=p.rect.centerx-round(p.rect.width)*2.5
                             boom.y=p.rect.centery-round(p.rect.height)*1.5
-                            playerDino.score+=30  
+                            playerDino.score+=30
                             p.kill()
                             # 여기만 바꿈
                             m_list.remove(m)
-                            # 
-                    #  
+                            #
+                    #
 
                     if not playerDino.collision_immune:
                         if pygame.sprite.collide_mask(playerDino, p):
@@ -724,7 +650,7 @@ def gameplay():
                 CACTUS_INTERVAL = 50
                 # 익룡을 더 자주 등장시키기 위해 12로 수정했습니다. (원래값은 300)
                 PTERA_INTERVAL = 12
-                # 
+                #
                 CLOUD_INTERVAL = 300
                 SHIELD_INTERVAL = 500
                 LIFE_INTERVAL = 1000
@@ -755,7 +681,7 @@ def gameplay():
                             if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL*5) == MAGIC_NUM:
                                 last_obstacle.empty()
                                 last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
-                
+
                     if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
                         Cloud(width, random.randrange(height / 5, height / 2))
 
@@ -771,12 +697,12 @@ def gameplay():
                             boom.y=pking.rect.centery-round(pking.rect.height/2)
                             pking.hp -= 1
                             m_list.remove(m)
-                            
+
                             if pking.hp <= 0:
                                 pking.kill()
                                 isPkingAlive=False
-                    
-                    # 
+
+                    #
                     if (len(pm_list)==0):
                         pass
                     else:
@@ -791,7 +717,7 @@ def gameplay():
                                 if life == 0:
                                     playerDino.isDead = True
                                 pm_list.remove(pm)
-                    # 
+                    #
                 else:
                     if len(cacti) < 2:
                         if len(cacti) == 0:
@@ -861,10 +787,10 @@ def gameplay():
                 heart.update(life)
                 slow_items.update()
 
-                # 보스몬스터 타임이면, 
+                # 보스몬스터 타임이면,
                 if isPkingTime:
                     pking.update()
-                # 
+                #
 
                 if pygame.display.get_surface() != None:
                     screen.fill(background_col)
@@ -891,8 +817,8 @@ def gameplay():
                         pking.draw()
                         # 보스 익룡이 쏘는 미사일을 보여준다.
                         for pm in pm_list:
-                            pm.show() 
-                    # 
+                            pm.show()
+                    #
 
                    # 5. 미사일 배열에 저장된 미사일들을 게임 스크린에 그려줍니다.
                     for m in m_list:
@@ -1058,7 +984,7 @@ def gamerule():
         resized_screen.get_width(),
         screen_board_height
         ))
-    
+
     gamerule_image, gamerule_rect= load_image("gamerule.png",800,300,-1)
     gamerule_rect.centerx=width*0.5
     gamerule_rect.centery=height*0.5
@@ -1069,7 +995,7 @@ def gamerule():
         else:
             screen_board.fill(background_col)
             screen_board.blit(gamerule_image,gamerule_rect)
-            
+
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     gameQuit = True
