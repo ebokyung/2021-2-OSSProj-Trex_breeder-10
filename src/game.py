@@ -54,6 +54,16 @@ def introscreen():
     global bgm_on
     global resized_screen, full_screen
     global high_score
+
+    # temp_dino를 전역변수로 설정합니다.
+    global temp_dino
+    global type_idx
+    global dino_type
+    dino_type = ['ORIGINAL','RED','ORANGE','YELLOW','GREEN','PURPLE','BLACK','PINK']
+    type_idx = 0
+    click_count = 0
+    # 
+
     pygame.mixer.music.stop()
     temp_dino = Dino(dino_size[0], dino_size[1])
     temp_dino.isBlinking = True
@@ -155,6 +165,14 @@ def introscreen():
 
                         if r_btn_credit_rect.collidepoint(x, y):
                             credit()
+
+                        # temp_dino를 누르는 경우: 
+                        if temp_dino.rect.collidepoint(x, y):
+                            click_count += 1 
+                            type_idx = click_count % len(dino_type)
+                            temp_dino = Dino(dino_size[0], dino_size[1],type = dino_type[type_idx])
+                            temp_dino.isBlinking = True
+                        # 
 
                         if r_full_screen_on_rect.collidepoint(x,y):
                             full_screen = not full_screen
@@ -316,7 +334,11 @@ def gameplay():
     life = 5
     ###
     paused = False
-    playerDino = Dino(dino_size[0], dino_size[1])
+    
+    # 디노 타입 때문에 변경된 부분
+    playerDino = Dino(dino_size[0], dino_size[1], type = dino_type[type_idx])
+    # 
+
     new_ground = Ground(-1 * gamespeed)
     scb = Scoreboard()
     highsc = Scoreboard(width * 0.78)
@@ -490,8 +512,28 @@ def gameplay():
                 if (space_go==True) and (int(bk%15)==0):
                     # print(bk)
                     mm=obj()
-                    mm.put_img("./sprites/bullet3.png")
-                    mm.change_size(10,10)
+
+                    # 디노의 종류에 따라 다른 총알이 나가도록 합니다.
+                    if playerDino.type == 'RED':
+                        mm.put_img("./sprites/black_bullet.png")
+                        mm.change_size(10,10)
+                    elif playerDino.type == 'YELLOW':
+                        mm.put_img("./sprites/blue_bullet.png")
+                        mm.change_size(10,10)
+                    elif playerDino.type == 'ORANGE':
+                        mm.put_img("./sprites/blue_bullet.png")
+                        mm.change_size(10,10)
+                    elif playerDino.type == 'PURPLE':
+                        mm.put_img("./sprites/pink_bullet.png")
+                        mm.change_size(15,5)
+                    elif playerDino.type == 'PINK':
+                        mm.put_img("./sprites/heart_bullet.png")
+                        mm.change_size(10,10)
+                    else:                    
+                        mm.put_img("./sprites/red_bullet.png")
+                        mm.change_size(10,10)
+                    # 
+                    
                     if playerDino.isDucking ==False:
                         mm.x = round(playerDino.rect.centerx)
                         mm.y = round(playerDino.rect.top*1.035)
