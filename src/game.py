@@ -115,8 +115,10 @@ def option():
     btnpush_interval = 500  # ms
     pygame.mixer.music.stop()
     done = False
-    optionimg, optionimg_rect = load_image('option_bg.png', width, height, -1)
+    db_init = False
 
+    largeText = pygame.font.Font('freesansbold.ttf', 60)
+    TextSurf, TextRect = text_objects("[ OPTION ]", largeText)
     btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1);
     btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
     r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
@@ -126,11 +128,15 @@ def option():
     r_btn_gamerule, r_btn_gamerule_rect = load_image(*resize('btn_gamerule.png', 60, 60, -1))
     btn_home, btn_home_rect = load_image('main_button.png', 70, 62, -1)
     r_btn_home, r_btn_home_rect = load_image(*resize('main_button.png', 70, 62, -1))
+    btn_credit, btn_credit_rect = load_image('btn_credit.png', 150, 50, -1)
+    r_btn_credit, r_btn_credit_rect = load_image(*resize('btn_credit.png', 150, 50, -1))
 
+    TextRect.center = (width * 0.5, height * 0.2)
     btn_bgm_on_rect.center = (width * 0.25, height * 0.5)
     init_btn_rect.center = (width * 0.5, height * 0.5)
     btn_gamerule_rect.center = (width * 0.75, height * 0.5)
     btn_home_rect.center = (width * 0.9, height * 0.15)
+    btn_credit_rect.center = (width * 0.9, height * 0.85)
 
     while not done:
         for event in pygame.event.get():
@@ -160,27 +166,37 @@ def option():
                         db.query_db("delete from user;")
                         db.commit()
                         high_score = 0
+                        db_init = True
 
                     if r_btn_gamerule_rect.collidepoint(x, y):
                         gamerule()
+
+                    if r_btn_credit_rect.collidepoint(x, y):
+                        credit()
+
             if event.type == pygame.VIDEORESIZE:
                 checkscrsize(event.w, event.h)
 
         r_init_btn_rect.centerx, r_init_btn_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height() * 0.5
         r_btn_gamerule_rect.centerx, r_btn_gamerule_rect.centery = resized_screen.get_width() * 0.75, resized_screen.get_height() * 0.5
         r_btn_home_rect.centerx, r_btn_home_rect.centery = resized_screen.get_width() * 0.9, resized_screen.get_height() * 0.15
+        r_btn_credit_rect.centerx, r_btn_credit_rect.centery = resized_screen.get_width() * 0.9, resized_screen.get_height() * 0.85
 
-        screen.fill(white)
-        screen.blit(optionimg, optionimg_rect)
+        screen.fill(background_col)
+        screen.blit(TextSurf, TextRect)
         screen.blit(init_btn_image, init_btn_rect)
         screen.blit(btn_gamerule, btn_gamerule_rect)
         screen.blit(btn_home, btn_home_rect)
+        screen.blit(btn_credit, btn_credit_rect)
+
         if bgm_on:
             screen.blit(btn_bgm_on, btn_bgm_on_rect)
             r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.25, resized_screen.get_height() * 0.5
         if not bgm_on:
             screen.blit(btn_bgm_off, btn_bgm_on_rect)
             r_btn_bgm_on_rect.centerx, r_btn_bgm_on_rect.centery = resized_screen.get_width() * 0.25, resized_screen.get_height() * 0.5
+        if db_init:
+            draw_text("Scoreboard cleared", font, screen, 400, 300, black)
 
         resized_screen.blit(
             pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
@@ -191,7 +207,7 @@ def option():
     pygame.quit()
     quit()
 
-# 0. 이클래스는 미사일을 쉽게 만들기 위한 미사일 클래스입니다.
+### 미사일을 쉽게 만들기 위한 미사일 클래스 ###
 class obj(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
