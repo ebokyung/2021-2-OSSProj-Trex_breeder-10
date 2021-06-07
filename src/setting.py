@@ -54,6 +54,17 @@ collision_immune_time = 500
 shield_time = 2000
 speed_up_limit_count = 700
 
+# 게임 내에 text를 넣을때 쓰는 함수
+def draw_text(text,font,surface,x,y,main_color) :
+    text_obj = font.render(text,True,main_color)
+    text_rect = text_obj.get_rect()
+    text_rect.centerx = x
+    text_rect.centery = y
+    surface.blit(text_obj,text_rect)
+
+def text_objects(text, font):
+    textSurface = font.render(text, True, (black))
+    return textSurface, textSurface.get_rect()
 
 # 게임 내 image를 넣을 때 쓰는 함수
 def load_image(
