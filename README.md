@@ -1,3 +1,6 @@
+<img alt="MIT" src ="https://img.shields.io/badge/license-MIT-green">
+<img alt="Python" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white"/>
+
 # 2021-1-OSSPC-MilkDragon-6
 ## Milk Dragon’s Adventure
 <img width="599" alt="시작화면" src="https://user-images.githubusercontent.com/70673826/121240479-57b4fb80-c8d5-11eb-8ed2-fba2ba055709.PNG">
