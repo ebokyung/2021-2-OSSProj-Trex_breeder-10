@@ -274,29 +274,7 @@ def selectMode():
     quit()
 
 
-### 미사일을 쉽게 만들기 위한 미사일 클래스 ###
-class obj(pygame.sprite.Sprite):
-    def __init__(self):
-        super().__init__()
-        self.x = 0
-        self.y = 0
-        self.move = 0
-        self.xmove = 0
-        self.ymove = 0
-        self.rect=None
-    def put_img(self, address):
-        if address[-3:] == "png":
-            self.img = pygame.image.load(address).convert_alpha()
-            self.rect = self.img.get_rect
-        else :
-            self.img = pygame.image.load(address)
-        self.sx, self.sy = self.img.get_size()
-    def change_size(self, sx, sy):
-        self.img = pygame.transform.scale(self.img, (sx, sy))
-        self.sx, self.sy = self.img.get_size()
-    def show(self):
-        screen.blit(self.img, (self.x,self.y))
-#
+
 
 
 ## 게임 작동 ##
@@ -781,8 +759,8 @@ def gameplay_hard():
                             paused = not paused
                             paused = pausing()
 
-                        # jumping x2 ( press key f)
-                        if event.key == pygame.K_f:
+                        # jumping x2 ( press key s)
+                        if event.key == pygame.K_s:
                             jumpingx2=True
 
                         # 2. a키를 누르면, 미사일이 나갑니다.
@@ -809,7 +787,7 @@ def gameplay_hard():
                         #
 
                         ## jumgpingx2
-                        if event.key == pygame.K_f:
+                        if event.key == pygame.K_s:
                             jumpingx2 = False
 
                     if event.type == pygame.MOUSEBUTTONDOWN:
