@@ -5,8 +5,6 @@ import pygame
 from pygame import *
 
 
-
-
 pygame.mixer.pre_init(44100, -16, 2, 2048)
 pygame.init()
 gamername=''

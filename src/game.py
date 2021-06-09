@@ -212,6 +212,7 @@ def option():
     quit()
 
 
+
 def selectMode():
     global resized_screen
     gameStart = False
@@ -296,6 +297,7 @@ class obj(pygame.sprite.Sprite):
     def show(self):
         screen.blit(self.img, (self.x,self.y))
 #
+
 
 ## 게임 작동 ##
 def gameplay_easy():
