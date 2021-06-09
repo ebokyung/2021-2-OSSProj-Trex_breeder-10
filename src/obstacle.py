@@ -226,9 +226,19 @@ class Ptera(pygame.sprite.Sprite):
 class Stone(pygame.sprite.Sprite):
     def __init__(self, speed=5, sizex=-1, sizey=-1):
         pygame.sprite.Sprite.__init__(self,self.containers)
-        self.images, self.rect = load_sprite_sheet('stone1.png', 1, 1, sizex, sizey, -1)
+        self.images, self.rect = load_sprite_sheet('stone.png', 1, 1, sizex, sizey, -1)
+        self.rect.top = height *0.9
         self.rect.bottom = int(0.98*height)
         self.rect.left = width + self.rect.width
+
+        #self.ptera_height = height * 0.3
+        ## self.rect.centery = self.ptera_height[random.randrange(0, 3)]
+        #self.rect.centery = self.ptera_height
+        #self.rect.left = width - self.rect.width - 50
+
+
+
+
         self.image = self.images[0]
         self.movement = [-1*speed, 0]
 
