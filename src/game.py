@@ -34,6 +34,8 @@ def introscreen():
     btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
     r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
     btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
+    # DINO IMAGE
+
 
     while not gameStart:
         if pygame.display.get_surface() == None:
@@ -144,6 +146,22 @@ def option():
 
     while not done:
         for event in pygame.event.get():
+
+            # CHANGE SIZE START
+            if event.type == pygame.VIDEORESIZE and not full_screen:
+                # r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 150, 50, -1))
+                # btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 150, 50, -1)
+                # r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 150, 50, -1))
+                # btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
+                # r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
+                # btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
+                pass
+                ###IMGPOS###
+                #BACKGROUND IMG POS
+                # Background_rect.bottomleft = (width*0, height)
+            
+            # CHANGE SIZE END
+
             if event.type == pygame.QUIT:
                 done = True
 
@@ -178,8 +196,8 @@ def option():
                     if r_btn_credit_rect.collidepoint(x, y):
                         credit()
 
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
+            # if event.type == pygame.VIDEORESIZE:
+            #     checkscrsize(event.w, event.h)
 
         r_init_btn_rect.centerx, r_init_btn_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height() * 0.5
         r_btn_gamerule_rect.centerx, r_btn_gamerule_rect.centery = resized_screen.get_width() * 0.75, resized_screen.get_height() * 0.5
@@ -237,6 +255,7 @@ def selectMode():
 
     while not gameStart:
         for event in pygame.event.get():
+            
             if event.type == pygame.QUIT:
                 gameStart = True
 
@@ -647,8 +666,11 @@ def gameplay_hard():
     result = db.query_db("select score from user order by score desc;", one=True)
     if result is not None:
         high_score = result['score']
-    if bgm_on:
-        pygame.mixer.music.play(-1)  # 배경음악 실행
+
+    # HERE: REMOVE SOUND!!    
+    # if bgm_on:
+    #     pygame.mixer.music.play(-1)  # 배경음악 실행
+    
     gamespeed = 4
     startMenu = False
     gameOver = False
@@ -1427,11 +1449,13 @@ def gamerule():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                         gameQuit = True
-                        introscreen()
+                        # introscreen()
+                        option()
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     if event.button == 1:
                         gameQuit = True
-                        introscreen()
+                        # introscreen()
+                        option()
                 if event.type == pygame.VIDEORESIZE:
                     checkscrsize(event.w, event.h)
 
