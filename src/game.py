@@ -401,6 +401,18 @@ def gameplay_easy():
 
             if not paused:
 
+                for s in stones:
+                    s.movement[0] = -1 * gamespeed
+                    if not playerDino.collision_immune:
+                        if pygame.sprite.collide_mask(playerDino, s):
+                            playerDino.collision_immune = True
+                            life -= 1
+                            collision_time = pygame.time.get_ticks()
+                            if life == 0:
+                                playerDino.isDead = True
+                            if pygame.mixer.get_init() is not None:
+                                die_sound.play()
+
                 for c in cacti:
                     c.movement[0] = -1 * gamespeed
                     if not playerDino.collision_immune:
