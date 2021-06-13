@@ -244,7 +244,6 @@ def selectMode():
     # hardmode button
     btn_hardmode, btn_hardmode_rect = load_image('hard.png', 150, 50, -1)
     r_btn_hardmode, r_btn_hardmode_rect = load_image(*resize('hard.png', 150, 50, -1))
-
     # 배경 이미지
     Background, Background_rect = load_image('intro_bg.png', width, height, -1)
 
@@ -274,8 +273,8 @@ def selectMode():
             if event.type == pygame.VIDEORESIZE:
                 checkscrsize(event.w, event.h)
 
-        r_easy_btn_rect.centerx, r_easy_btn_rect.centery = resized_screen.get_width() * 0.72, resized_screen.get_height() * 0.5
-        r_btn_hardmode_rect.centerx, r_btn_hardmode_rect.centery = resized_screen.get_width() * 0.72, resized_screen.get_height() * (
+        r_easy_btn_rect.centerx, r_easy_btn_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height() * 0.5
+        r_btn_hardmode_rect.centerx, r_btn_hardmode_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height() * (
                 0.5 + button_offset)
 
         screen.blit(Background, Background_rect)
