@@ -393,6 +393,12 @@ def main():
                     if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
                         Cloud(width, random.randrange(height / 5, height / 2))
                     
+                    # 여기선 x,y가 아닌 Dino객체에서 바뀌는 bottom과 left를 넘겨준다
+                    p2Pos = read_pos(n.send(make_pos((player1.rect.bottom, player1.rect.left))))
+                    player2.rect.bottom = p2Pos[0]
+                    player2.rect.left = p2Pos[1]
+                    print(p2Pos)
+
                     cacti.update()
                     fire_cacti.update()
                     pteras.update()
@@ -428,6 +434,8 @@ def main():
                         life_items.draw(screen)
                         slow_items.draw(screen)
                         # highjump_items.draw(screen)
+                        player1.draw()
+                        player2.draw()
                         resized_screen.blit(
                             pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
                             resized_screen_centerpos)
