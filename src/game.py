@@ -296,7 +296,7 @@ def selectMode():
 
 
 ## 게임 작동 ##
-def gameplay_easy():
+def gameplay_easy(playerDino):
     global resized_screen
     global high_score
     result = db.query_db("select score from user order by score desc;", one=True)
@@ -313,7 +313,6 @@ def gameplay_easy():
     ###
     paused = False
 
-    playerDino = Dino(dino_size[0], dino_size[1], type=dino_type[type_idx])
 
     new_ground = Ground(-1 * gamespeed)
     scb = Scoreboard()
