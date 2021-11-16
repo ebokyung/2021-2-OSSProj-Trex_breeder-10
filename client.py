@@ -6,6 +6,9 @@ from src.setting import *
 
 dino_type = ['ORIGINAL','RED','ORANGE','YELLOW','GREEN','PURPLE','BLACK','PINK']
 #Player class를 기존에 있던 Dino class를 활용#
+
+#TODO: set different starting positions for dinos per player
+
 class Dino():
     def __init__(self, sizex=-1, sizey=-1,type = None):
         
@@ -143,6 +146,9 @@ def main():
     
     player1 = Dino(dino_size[0], dino_size[1], type=dino_type[1])
     player2 = Dino(dino_size[0], dino_size[1], type=dino_type[0])
+    #TODO: health of dinos, speed of dinos, item effect to dinos..
+    #OPINION: I'm guessing it should be classified in Dino class 
+    #but this issue needs further discussion w/ members on how to handle this
 
     clock = pygame.time.Clock()
 
@@ -361,6 +367,9 @@ def main():
                     HIGHJUMP_INTERVAL = 300
                     OBJECT_REFRESH_LINE = width * 0.8
                     MAGIC_NUM = 10
+
+                    #TODO: fix random appearance of obstacle 
+                    #REASON: obstacles are shown differently to clients - looks like they are not in the same map
 
                     if len(cacti) < 2:
                         if len(cacti) == 0:
