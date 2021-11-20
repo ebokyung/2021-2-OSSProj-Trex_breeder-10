@@ -30,7 +30,7 @@ def introscreen():
     # 버튼 이미지
     r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 150, 50, -1))
     btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 150, 50, -1)
-    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 150, 50, -1))
+    r_btn_board, r_btn_board_rect =     load_image(*resize('btn_board.png', 150, 50, -1))
     btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
     r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
     btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
@@ -270,7 +270,8 @@ def selectMode():
                     if r_btn_hardmode_rect.collidepoint(x, y):
                         #남현 - 211104 중간함수 실행 -> 삭제
                         # gameplay_hard()
-                        gameplay_bonus(1, 5, 4, 0)
+                        gameplay_hard(3)
+                        # gameplay_bonus(1, 5, 4, 0)
 
             if event.type == pygame.VIDEORESIZE:
                 checkscrsize(event.w, event.h)
@@ -739,6 +740,11 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
     gameover_image, gameover_rect = load_image('game_over.png', 380, 22, -1)
 
+    # 남현 - 211120 스테이지 다 꺠면 축하메시지 출력
+    you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
+    # 남현 - 211120 깼는지 안깼는지 확인
+    you_won = False
+
     temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
     HI_image = pygame.Surface((30, int(15 * 6 / 5)))
     HI_rect = HI_image.get_rect()
@@ -755,6 +761,10 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     HI_image.blit(temp_images[11], temp_rect)
     HI_rect.top = height * 0.05
     HI_rect.left = width * 0.73
+
+    # 남현 - 211117 보스를 죽였는지 아닌지 판단하는 변수
+    isBossKilled = False
+
 
     # 1. 미사일 발사.
     space_go=False
@@ -791,7 +801,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     # 시작 시간 정보
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     # total time
-    total_time = 120
+    total_time = 30
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -1195,32 +1205,13 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                                 # 남현 - 211104 파라미터를 바꿔서 호출하도록 함, stage 3인 경우 끝
                                 # 현재 스피드와 점수를 파라미터로 넘겨줌
                                 # 남현 - 211109 stage2가 끝나면 보너스 스테이지로 진입
-                                print("다음 스테이지 진입")
+                                # print("다음 스테이지 진입")
                                 # 남현 - 여기 스테이지 끝나면 NEXT STAGE라는 메세지를 출력하고 싶었는데 실행 안됨
-                                if(stage == 1) :
-                                    #메세지 출력하고 싶은데 잘 안됨
-                                    next_msg = pygame.font.Font(None, 120).render(str("NEXT STAGE"), True, (0, 0, 0))
-                                    screen.blit(next_msg, (width * 0.275, height * 0.4))
-                                    pygame.time.wait(500)
-                                    gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
 
-                                elif (stage == 2):
-                                    # 메세지 출력하고 싶은데 잘 안됨
-                                    next_msg = pygame.font.Font(None, 100).render(str("BONUS STAGE"), True, (0, 0, 0))
-                                    screen.blit(next_msg, (width * 0.2, height * 0.4))
-                                    pygame.time.wait(500)
-                                    #gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
-                                    gameplay_bonus(stage, life, gamespeed, playerDino.score)
+                                # 남현 - 211117 보스 죽으면 다음 스테이지 진입이 아닌 timer가 0이될때까지 플레이
+                                isBossKilled = True
 
-                                elif (stage == 3) :
-                                    print("모든 스테이지 클리어")
-                                    #남현 - 여기 gameOver를 True로 바꾸면 게임오버가 잘 될 줄 알았는데 화면만 멈추고 게임오버가 안 됨..
-                                    #그런데 if절을 만드니깐 gameover는 잘 되는 것을 확인할 수 있었음
-                                    #마지막에 축하 메시지 또는 게임을 클리어했다는 메시지를 출력하고 싶은데 어떻게 해야할 지 모르겠음
-                                    pygame.time.wait(500)
-                                    congrat_msg = pygame.font.Font(None, 120).render(str("CONGRATULATION"), True, (255, 255, 255))
-                                    screen.blit(congrat_msg, (width * 0.275, height * 0.4))
-                                    gameOver = True
+
 
 
 
@@ -1407,8 +1398,40 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                     # 만약 시간이 0 이하이면 게임 종료
                     if total_time - elapsed_time <= 0:
                         print("타임아웃")
-                        gameOver = True
+                        
+                        # 남현 - 211117 보스를 죽였을때만 다음 스테이지로 넘어가도록
+                        if isBossKilled == False :
+                            gameOver = True
+                        else: 
+                            if (stage == 1):
+                                # 메세지 출력하고 싶은데 잘 안됨
+                                next_msg = pygame.font.Font(None, 120).render(str("NEXT STAGE"), True, (0, 0, 0))
+                                screen.blit(next_msg, (width * 0.275, height * 0.4))
+                                pygame.time.wait(500)
+                                gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
 
+                            elif (stage == 2):
+                                # 메세지 출력하고 싶은데 잘 안됨
+                                next_msg = pygame.font.Font(None, 100).render(str("BONUS STAGE"), True, (0, 0, 0))
+                                screen.blit(next_msg, (width * 0.2, height * 0.4))
+                                pygame.time.wait(500)
+                                # gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
+                                gameplay_bonus(stage, life, gamespeed, playerDino.score)
+
+                            elif (stage == 3):
+                                print("모든 스테이지 클리어")
+                                # 남현 - 여기 gameOver를 True로 바꾸면 게임오버가 잘 될 줄 알았는데 화면만 멈추고 게임오버가 안 됨..
+                                # 그런데 if절을 만드니깐 gameover는 잘 되는 것을 확인할 수 있었음
+                                # 마지막에 축하 메시지 또는 게임을 클리어했다는 메시지를 출력하고 싶은데 어떻게 해야할 지 모르겠음
+                                pygame.time.wait(500)
+                                congrat_msg = pygame.font.Font(None, 120).render(str("CONGRATULATION"), True,
+                                                                                 (255, 255, 255))
+                                screen.blit(congrat_msg, (width * 0.275, height * 0.4))
+                                
+                                # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
+                                you_won = True
+
+                                gameOver = True
 
                     pygame.display.update()
                 clock.tick(FPS)
@@ -1421,15 +1444,17 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
 
-                    # new_ground.speed -= 1
-                    # gamespeed += 1
+                    new_ground.speed -= 1
+                    gamespeed += 1
+                    # 남현 - 211120 속도 증가 시 체크포인트 소리
+                    checkPoint_sound.play()
 
-                    # 남현 - 211113 보스 등장 시 속도증가제한
-                    if(isPkingTime == False) :
-                        new_ground.speed -= 1
-                        gamespeed += 1
-                        # 남현 - 211113 속도 증가 시 체크포인트 소리
-                        checkPoint_sound.play()
+                    # 남현 - 211113 보스 등장 시 속도증가제한 -> 삭제
+                    # if(isPkingTime == False) :
+                    #     new_ground.speed -= 1
+                    #     gamespeed += 1
+                    #     # 남현 - 211113 속도 증가 시 체크포인트 소리
+                    #     checkPoint_sound.play()
 
                 counter = (counter + 1)
 
@@ -1484,7 +1509,12 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
 
             highsc.update(high_score)
             if pygame.display.get_surface() != None:
-                disp_gameOver_msg(gameover_image)
+                # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 축하메시지
+                # 아니면 그냥 GameOver
+                if (you_won == True) :
+                    disp_gameOver_msg(you_won_image)
+                else :
+                    disp_gameOver_msg(gameover_image)
                 if high_score != 0:
                     highsc.draw()
                     screen.blit(HI_image, HI_rect)
@@ -1576,6 +1606,8 @@ def gameplay_bonus(stage, life, speed, score):
     # BUTTON IMG LOAD
     # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
     gameover_image, gameover_rect = load_image('game_over.png', 380, 22, -1)
+
+
 
     temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
     HI_image = pygame.Surface((30, int(15 * 6 / 5)))
