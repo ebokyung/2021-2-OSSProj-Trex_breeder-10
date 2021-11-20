@@ -1200,14 +1200,6 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                             if pking.hp <= 0:
                                 pking.kill()
                                 isPkingAlive=False
-                                # 남현 - 211031 pking이 죽었을 때 다음스테이지로 넘어가게 함(gameplay_hard2호출) -> 없앰
-                                # 남현 - 211104 파라미터를 바꿔서 호출하도록 함, stage 3인 경우 끝
-                                # 현재 스피드와 점수를 파라미터로 넘겨줌
-                                # 남현 - 211109 stage2가 끝나면 보너스 스테이지로 진입
-                                # print("다음 스테이지 진입")
-                                # 남현 - 여기 스테이지 끝나면 NEXT STAGE라는 메세지를 출력하고 싶었는데 실행 안됨
-
-                                # 남현 - 211117 보스 죽으면 다음 스테이지 진입이 아닌 timer가 0이될때까지 플레이
                                 isBossKilled = True
 
 
@@ -1403,29 +1395,17 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                             gameOver = True
                         else: 
                             if (stage == 1):
-                                # 메세지 출력하고 싶은데 잘 안됨
-                                next_msg = pygame.font.Font(None, 120).render(str("NEXT STAGE"), True, (0, 0, 0))
-                                screen.blit(next_msg, (width * 0.275, height * 0.4))
                                 pygame.time.wait(500)
                                 gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
 
                             elif (stage == 2):
-                                # 메세지 출력하고 싶은데 잘 안됨
-                                next_msg = pygame.font.Font(None, 100).render(str("BONUS STAGE"), True, (0, 0, 0))
-                                screen.blit(next_msg, (width * 0.2, height * 0.4))
                                 pygame.time.wait(500)
                                 # gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
                                 gameplay_bonus(stage, life, gamespeed, playerDino.score)
 
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
-                                # 남현 - 여기 gameOver를 True로 바꾸면 게임오버가 잘 될 줄 알았는데 화면만 멈추고 게임오버가 안 됨..
-                                # 그런데 if절을 만드니깐 gameover는 잘 되는 것을 확인할 수 있었음
-                                # 마지막에 축하 메시지 또는 게임을 클리어했다는 메시지를 출력하고 싶은데 어떻게 해야할 지 모르겠음
                                 pygame.time.wait(500)
-                                congrat_msg = pygame.font.Font(None, 120).render(str("CONGRATULATION"), True,
-                                                                                 (255, 255, 255))
-                                screen.blit(congrat_msg, (width * 0.275, height * 0.4))
                                 
                                 # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
                                 you_won = True
@@ -1447,13 +1427,6 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                     gamespeed += 1
                     # 남현 - 211120 속도 증가 시 체크포인트 소리
                     checkPoint_sound.play()
-
-                    # 남현 - 211113 보스 등장 시 속도증가제한 -> 삭제
-                    # if(isPkingTime == False) :
-                    #     new_ground.speed -= 1
-                    #     gamespeed += 1
-                    #     # 남현 - 211113 속도 증가 시 체크포인트 소리
-                    #     checkPoint_sound.play()
 
                 counter = (counter + 1)
 
@@ -1576,31 +1549,14 @@ def gameplay_bonus(stage, life, speed, score):
     speed_text = font.render("SPEED", True, black)
 
     cacti = pygame.sprite.Group()
-    # fire_cacti = pygame.sprite.Group()
-    # pteras = pygame.sprite.Group()
-    # stones = pygame.sprite.Group()  # add stones
     clouds = pygame.sprite.Group()
     last_obstacle = pygame.sprite.Group()
-    # shield_items = pygame.sprite.Group()
     life_items = pygame.sprite.Group()
-    
-    # 남현 - 211109 보너스 아이템 추가
-    bonus_items = pygame.sprite.Group()
-
-    # slow_items = pygame.sprite.Group()
 
     Cactus.containers = cacti
-    # fire_Cactus.containers = fire_cacti
-    # Ptera.containers = pteras
     Cloud.containers = clouds
-    # ShieldItem.containers = shield_items
     LifeItem.containers = life_items
 
-    # 남현 - 211109 보너스 아이템 추가
-    BonusItem.containers = bonus_items
-
-    # SlowItem.containers = slow_items
-    # Stone.containers = stones  # add stone containers
 
     # BUTTON IMG LOAD
     # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
@@ -1626,31 +1582,14 @@ def gameplay_bonus(stage, life, speed, score):
     space_go = False
     m_list = []
     bk = 0
-    # 익룡이 격추되었을때
-    isDown = False
-    boomCount = 0
-    #
+
 
     # 방향키 구현
     goLeft = False
     goRight = False
     #
 
-    # # 보스몬스터 변수설정
-    isPkingTime = False
-    # isPkingAlive = True
-    # pking = PteraKing()
-    # pm_list = []
-    # pm_vector = []
-    # pm_pattern0_count = 0
-    # pm_pattern1_count = 0
 
-    # 남현 - 211031 보스 등장 시기를 점수(100점)가 아닌 시간(10초)로
-    # pking_appearance_score = 100
-    # pking_appearance_time = 10
-    #
-
-    #
     jumpingx2 = False
 
     # 남현 - 211030 타이머기능 추가
@@ -1811,56 +1750,6 @@ def gameplay_bonus(stage, life, speed, score):
                         playerDino.isJumping = True
                         playerDino.movement[1] = -1 * playerDino.superJumpSpeed
 
-                # # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일.
-                # if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 20) == 0):
-                #     pm = obj()
-                #     pm.put_img("./sprites/pking bullet.png")
-                #     pm.change_size(15, 15)
-                #     pm.x = round(pking.rect.centerx)
-                #     pm.y = round(pking.rect.centery)
-                #     pm.xmove = random.randint(0, 15)
-                #     pm.ymove = random.randint(1, 3)
-                #
-                #     pm_list.append(pm)
-                # pm_pattern0_count += 1
-                # pd_list = []
-
-                # for i in range(len(pm_list)):
-                #     pm = pm_list[i]
-                #     pm.x -= pm.xmove
-                #     pm.y += pm.ymove
-                #     if pm.y > height or pm.x < 0:
-                #         pd_list.append(i)
-                # pd_list.reverse()
-                # for d in pd_list:
-                #     del pm_list[d]
-
-                #
-
-                # # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
-                # if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
-                #     # print(pm_list)
-                #     pm = obj()
-                #     pm.put_img("./sprites/pking bullet.png")
-                #     pm.change_size(15, 15)
-                #     pm.x = round(pking.rect.centerx)
-                #     pm.y = round(pking.rect.centery)
-                #     pm.move = 3
-                #     pm_list.append(pm)
-                # pm_pattern1_count += 1
-                # pd_list = []
-                #
-                # for i in range(len(pm_list)):
-                #     pm = pm_list[i]
-                #     pm.y += pm.move
-                #     if pm.y > height or pm.x < 0:
-                #         pd_list.append(i)
-                #
-                # pd_list.reverse()
-                # for d in pd_list:
-                #     del pm_list[d]
-                # #
-                #
 
                 # 남현 - 211112 cati(선인장)을 아예 안 나오게 하면 하트 아이템도 안나옴
                 # => 아예 안나오게는 못하니 life 를 깎지 않는걸로?
@@ -1881,103 +1770,6 @@ def gameplay_bonus(stage, life, speed, score):
                         # if immune_time - collision_time > collision_immune_time:
                         #     playerDino.collision_immune = False
 
-                # for f in fire_cacti:
-                #     f.movement[0] = -1 * gamespeed
-                #     if not playerDino.collision_immune:
-                #         if pygame.sprite.collide_mask(playerDino, f):
-                #             playerDino.collision_immune = True
-                #             life -= 1
-                #             collision_time = pygame.time.get_ticks()
-                #             if life == 0:
-                #                 playerDino.isDead = True
-                #             if pygame.mixer.get_init() is not None:
-                #                 die_sound.play()
-                #
-                #     elif not playerDino.isSuper:
-                #         immune_time = pygame.time.get_ticks()
-                #         if immune_time - collision_time > collision_immune_time:
-                #             playerDino.collision_immune = False
-
-                # for p in pteras:
-                #     p.movement[0] = -1 * gamespeed
-                #
-                #     # 7. 익룡이 미사일에 맞으면 익룡과 미사일 모두 사라집니다.
-                #
-                #     if (len(m_list) == 0):
-                #         pass
-                #     else:
-                #         if (m.x >= p.rect.left) and (m.x <= p.rect.right) and (m.y > p.rect.top) and (
-                #                 m.y < p.rect.bottom):
-                #             print("격추 성공")
-                #             isDown = True
-                #             boom = obj()
-                #             boom.put_img("./sprites/boom.png")
-                #             boom.change_size(200, 100)
-                #             boom.x = p.rect.centerx - round(p.rect.width) * 2.5
-                #             boom.y = p.rect.centery - round(p.rect.height) * 1.5
-                #             playerDino.score += 30
-                #             p.kill()
-                #             # 여기만 바꿈
-                #             m_list.remove(m)
-                #             #
-                    #
-
-                    # if not playerDino.collision_immune:
-                    #     if pygame.sprite.collide_mask(playerDino, p):
-                    #         playerDino.collision_immune = True
-                    #         life -= 1
-                    #         collision_time = pygame.time.get_ticks()
-                    #         if life == 0:
-                    #             playerDino.isDead = True
-                    #         if pygame.mixer.get_init() is not None:
-                    #             die_sound.play()
-                    #
-                    # elif not playerDino.isSuper:
-                    #     immune_time = pygame.time.get_ticks()
-                    #     if immune_time - collision_time > collision_immune_time:
-                    #         playerDino.collision_immune = False
-
-                # for s in stones:
-                #     s.movement[0] = -1 * gamespeed
-                #     if not playerDino.collision_immune:
-                #         if pygame.sprite.collide_mask(playerDino, s):
-                #             playerDino.collision_immune = True
-                #             life -= 1
-                #             collision_time = pygame.time.get_ticks()
-                #             if life == 0:
-                #                 playerDino.isDead = True
-                #             if pygame.mixer.get_init() is not None:
-                #                 die_sound.play()
-
-                # if not playerDino.isSuper:
-                #     for s in shield_items:
-                #         s.movement[0] = -1 * gamespeed
-                #         if pygame.sprite.collide_mask(playerDino, s):
-                #             if pygame.mixer.get_init() is not None:
-                #                 checkPoint_sound.play()
-                #             playerDino.collision_immune = True
-                #             playerDino.isSuper = True
-                #             s.kill()
-                #             item_time = pygame.time.get_ticks()
-                #         elif s.rect.right < 0:
-                #             s.kill()
-                # else:
-                #     for s in shield_items:
-                #         s.movement[0] = -1 * gamespeed
-                #         if pygame.sprite.collide_mask(playerDino, s):
-                #             if pygame.mixer.get_init() is not None:
-                #                 checkPoint_sound.play()
-                #             playerDino.collision_immune = True
-                #             playerDino.isSuper = True
-                #             s.kill()
-                #             item_time = pygame.time.get_ticks()
-                #         elif s.rect.right < 0:
-                #             s.kill()
-                #
-                #     if pygame.time.get_ticks() - item_time > shield_time:
-                #         playerDino.collision_immune = False
-                #         playerDino.isSuper = False
-                
                 # 211113 보너스 아이템이 등장하지 않으므로 기존 하트 아이템에 보너스 점수 추가
                 for l in life_items:
                     l.movement[0] = -1 * gamespeed
@@ -1990,127 +1782,16 @@ def gameplay_bonus(stage, life, speed, score):
                     elif l.rect.right < 0:
                         l.kill()
 
-                # 남현 - 211113 보너스 아이템 추가
-                for b in bonus_items:
-                    b.movement[0] = -1 * gamespeed
-                    if pygame.sprite.collide_mask(playerDino, b):
-                        if pygame.mixer.get_init() is not None:
-                            checkPoint_sound.play()
-                        playerDino.score += 10
-                        b.kill()
-                    elif b.rect.right < 0:
-                        b.kill()
 
-                # for k in slow_items:
-                #     k.movement[0] = -1 * gamespeed
-                #     if pygame.sprite.collide_mask(playerDino, k):
-                #         if pygame.mixer.get_init() is not None:
-                #             checkPoint_sound.play()
-                #         gamespeed -= 1
-                #         new_ground.speed += 1
-                #         k.kill()
-                #     elif k.rect.right < 0:
-                #         k.kill()
-
-                STONE_INTERVAL = 100
                 CACTUS_INTERVAL = 50
-                # 익룡을 더 자주 등장시키기 위해 12로 수정했습니다. (원래값은 300)
-                PTERA_INTERVAL = 12
-                #
                 
                 # 남현 - 211109 구름도 test를 위해 인터벌 변경
                 CLOUD_INTERVAL = 11
-                # SHIELD_INTERVAL = 500
-                
-                # 남현 - 211109 보너스스테이지 이므로 life_interval 11로 줄임
-                LIFE_INTERVAL = 11
-                # SLOW_INTERVAL = 1000
 
-                # 남현 - 211113 보너스 아이템 추가
-                BONUS_INTERVAL = 11
 
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
 
-                # print(pking.hp)
-
-                # # 남현 - 211031 보스 등장 조건을 플레이어점수>보스등장점수 가 아닌
-                # # 경과된시간>보스등장시간 으로 바꿈
-                # # if (isPkingAlive)and(playerDino.score>pking_appearance_score):
-                # if (isPkingAlive) and (elapsed_time > pking_appearance_time):
-                #     isPkingTime = True
-                # else:
-                #     isPkingTime = False
-                #
-                # if isPkingTime:
-                #     if len(cacti) < 2:
-                #         if len(cacti) == 0:
-                #             last_obstacle.empty()
-                #             last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
-                #     else:
-                #         for l in last_obstacle:
-                #             if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL) == MAGIC_NUM:
-                #                 last_obstacle.empty()
-                #                 last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
-                #
-                #     if len(fire_cacti) < 2:
-                #         for l in last_obstacle:
-                #             if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(
-                #                     CACTUS_INTERVAL * 5) == MAGIC_NUM:
-                #                 last_obstacle.empty()
-                #                 last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
-                #
-                #     if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
-                #         Cloud(width, random.randrange(height / 5, height / 2))
-                #
-                #     if (len(m_list) == 0):
-                #         pass
-                #     else:
-                #         if (m.x >= pking.rect.left) and (m.x <= pking.rect.right) and (m.y > pking.rect.top) and (
-                #                 m.y < pking.rect.bottom):
-                #             isDown = True
-                #             boom = obj()
-                #             boom.put_img("./sprites/boom.png")
-                #             boom.change_size(200, 100)
-                #             boom.x = pking.rect.centerx - round(pking.rect.width)
-                #             boom.y = pking.rect.centery - round(pking.rect.height / 2)
-                #             pking.hp -= 1
-                #             m_list.remove(m)
-                #
-                #             if pking.hp <= 0:
-                #                 pking.kill()
-                #                 isPkingAlive = False
-                #                 # 남현 - 211031 pking이 죽었을 때 다음스테이지로 넘어가게 함(gameplay_hard2호출) -> 없앰
-                #                 # 남현 - 211104 파라미터를 바꿔서 호출하도록 함, stage 3인 경우 끝
-                #                 # 현재 스피드와 점수를 파라미터로 넘겨줌
-                #                 print("다음 스테이지 진입")
-                #                 # 남현 - 여기 스테이지 끝나면 NEXT STAGE라는 메세지를 출력하고 싶었는데 실행 안됨
-                #
-                #                 if (stage == 2):
-                #                     # 메세지 출력하고 싶은데 잘 안됨
-                #                     next_msg = pygame.font.Font(None, 120).render(str("NEXT STAGE"), True, (0, 0, 0))
-                #                     screen.blit(next_msg, (width * 0.275, height * 0.4))
-                #                     pygame.time.wait(500)
-                #                     gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
-                #
-                #     #
-                #     if (len(pm_list) == 0):
-                #         pass
-                #     else:
-                #         # print("x: ",pm.x,"y: ",pm.y)
-                #         for pm in pm_list:
-                #             if (pm.x >= playerDino.rect.left) and (pm.x <= playerDino.rect.right) and (
-                #                     pm.y > playerDino.rect.top) and (pm.y < playerDino.rect.bottom):
-                #                 print("공격에 맞음.")
-                #                 # if pygame.sprite.collide_mask(playerDino, pm):
-                #                 playerDino.collision_immune = True
-                #                 life -= 1
-                #                 collision_time = pygame.time.get_ticks()
-                #                 if life == 0:
-                #                     playerDino.isDead = True
-                #                 pm_list.remove(pm)
-                #     #
-                # else:
 
                 # 남현 - 211112 cati(선인장)을 아예 안 나오게 하면 하트 아이템도 안나옴
 
@@ -2125,38 +1806,11 @@ def gameplay_bonus(stage, life, speed, score):
                                 last_obstacle.empty()
                                 last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
 
-                # if len(fire_cacti) < 2:
-                #     for l in last_obstacle:
-                #         if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(
-                #                 CACTUS_INTERVAL * 5) == MAGIC_NUM:
-                #             last_obstacle.empty()
-                #             last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
 
-                # if len(stones) < 2:
-                #     for l in last_obstacle:
-                #         if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
-                #             last_obstacle.empty()
-                #             last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
-                #
-                # if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
-                #     for l in last_obstacle:
-                #         if l.rect.right < OBJECT_REFRESH_LINE:
-                #             last_obstacle.empty()
-                #             last_obstacle.add(Ptera(gamespeed, ptera_size[0], ptera_size[1]))
-                #
-                
                 # 남현 - 211112 구름 등장 조건 수정
                 # if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
                 if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
                     Cloud(width, random.randrange(height / 5, height / 2))
-                #
-                #     if len(shield_items) == 0 and random.randrange(
-                #             SHIELD_INTERVAL) == MAGIC_NUM and counter > SHIELD_INTERVAL:
-                #         for l in last_obstacle:
-                #             if l.rect.right < OBJECT_REFRESH_LINE:
-                #                 last_obstacle.empty()
-                #                 last_obstacle.add(ShieldItem(gamespeed, object_size[0], object_size[1]))
-                #
 
                 # 남현 - 211109 life_items 등장조건 수정
                 # if len(life_items) == 0 and random.randrange(LIFE_INTERVAL) == MAGIC_NUM and counter > LIFE_INTERVAL * 2:
@@ -2166,45 +1820,22 @@ def gameplay_bonus(stage, life, speed, score):
                             last_obstacle.empty()
                             last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
 
-                # 남현 - 211113 보너스 아이템 추가 -> 보너스 아이템이 등장하지 않음
-                if True:
-                    for b in last_obstacle:
-                        if b.rect.right < OBJECT_REFRESH_LINE:
-                            last_obstacle.empty()
-                            last_obstacle.add(BonusItem(gamespeed, object_size[0], object_size[1]))
 
-
-                #
-                #     if len(slow_items) == 0 and random.randrange(
-                #             SLOW_INTERVAL) == MAGIC_NUM and counter > SLOW_INTERVAL:
-                #         for l in last_obstacle:
-                #             if l.rect.right < OBJECT_REFRESH_LINE:
-                #                 last_obstacle.empty()
-                #                 last_obstacle.add(SlowItem(gamespeed01, object_size[0], object_size[1]))
 
                 playerDino.update()
                 cacti.update()
-                # fire_cacti.update()
-                # stones.update()
-                # pteras.update()
+
                 clouds.update()
-                # shield_items.update()
+
                 life_items.update()
                 # 남현 - 211113 보너스 아이템 추가
-                bonus_items.update()
-
 
                 new_ground.update()
                 scb.update(playerDino.score)
                 highsc.update(high_score)
                 speed_indicator.update(gamespeed - 3)
                 heart.update(life)
-                # slow_items.update()
 
-                # 보스몬스터 타임이면,
-                # if isPkingTime:
-                #     pking.update()
-                #
 
                 if pygame.display.get_surface() != None:
 
@@ -2238,55 +1869,19 @@ def gameplay_bonus(stage, life, speed, score):
                         stage_info = pygame.font.Font(None, 100).render(str("BONUS STAGE"), True, (0, 0, 0))
                         # 출력할 글자, True, 글자 색상
                         screen.blit(stage_info, (width * 0.20, height * 0.4))
-                        # if (stage == 1):
-                        #     stage_info = pygame.font.Font(None, 120).render(str("STAGE 1"), True, (0, 0, 0))
-                        #     # 출력할 글자, True, 글자 색상
-                        #     screen.blit(stage_info, (width * 0.275, height * 0.4))
-                        # if (stage == 2):
-                        #     stage_info = pygame.font.Font(None, 120).render(str("STAGE 2"), True, (255, 255, 255))
-                        #     # 출력할 글자, True, 글자 색상
-                        #     screen.blit(stage_info, (width * 0.275, height * 0.4))
-                        # if (stage == 3):
-                        #     stage_info = pygame.font.Font(None, 120).render(str("STAGE 3"), True, (0, 0, 0))
-                        #     # 출력할 글자, True, 글자 색상
-                        #     screen.blit(stage_info, (width * 0.275, height * 0.4))
 
                     heart.draw()
                     if high_score != 0:
                         highsc.draw()
                         screen.blit(HI_image, HI_rect)
-                    # cacti.draw(screen)
-                    # fire_cacti.draw(screen)
-                    # stones.draw(screen)
-                    # pteras.draw(screen)
-                    # shield_items.draw(screen)
                     life_items.draw(screen)
-                    # slow_items.draw(screen)
 
-                    # 남현 - 211113 보너스 아이템 추가
-                    bonus_items.draw(screen)
-
-                    # pkingtime이면, 보스몬스터를 보여줘라.
-                    # if isPkingTime:
-                    #     # print(pking.pattern_idx)
-                    #     pking.draw()
-                    #     # 보스 익룡이 쏘는 미사일을 보여준다.
-                    #     for pm in pm_list:
-                    #         pm.show()
-                    #
 
                     # 5. 미사일 배열에 저장된 미사일들을 게임 스크린에 그려줍니다.
                     for m in m_list:
                         m.show()
                         # print(type(mm.x))
-                    # if isDown:
-                    #     boom.show()
-                    #     boomCount += 1
-                    #     # boomCount가 5가 될 때까지 boom이미지를 계속 보여준다.
-                    #     if boomCount > 10:
-                    #         boomCount = 0
-                    #         isDown = False
-                    #
+
 
                     playerDino.draw()
                     resized_screen.blit(
@@ -2374,9 +1969,6 @@ def gameplay_bonus(stage, life, speed, score):
 
     pygame.quit()
     quit()
-
-
-#남현 - 211031 스테이지 추가를 위한 gameplay_hard() 함수 복사 -> 삭제
 
 
 def board():
