@@ -595,7 +595,8 @@ def gameplay_easy():
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
                     new_ground.speed -= 1
-                    gamespeed += 1
+                    if gamespeed < 13:
+                        gamespeed += 1
 
                 counter = (counter + 1)
 
@@ -1295,7 +1296,8 @@ def gameplay_hard():
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
                     new_ground.speed -= 1
-                    gamespeed += 1
+                    if gamespeed < 13:
+                        gamespeed += 1
 
                 counter = (counter + 1)
 
