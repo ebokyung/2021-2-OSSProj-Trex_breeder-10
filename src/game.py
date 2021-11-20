@@ -596,7 +596,8 @@ def gameplay_easy():
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
                     new_ground.speed -= 1
-                    gamespeed += 1
+                    if gamespeed < 13:
+                        gamespeed += 1
 
                 counter = (counter + 1)
 
@@ -1194,10 +1195,10 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                             boom.change_size(200,100)
                             boom.x=pking.rect.centerx-round(pking.rect.width)
                             boom.y=pking.rect.centery-round(pking.rect.height/2)
-                            pking.hp -= 1
+                            pking.get_damage(1)
                             m_list.remove(m)
 
-                            if pking.hp <= 0:
+                            if pking.current_health == 0:
                                 pking.kill()
                                 isPkingAlive=False
                                 isBossKilled = True
@@ -1362,6 +1363,8 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                     if isPkingTime:
                         # print(pking.pattern_idx)
                         pking.draw()
+                        pking.bos_health()
+
                         # 보스 익룡이 쏘는 미사일을 보여준다.
                         for pm in pm_list:
                             pm.show()
@@ -1906,7 +1909,8 @@ def gameplay_bonus(stage, life, speed, score):
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
                     new_ground.speed -= 1
-                    gamespeed += 1
+                    if gamespeed < 13:
+                        gamespeed += 1
 
                 counter = (counter + 1)
 

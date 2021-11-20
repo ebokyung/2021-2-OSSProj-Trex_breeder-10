@@ -41,7 +41,7 @@ class fire_Cactus(pygame.sprite.Sprite):
 # pteraking 클래스
 class PteraKing(pygame.sprite.Sprite):
     
-    def __init__(self, speed=0, sizex=-1, sizey=-1):
+    def __init__(self, speed=0, sizex=-1, sizey=-1, health=5):
         pygame.sprite.Sprite.__init__(self)
         self.images, self.rect = load_sprite_sheet('pteraking.png', 2, 1, sizex, sizey, -1)
         # self.ptera_height = [height*0.82, height*0.75, height*0.60]
@@ -86,10 +86,25 @@ class PteraKing(pygame.sprite.Sprite):
 
         self.goup=False
         self.topmost=height*0.3
-        # 
-        
-        # 남현 - 211031 보스 체력 15에서 3으로 바꿈
-        self.hp = 3
+
+
+        # 보스 체력바 가시화
+        self.current_health = health
+        self.maximum_health = health
+        self.health_bar_length = 80
+        self.health_ratio = self.maximum_health / self.health_bar_length
+    
+    def get_damage(self, amount):
+        if self.current_health > 0:
+            self.current_health -= amount
+        if self.current_health <= 0:
+            self.current_health =0
+
+    def bos_health(self):
+        #pygame.draw.rect(self.image, color, [position_x,position_y, width, height], border)
+        pygame.draw.rect(screen, bright_red, (self.rect[0],self.rect[1],self.current_health/self.health_ratio,10)) 
+        pygame.draw.rect(screen, white, (self.rect[0],self.rect[1],self.health_bar_length,10),2)
+
 
     def draw(self):
         screen.blit(self.image, self.rect)
@@ -176,6 +191,7 @@ class PteraKing(pygame.sprite.Sprite):
                 self.pattern_idx = 0
 
     def update(self):
+        self.bos_health()
 
         self.counter=self.counter+1
      
