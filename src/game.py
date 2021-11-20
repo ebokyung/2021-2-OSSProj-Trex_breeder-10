@@ -305,7 +305,14 @@ def gameplay_easy():
         high_score = result['score']
     #    if bgm_on:
     #       pygame.mixer.music.play(-1) # 배경음악 실행
+    #보경 - 작은익룡 맞으면 감속
+    global gamespeed 
     gamespeed = 4
+    def gamespeed_down():
+        global gamespeed
+        if gamespeed > 4:
+            gamespeed -= 1
+
     startMenu = False
     gameOver = False
     gameQuit = False
@@ -427,7 +434,7 @@ def gameplay_easy():
                             playerDino.collision_immune = True
                             life -= 1
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -439,7 +446,7 @@ def gameplay_easy():
                             playerDino.collision_immune = True
                             life -= 1
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -456,7 +463,7 @@ def gameplay_easy():
                             playerDino.collision_immune = True
                             life -= 1
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -472,8 +479,9 @@ def gameplay_easy():
                         if pygame.sprite.collide_mask(playerDino, p):
                             playerDino.collision_immune = True
                             life -= 1
+                            gamespeed_down()
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -679,7 +687,13 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     #     pygame.mixer.music.play(-1)  # 배경음악 실행
 
     #남현 - 211104 이전 스테이지에서 게임 스피드 변수 받기
-    gamespeed = speed   #원래 기본값 : 4
+    #보경 - 작은익룡이랑 보스 총알 맞으면 감속
+    global gamespeed 
+    gamespeed = speed
+    def gamespeed_down():
+        global gamespeed
+        if gamespeed > 4:
+            gamespeed -= 1
 
     startMenu = False
     gameOver = False
@@ -801,7 +815,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     # 시작 시간 정보
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     # total time
-    total_time = 30
+    total_time = 100
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -1014,7 +1028,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                             playerDino.collision_immune = True
                             life -= 1
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -1031,7 +1045,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                             playerDino.collision_immune = True
                             life -= 1
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -1059,17 +1073,17 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                             boom.y=p.rect.centery-round(p.rect.height)*1.5
                             playerDino.score+=30
                             p.kill()
-                            # 여기만 바꿈
                             m_list.remove(m)
-                            #
+
                     #
 
                     if not playerDino.collision_immune:
                         if pygame.sprite.collide_mask(playerDino, p):
                             playerDino.collision_immune = True
                             life -= 1
+                            gamespeed_down()
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -1086,7 +1100,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                             playerDino.collision_immune = True
                             life -= 1
                             collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
@@ -1219,12 +1233,13 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                                 print("공격에 맞음.")
                                 # if pygame.sprite.collide_mask(playerDino, pm):
                                 playerDino.collision_immune = True
-                                life -= 1
+                                life -= 2
+                                gamespeed_down()
                                 
                                 # 남현 - 211113 보스의 총알에 맞으면 사운드 추가
                                 die_sound.play()
                                 collision_time = pygame.time.get_ticks()
-                                if life == 0:
+                                if life <= 0:
                                     playerDino.isDead = True
                                 pm_list.remove(pm)
                     #
@@ -1599,7 +1614,7 @@ def gameplay_bonus(stage, life, speed, score):
     # 시작 시간 정보
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     # total time
-    total_time = 30
+    total_time = 100
     elapsed_time = 0  # elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -1763,7 +1778,7 @@ def gameplay_bonus(stage, life, speed, score):
                             # playerDino.collision_immune = True
                             # life -= 1
                             # collision_time = pygame.time.get_ticks()
-                            if life == 0:
+                            if life <= 0:
                                 playerDino.isDead = True
                             # if pygame.mixer.get_init() is not None:
                             #     die_sound.play()
