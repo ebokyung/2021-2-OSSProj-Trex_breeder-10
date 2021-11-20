@@ -87,7 +87,9 @@ class PteraKing(pygame.sprite.Sprite):
         self.goup=False
         self.topmost=height*0.3
         # 
-        self.hp = 15
+        
+        # 남현 - 211031 보스 체력 15에서 3으로 바꿈
+        self.hp = 3
 
     def draw(self):
         screen.blit(self.image, self.rect)
