@@ -87,6 +87,7 @@ class PteraKing(pygame.sprite.Sprite):
         self.goup=False
         self.topmost=height*0.3
 
+
         # 보스 체력바 가시화
         self.current_health = health
         self.maximum_health = health
