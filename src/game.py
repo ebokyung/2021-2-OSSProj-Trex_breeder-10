@@ -1105,7 +1105,6 @@ def gameplay_hard():
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
 
-                # print(pking.hp)
                 if (isPkingAlive)and(playerDino.score>pking_appearance_score):
                     isPkingTime=True
                 else:
@@ -1141,10 +1140,10 @@ def gameplay_hard():
                             boom.change_size(200,100)
                             boom.x=pking.rect.centerx-round(pking.rect.width)
                             boom.y=pking.rect.centery-round(pking.rect.height/2)
-                            pking.hp -= 1
+                            pking.get_damage(1)
                             m_list.remove(m)
 
-                            if pking.hp <= 0:
+                            if pking.current_health == 0:
                                 pking.kill()
                                 isPkingAlive=False
 
@@ -1261,6 +1260,8 @@ def gameplay_hard():
                     if isPkingTime:
                         # print(pking.pattern_idx)
                         pking.draw()
+                        pking.bos_health()
+
                         # 보스 익룡이 쏘는 미사일을 보여준다.
                         for pm in pm_list:
                             pm.show()
