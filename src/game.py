@@ -269,8 +269,7 @@ def selectMode():
 
                     if r_btn_hardmode_rect.collidepoint(x, y):
                         #남현 - 211104 중간함수 실행 -> 삭제
-                        # gameplay_hard()
-                        gameplay_hard(3)
+                        gameplay_hard()
                         # gameplay_bonus(1, 5, 4, 0)
 
             if event.type == pygame.VIDEORESIZE:
