@@ -64,9 +64,9 @@ class Heart:
 
 class HeartIndicator:
 
-    def __init__(self, life):
+    def __init__(self, max_life, life):
         self.heart_size = [20,30]
-        self.max_life = life
+        self.max_life = max_life
         self.current_life = life
         self.life_set = []
 

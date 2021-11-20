@@ -269,7 +269,7 @@ def selectMode():
 
                     if r_btn_hardmode_rect.collidepoint(x, y):
                         #남현 - 211104 중간함수 실행 -> 삭제
-                        gameplay_hard()
+                        gameplay_hard(2)
                         # gameplay_bonus(1, 5, 4, 0)
 
             if event.type == pygame.VIDEORESIZE:
@@ -317,7 +317,8 @@ def gameplay_easy():
     gameOver = False
     gameQuit = False
     ###
-    life = 5
+    life = 10
+    max_life = 10
     ###
     paused = False
 
@@ -326,7 +327,7 @@ def gameplay_easy():
     new_ground = Ground(-1 * gamespeed)
     scb = Scoreboard()
     highsc = Scoreboard(width * 0.78)
-    heart = HeartIndicator(life)
+    heart = HeartIndicator(max_life, life)
     speed_indicator = Scoreboard(width * 0.12, height * 0.15)
     counter = 0
 
@@ -670,7 +671,7 @@ def gameplay_easy():
     quit()
 
 #남현 - 211104 gameplay_hard에 스테이지 추가를 위한 파라미터 도입
-def gameplay_hard(stage=1, life=5, speed=4, score=0):
+def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
 
     global resized_screen
     global high_score
@@ -680,7 +681,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
 
 
     #남현 - 211104 스테이지 변수 추가
-    stage = stage
+    stage = cur_stage
 
     # HERE: REMOVE SOUND!!    
     # if bgm_on:
@@ -689,7 +690,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     #남현 - 211104 이전 스테이지에서 게임 스피드 변수 받기
     #보경 - 작은익룡이랑 보스 총알 맞으면 감속
     global gamespeed 
-    gamespeed = speed
+    gamespeed = cur_speed
     def gamespeed_down():
         global gamespeed
         if gamespeed > 4:
@@ -698,14 +699,12 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     startMenu = False
     gameOver = False
     gameQuit = False
-    ###
 
-    #
-
+    #보경 - max life 고정
+    max_life = 15
     # 남현 - 211104 이전 스테이지에서 게임 life 변수 받기
-    life = life
+    life = cur_life    
 
-    ###
     paused = False
 
 
@@ -715,12 +714,12 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     # 
     
     # 남현 - 211104 전 스테이지의 스코어 유지
-    playerDino.score = score;
+    playerDino.score = cur_score;
 
     new_ground = Ground(-1 * gamespeed)
     scb = Scoreboard()
     highsc = Scoreboard(width * 0.78)
-    heart = HeartIndicator(life)
+    heart = HeartIndicator(max_life, life)
     speed_indicator = Scoreboard(width * 0.12, height * 0.15)
     counter = 0
 
@@ -815,7 +814,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
     # 시작 시간 정보
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     # total time
-    total_time = 100
+    total_time = 30
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -1139,7 +1138,8 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                     if pygame.sprite.collide_mask(playerDino, l):
                         if pygame.mixer.get_init() is not None:
                             checkPoint_sound.play()
-                        life += 1
+                        if life < max_life:
+                            life += 1
                         l.kill()
                     elif l.rect.right < 0:
                         l.kill()
@@ -1442,7 +1442,8 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
 
                     new_ground.speed -= 1
-                    gamespeed += 1
+                    if gamespeed < 13:
+                        gamespeed += 1
                     # 남현 - 211120 속도 증가 시 체크포인트 소리
                     checkPoint_sound.play()
 
@@ -1519,7 +1520,7 @@ def gameplay_hard(stage=1, life=5, speed=4, score=0):
 
 
 #남현 - 211109 보너스 스테이지 구현
-def gameplay_bonus(stage, life, speed, score):
+def gameplay_bonus(cur_stage, cur_life, cur_speed, cur_score):
     global resized_screen
     global high_score
     result = db.query_db("select score from user order by score desc;", one=True)
@@ -1527,14 +1528,14 @@ def gameplay_bonus(stage, life, speed, score):
         high_score = result['score']
 
     # 남현 - 211104 스테이지 변수 추가
-    stage = stage
+    stage = cur_stage
 
     # HERE: REMOVE SOUND!!
     # if bgm_on:
     #     pygame.mixer.music.play(-1)  # 배경음악 실행
 
     # 남현 - 211104 이전 스테이지에서 게임 스피드 변수 받기
-    gamespeed = speed  # 원래 기본값 : 4
+    gamespeed = cur_speed  # 원래 기본값 : 4
 
     startMenu = False
     gameOver = False
@@ -1544,7 +1545,8 @@ def gameplay_bonus(stage, life, speed, score):
     #
 
     # 남현 - 211104 이전 스테이지에서 게임 life 변수 받기
-    life = life
+    life = cur_life
+    max_life = 15
 
     ###
     paused = False
@@ -1554,12 +1556,12 @@ def gameplay_bonus(stage, life, speed, score):
     #
 
     # 남현 - 211104 전 스테이지의 스코어 유지
-    playerDino.score = score;
+    playerDino.score = cur_score;
 
     new_ground = Ground(-1 * gamespeed)
     scb = Scoreboard()
     highsc = Scoreboard(width * 0.78)
-    heart = HeartIndicator(life)
+    heart = HeartIndicator(max_life, life)
     speed_indicator = Scoreboard(width * 0.12, height * 0.15)
     counter = 0
 
@@ -1794,7 +1796,8 @@ def gameplay_bonus(stage, life, speed, score):
                     if pygame.sprite.collide_mask(playerDino, l):
                         if pygame.mixer.get_init() is not None:
                             checkPoint_sound.play()
-                        life += 1
+                        if life < max_life: # 보경
+                            life += 1
                         playerDino.score += 10
                         l.kill()
                     elif l.rect.right < 0:
