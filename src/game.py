@@ -306,7 +306,7 @@ def gameplay_easy():
     #    if bgm_on:
     #       pygame.mixer.music.play(-1) # 배경음악 실행
     #보경 - 작은익룡 맞으면 감속
-    global gamespeed 
+    #게임을 실행하면 실제 움직이는 initial gamespeed는 4(4~13)이고, 사용자에게는 가장 낮은 speed인 1(1~10)로 인식하는 값임
     gamespeed = 4
     def gamespeed_down():
         global gamespeed
@@ -689,6 +689,7 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
 
     #남현 - 211104 이전 스테이지에서 게임 스피드 변수 받기
     #보경 - 작은익룡이랑 보스 총알 맞으면 감속
+    #게임을 실행하면 실제 움직이는 initial gamespeed는 4(4~13)이고, 사용자에게는 가장 낮은 speed인 1(1~10)로 인식하는 값임
     global gamespeed 
     gamespeed = cur_speed
     def gamespeed_down():
