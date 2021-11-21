@@ -268,8 +268,8 @@ def selectMode():
                         gameplay_easy()
 
                     if r_btn_hardmode_rect.collidepoint(x, y):
-                        #남현 - 211104 중간함수 실행 -> 삭제
-                        gameplay_hard(2)
+                        #남현 - 211104 게임시작부분
+                        gameplay_hard()
                         # gameplay_bonus(1, 5, 4, 0)
 
             if event.type == pygame.VIDEORESIZE:
@@ -1307,9 +1307,12 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                 life_items.update()
 
                 new_ground.update()
-                scb.update(playerDino.score)
-                highsc.update(high_score)
-                speed_indicator.update(gamespeed - 3)
+
+                # 남현 - 211121 현재 stage를 파라미터로 넘김
+                scb.update(playerDino.score, stage)
+                highsc.update(high_score, stage)
+                speed_indicator.update(gamespeed - 3, stage)
+
                 heart.update(life)
                 slow_items.update()
 
@@ -1499,7 +1502,9 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)
 
-            highsc.update(high_score)
+            # 남현 - 211121 현재 stage를 파라미터로 넘김
+            highsc.update(high_score, stage)
+
             if pygame.display.get_surface() != None:
                 # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 축하메시지
                 # 아니면 그냥 GameOver
