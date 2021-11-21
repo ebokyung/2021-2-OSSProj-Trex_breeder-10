@@ -2,7 +2,7 @@ from src.setting import *
 
 
 class Dino():
-    def __init__(self, sizex=-1, sizey=-1,type = None):
+    def __init__(self, sizex=-1, sizey=-1,type = None, player_num = 0):
         
         # 디노의 타입을 결정합니다. 
         self.type = type
@@ -37,9 +37,13 @@ class Dino():
             self.images, self.rect = load_sprite_sheet('dino.png', 6, 1, sizex, sizey, -1)
             self.images1, self.rect1 = load_sprite_sheet('dino_ducking.png', 2, 1, 59, sizey, -1)
         # 
+        if player_num == 0:
+            self.rect.bottom = int(0.98 * height)
+            self.rect.left = width / 15
+        else:
+            self.rect.bottom = int(0.98 * height)
+            self.rect.left = width / 17
 
-        self.rect.bottom = int(0.98*height)
-        self.rect.left = width/15
         self.image = self.images[0]
         self.index = 0
         self.counter = 0

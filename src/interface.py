@@ -46,15 +46,15 @@ class Cloud(pygame.sprite.Sprite):
 class Heart:
 
     def __init__(self, sizex=-1, sizey=-1, x=-1, y=-1):
-        self.images, self.rect = load_sprite_sheet("hpbar.png", 2, 1, sizex, sizey, -1)
-        self.image = self.images[1]
+        self.image, self.rect = load_image("hpbar.png", sizex, sizey)
+        
         if x == -1:
             self.rect.left = width * 0.01
         else:
             self.rect.left = x
 
         if y == -1:
-            self.rect.top = height * 0.01
+            self.rect.top = height * 0.04
         else:
             self.rect.top = y
 
@@ -64,19 +64,32 @@ class Heart:
 
 class HeartIndicator:
 
-    def __init__(self, life):
-        # self.heart_size = 40
-        self.life = life
-        self.life_set = []
+    def __init__(self, max_life, life, player_num = 0):
+        self.player_num = 0 
+        if player_num == 0:
+            self.heart_size = [20,30]
+            self.max_life = max_life
+            self.current_life = life
+            self.life_set = []
+        else:
+            self.player_num = 1
+            self.heart_size = [20,30]
+            self.max_life = max_life
+            self.current_life = life
+            self.life_set = []
 
     def draw(self):
+        if self.player_num == 0:
+            pygame.draw.rect(screen, black, (width * 0.01, height * 0.04, self.heart_size[0]*self.max_life, self.heart_size[1]), 3)
+        else:
+            pygame.draw.rect(screen, black, (width * 0.01, height * 0.04 * 2, self.heart_size[0]*self.max_life, self.heart_size[1]), 3)
         for life in self.life_set:
             life.draw()
 
+    #아마도 수정필요?
     def update(self, life):
-        self.life = life
-        # self.life_set = [Heart(self.heart_size, self.heart_size, width * 0.01 + i * self.heart_size) for i in range(self.life)]
-        self.life_set = [Heart(object_size[0], object_size[1], width * 0.01 + i * (object_size[0]-i)) for i in range(self.life)]
+        self.current_life = life
+        self.life_set = [Heart(self.heart_size[0], self.heart_size[1], width * 0.01 + i * self.heart_size[0]) for i in range(self.current_life)]
 
 
 class Scoreboard:
@@ -98,9 +111,16 @@ class Scoreboard:
     def draw(self):
         screen.blit(self.image, self.rect)
 
-    def update(self,score):
+    # 남현 - 211121 현재 stage를 파라미터로 받아옴
+    def update(self,score, stage = 1):
         score_digits = extractDigits(score)
-        self.image.fill(background_col)
+        if(stage == 1):
+            self.image.fill(background_col)
+        elif(stage == 2):
+            self.image.fill(background_col2)
+        elif(stage == 3):
+            self.image.fill(background_col3)
+
         for s in score_digits:
             self.image.blit(self.tempimages[s], self.temprect)
             self.temprect.left += self.temprect.width
