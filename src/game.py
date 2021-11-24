@@ -172,6 +172,7 @@ def option():
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     x, y = event.pos
                     if r_btn_home_rect.collidepoint(x, y):
+                        done = True
                         introscreen()
 
                     if r_btn_bgm_on_rect.collidepoint(x, y) and bgm_on:
@@ -2152,6 +2153,7 @@ def pausing():
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         x, y = event.pos
                         if resized_retbutton_rect.collidepoint(x, y):
+                            gameQuit = True
                             introscreen()
 
                         if resized_resume_rect.collidepoint(x, y):
