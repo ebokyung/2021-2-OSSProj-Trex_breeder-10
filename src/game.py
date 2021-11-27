@@ -848,7 +848,7 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
     # 시작 시간 정보
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     # total time
-    total_time = 30
+    total_time = 40
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -1009,28 +1009,33 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                         playerDino.movement[1] = -1 * playerDino.superJumpSpeed
 
                 # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일(pm)
-                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 10) == 0):
+                # 패턴0일때 미사일 쏘는 주기
+                if (stage == 1):
+                    cycle0 = 20
+                else:
+                    cycle0 = 15
+
+                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % cycle0) == 0):
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
+                    pm.xmove = random.randint(0,15)     #총알 움직이는 방향 및 속도 
                     if (stage == 1):
-                        pm.xmove = random.randint(0,15) #총알 움직이는 방향 및 속도 
                         pm.ymove = random.randint(1,3)
-                    elif (stage == 2):
-                        pm.xmove = random.randint(0,20) 
-                        pm.ymove = random.randint(1,7)
+                    else:
+                        pm.ymove = random.randint(1,5)  # stage 2,3에서는 총알이 더 빨리 떨어짐
 
                     pm_list.append(pm)
                 pm_pattern0_count += 1
-                pd_list = []        #보스 익룡 미사일 중에 이상한거는 삭제할려고
+                pd_list = []        
 
                 for i in range(len(pm_list)):
                     pm = pm_list[i]
                     pm.x -= pm.xmove
                     pm.y += pm.ymove
-                    if pm.y > height or pm.x < 0:   #화면보다 높거나 0보다 작은 애들은 저장해둠????????
+                    if pm.y > height or pm.x < 0:   
                         pd_list.append(i)
                 pd_list.reverse()
                 for d in pd_list:
@@ -1040,17 +1045,27 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                 #
 
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
-                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 10) == 0):
+                # 패턴1일때 미사일 쏘는 주기
+                if (stage == 1 or stage == 3):  #stage 3에서는 보스가 움직이면서 총알 방향도 랜덤으로 쏘기 때문에 주기를 낮춤
+                    cycle1 = 20
+                else:
+                    cycle1 = 15
+                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % cycle1) == 0):
                     # print(pm_list)
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    if (stage == 2):
-                        pm.move = 5
-                    elif (stage == 1) or (stage == 3):
-                        pm.move =7
+                    if (stage == 1):
+                        pm.xmove = 0    #아래로 뚝 떨어짐
+                        pm.ymove = 5
+                    elif (stage ==2):
+                        pm.xmove = 0
+                        pm.ymove = 7    
+                    elif (stage ==3):
+                        pm.xmove = random.randint(0,7) #랜덤 발사
+                        pm.ymove = random.randint(1,5)
                     
                     pm_list.append(pm)
                 pm_pattern1_count += 1
@@ -1058,7 +1073,8 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
 
                 for i in range(len(pm_list)):
                     pm=pm_list[i]
-                    pm.y +=pm.move
+                    pm.x -= pm.xmove
+                    pm.y += pm.move
                     if pm.y>height or pm.x < 0:
                         pd_list.append(i)
 
@@ -1669,7 +1685,7 @@ def gameplay_bonus(cur_stage, cur_life, cur_speed, cur_score):
     # 시작 시간 정보
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     # total time
-    total_time = 100
+    total_time = 20
     elapsed_time = 0  # elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:

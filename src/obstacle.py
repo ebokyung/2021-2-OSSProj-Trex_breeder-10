@@ -41,7 +41,7 @@ class fire_Cactus(pygame.sprite.Sprite):
 # pteraking 클래스
 class PteraKing(pygame.sprite.Sprite):
     
-    def __init__(self, speed=0, sizex=-1, sizey=-1, health=1):
+    def __init__(self, speed=0, sizex=-1, sizey=-1, health=2):
         pygame.sprite.Sprite.__init__(self)
         self.images, self.rect = load_sprite_sheet('pteraking.png', 2, 1, sizex, sizey, -1)
         # self.ptera_height = [height*0.82, height*0.75, height*0.60]
