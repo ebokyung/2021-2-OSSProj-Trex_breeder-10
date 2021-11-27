@@ -781,7 +781,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                                 if p2_life <= 0:
                                     player2.isDead = True
 
-                            pm_list.remove(pm)
+                                pm_list.remove(pm)
                 else:
                     if len(cacti) < 2:
                         if len(cacti) == 0:
