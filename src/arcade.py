@@ -184,7 +184,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             p1_space_go = True
                             p1_bk = 0
 
-                        if event.key == pygame.K_LSHIFT:
+                        if event.key == pygame.K_RSHIFT:
                             p1_jumpingx2=True
 
                         #p2
@@ -246,6 +246,12 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
 
                         if event.key == pygame.K_d:
                             p2_goRight=False
+                        
+                        if event.key == pygame.K_LSHIFT:
+                            p2_jumpingx2 = False
+                        if event.key == pygame.K_RSHIFT:
+                            p1_jumpingx2 = False
+
 
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)
@@ -392,9 +398,9 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                     del pm_list[d]
 
                 if p2_jumpingx2:
-                    if player1.rect.bottom == int(height * 0.98):
-                        player1.isJumping = True
-                        player1.movement[1] = -1 * player1.superJumpSpeed
+                    if player2.rect.bottom == int(height * 0.98):
+                        player2.isJumping = True
+                        player2.movement[1] = -1 * player2.superJumpSpeed
 
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
                 if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
@@ -512,14 +518,16 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         pass
                     else:
                         #p1
-                        ptera_hit = False
-                        if (p1_m.x>=p.rect.left)and(p1_m.x<=p.rect.right)and(p1_m.y>p.rect.top)and(p1_m.y<p.rect.bottom):
-                            ptera_hit = True
-                            p1_m_list.remove(p1_m)
+                        if len(p1_m_list)!= 0:
+                            ptera_hit = False
+                            if (p1_m.x>=p.rect.left)and(p1_m.x<=p.rect.right)and(p1_m.y>p.rect.top)and(p1_m.y<p.rect.bottom):
+                                ptera_hit = True
+                                p1_m_list.remove(p1_m)
                         #p2
-                        if (p2_m.x>=p.rect.left)and(p2_m.x<=p.rect.right)and(p2_m.y>p.rect.top)and(p2_m.y<p.rect.bottom):
-                            ptera_hit = True
-                            p2_m_list.remove(p2_m)
+                        if len(p2_m_list)!= 0:
+                            if (p2_m.x>=p.rect.left)and(p2_m.x<=p.rect.right)and(p2_m.y>p.rect.top)and(p2_m.y<p.rect.bottom):
+                                ptera_hit = True
+                                p2_m_list.remove(p2_m)
 
 
                         if ptera_hit == True:
@@ -634,13 +642,14 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         pass
                     else:
                         Ptera_king_hit = False
-                        if (p1_m.x>=pking.rect.left)and(p1_m.x<=pking.rect.right)and(p1_m.y>pking.rect.top)and(p1_m.y<pking.rect.bottom):
-                            p1_m_list.remove(p1_mm)
-                            Ptera_king_hit = True
-                        
-                        if (p2_m.x>=pking.rect.left)and(p2_m.x<=pking.rect.right)and(p2_m.y>pking.rect.top)and(p2_m.y<pking.rect.bottom):
-                            p2_m_list.remove(p2_mm)
-                            Ptera_king_hit = True
+                        if len(p1_m_list) != 0:
+                            if (p1_m.x>=pking.rect.left)and(p1_m.x<=pking.rect.right)and(p1_m.y>pking.rect.top)and(p1_m.y<pking.rect.bottom):
+                                p1_m_list.remove(p1_mm)
+                                Ptera_king_hit = True
+                        if len(p2_m_list)!=0:
+                            if (p2_m.x>=pking.rect.left)and(p2_m.x<=pking.rect.right)and(p2_m.y>pking.rect.top)and(p2_m.y<pking.rect.bottom):
+                                p2_m_list.remove(p2_mm)
+                                Ptera_king_hit = True
 
                         if Ptera_king_hit == True:
                             isDown=True
@@ -655,6 +664,8 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                                 pking.kill()
                                 isPkingAlive=False
                                 isBossKilled = True
+                        else:
+                            pass
 
 
                     #
@@ -673,7 +684,6 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                                 p1_collision_time = pygame.time.get_ticks()
                                 if p1_life <= 0:
                                     player1.isDead = True
-                                pm_list.remove(pm)
                             #p2
                             if (pm.x>=player2.rect.left)and(pm.x<=player2.rect.right)and(pm.y>player2.rect.top)and(pm.y<player2.rect.bottom):
                                 print("공격에 맞음.")
@@ -685,7 +695,8 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                                 p2_collision_time = pygame.time.get_ticks()
                                 if p2_life <= 0:
                                     player2.isDead = True
-                                pm_list.remove(pm)
+
+                            pm_list.remove(pm)
                 else:
                     if len(cacti) < 2:
                         if len(cacti) == 0:
