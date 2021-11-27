@@ -236,7 +236,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             p1_goRight=False
                         
                         #p2
-                        if event.key == pygame.K_w:
+                        if event.key == pygame.K_s:
                             player2.isDucking = False
 
                         # 키에서 손을 떼면, 미사일이 발사 되지 않습니다.
