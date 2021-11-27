@@ -81,6 +81,23 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
     you_won = False
 
+    # temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
+    # HI_image = pygame.Surface((30, int(15 * 6 / 5)))
+    # HI_rect = HI_image.get_rect()
+    
+    
+    # #남현 - 211104 스테이지에 맞게 배경색 설정
+    # HI_image.fill(background_col)
+    # if (stage == 2):
+    #     HI_image.fill(background_col2)
+    # if (stage == 3):
+    #     HI_image.fill(background_col3)
+    # HI_image.blit(temp_images[10], temp_rect)
+    # temp_rect.left += temp_rect.width
+    # HI_image.blit(temp_images[11], temp_rect)
+    # HI_rect.top = height * 0.05
+    # HI_rect.left = width * 0.73
+
     isBossKilled = False
 
 
@@ -105,6 +122,9 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     p2_goLeft=False
     p2_goRight=False
     #
+
+    p1_jumpingx2 = False
+    p2_jumpingx2 = False
 
     # 보스몬스터 변수설정
     isPkingTime=False
@@ -164,6 +184,9 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             p1_space_go = True
                             p1_bk = 0
 
+                        if event.key == pygame.K_LSHIFT:
+                            p1_jumpingx2=True
+
                         #p2
                         if event.key == pygame.K_w:
                             # 스페이스 누르는 시점에 공룡이 땅에 닿아있으면 점프한다.
@@ -186,6 +209,9 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             p2_space_go = True
                             p2_bk = 0
       
+                        if event.key == pygame.K_LSHIFT:
+                            p2_jumpingx2=True
+
                         if event.key == pygame.K_ESCAPE:
                             paused = not paused
                             paused = pausing()
@@ -283,9 +309,15 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         p1_d_list.append(i)
 
                 p1_d_list.reverse()
-                # for d in p1_d_list:
-                #     del p1_m_list[d]
+                for d in p1_d_list:
+                     del p1_m_list[d]
                 
+                if p1_jumpingx2:
+                    if player1.rect.bottom == int(height * 0.98):
+                        player1.isJumping = True
+                        player1.movement[1] = -1 * player1.superJumpSpeed
+
+
                 #p2
                 if (p2_space_go==True) and (int(p2_bk%15)==0):
                     # print(bk)
@@ -359,6 +391,11 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                 for d in pd_list:
                     del pm_list[d]
 
+                if p2_jumpingx2:
+                    if player1.rect.bottom == int(height * 0.98):
+                        player1.isJumping = True
+                        player1.movement[1] = -1 * player1.superJumpSpeed
+
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
                 if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
                     pm=obj()
@@ -412,6 +449,27 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         p2_immune_time = pygame.time.get_ticks()
                         if p2_immune_time - p2_collision_time > collision_immune_time:
                             player2.collision_immune = False
+
+                for l in life_items:
+                    l.movement[0] = -1 * gamespeed
+                    if pygame.sprite.collide_mask(player1, l):
+                        if pygame.mixer.get_init() is not None:
+                            checkPoint_sound.play()
+                        if p1_life < max_life: # 보경
+                            p1_life += 1
+                        player1.score += 10
+                        l.kill()
+                    elif l.rect.right < 0:
+                        l.kill()
+                    if pygame.sprite.collide_mask(player2, l):
+                        if pygame.mixer.get_init() is not None:
+                            checkPoint_sound.play()
+                        if p2_life < max_life: # 보경
+                            p2_life += 1
+                        player2.score += 10
+                        l.kill()
+                    elif l.rect.right < 0:
+                        l.kill()
 
                 for f in fire_cacti:
                     f.movement[0] = -1 * gamespeed
