@@ -20,21 +20,25 @@ def introscreen():
     type_idx = 0
     click_count = 0
     #
-    temp_dino = Dino(dino_size[0], dino_size[1])
+    temp_dino = Dino(temp_dino_size[0], temp_dino_size[1])
     temp_dino.isBlinking = True
     gameStart = False
 
     ###이미지 로드###
     # 배경 이미지
-    Background, Background_rect = load_image('intro_bg.png', width, height, -1)
+    Background, Background_rect = load_image('intro_bg.png', width, height, None)
     # 버튼 이미지
-    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 150, 50, -1))
-    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 150, 50, -1)
-    r_btn_board, r_btn_board_rect =     load_image(*resize('btn_board.png', 150, 50, -1))
-    btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
-    r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
-    btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
+    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 130, 45, -1))
+    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 130, 45, -1)
+    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 130, 45, -1))
+    btn_board, btn_board_rect = load_image('btn_board.png',130, 45, -1)
+    r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png',130, 45, -1))
+    btn_option, btn_option_rect = load_image('btn_option.png',130, 45, -1)
     # DINO IMAGE
+    
+    btn_gamestart_rect.center = (width * 0.8, height * 0.55)
+    btn_board_rect.center = (width * 0.8, height * 0.7)
+    btn_option_rect.center = (width * 0.8, height * 0.85)
 
 
     while not gameStart:
@@ -45,12 +49,12 @@ def introscreen():
             for event in pygame.event.get():
                 # 이두용이 작성1 시작:
                 if event.type == pygame.VIDEORESIZE and not full_screen:
-                    r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 150, 50, -1))
-                    btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 150, 50, -1)
-                    r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 150, 50, -1))
-                    btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
-                    r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
-                    btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
+                    # r_btn_gamestart, r_btn_gamestart_rect = load_image(*resize('btn_start.png', 150, 50, -1))
+                    # btn_gamestart, btn_gamestart_rect = load_image('btn_start.png', 150, 50, -1)
+                    # r_btn_board, r_btn_board_rect = load_image(*resize('btn_board.png', 150, 50, -1))
+                    # btn_board, btn_board_rect = load_image('btn_board.png', 150, 50, -1)
+                    # r_btn_option, r_btn_option_rect = load_image(*resize('btn_option.png', 150, 50, -1))
+                    # btn_option, btn_option_rect = load_image('btn_option.png', 150, 50, -1)
 
                     ###IMGPOS###
                     #BACKGROUND IMG POS
@@ -72,16 +76,18 @@ def introscreen():
 
                         #board button
                         if r_btn_board_rect.collidepoint(x, y):
+                            gameStart = True
                             board()
                         # option button
                         if r_btn_option_rect.collidepoint(x, y):
+                            gameStart = True
                             option()
 
                         # temp_dino를 누르는 경우: 
                         if temp_dino.rect.collidepoint(x, y):
                             click_count += 1 
                             type_idx = click_count % len(dino_type)
-                            temp_dino = Dino(dino_size[0], dino_size[1],type = dino_type[type_idx])
+                            temp_dino = Dino(temp_dino_size[0], temp_dino_size[1],type = dino_type[type_idx])
                             temp_dino.isBlinking = True
 
         temp_dino.update()
@@ -89,11 +95,14 @@ def introscreen():
         # interface draw
         if pygame.display.get_surface() != None:
 
-            r_btn_gamestart_rect.centerx, r_btn_board_rect.centerx, r_btn_option_rect.centerx = resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72, resized_screen.get_width() * 0.72
-            r_btn_gamestart_rect.centery, r_btn_board_rect.centery, r_btn_option_rect.centery = resized_screen.get_height() * 0.5, resized_screen.get_height() * (0.5+button_offset), resized_screen.get_height() * (0.5+2*button_offset)
-
+            r_btn_gamestart_rect.centerx, r_btn_board_rect.centerx, r_btn_option_rect.centerx = resized_screen.get_width() * 0.8, resized_screen.get_width() * 0.8, resized_screen.get_width() * 0.8
+            r_btn_gamestart_rect.centery, r_btn_board_rect.centery, r_btn_option_rect.centery = resized_screen.get_height() * 0.55, resized_screen.get_height() * 0.7, resized_screen.get_height() * 0.85
+            
             screen.blit(Background, Background_rect)
-            disp_intro_buttons(btn_gamestart, btn_board, btn_option)
+            #disp_intro_buttons(btn_gamestart, btn_board, btn_option)
+            screen.blit(btn_gamestart, btn_gamestart_rect)
+            screen.blit(btn_board, btn_board_rect)
+            screen.blit(btn_option, btn_option_rect)
 
             temp_dino.draw()
             resized_screen.blit(
@@ -127,6 +136,7 @@ def option():
     TextSurf, TextRect = text_objects("[ OPTION ]", largeText)
     btn_bgm_on, btn_bgm_on_rect = load_image('btn_bgm_on.png', 60, 60, -1);
     btn_bgm_off, btn_bgm_off_rect = load_image('btn_bgm_off.png', 60, 60, -1)
+    
     r_btn_bgm_on, r_btn_bgm_on_rect = load_image(*resize('btn_bgm_on.png', 60, 60, -1))
     init_btn_image, init_btn_rect = load_image('scorereset.png', 60, 60, -1)
     r_init_btn_image, r_init_btn_rect = load_image(*resize('scorereset.png', 60, 60, -1))
@@ -192,9 +202,11 @@ def option():
                         db_init = True
 
                     if r_btn_gamerule_rect.collidepoint(x, y):
+                        done = True
                         gamerule()
 
                     if r_btn_credit_rect.collidepoint(x, y):
+                        done = True
                         credit()
 
             # if event.type == pygame.VIDEORESIZE:
@@ -222,8 +234,7 @@ def option():
             draw_text("Scoreboard cleared", font, screen, 400, 300, black)
 
         resized_screen.blit(
-            pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-            resized_screen_centerpos)
+            pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())), resized_screen_centerpos)
         pygame.display.update()
 
         clock.tick(FPS)
@@ -237,20 +248,28 @@ def selectMode():
     gameStart = False
     btnpush_interval = 500
 
-    # 버튼 이미지
-
-    ##easy mode button
-    easymode_btn_image, easymode_btn_rect = load_image('easy.png', 150, 50, -1)
-    r_easymode_btn_image, r_easy_btn_rect = load_image(*resize('easy.png', 150, 50, -1))
-    # hardmode button
-    btn_hardmode, btn_hardmode_rect = load_image('hard.png', 150, 50, -1)
-    r_btn_hardmode, r_btn_hardmode_rect = load_image(*resize('hard.png', 150, 50, -1))
     # 배경 이미지
     Background, Background_rect = load_image('intro_bg.png', width, height, -1)
+    # 홈으로 돌아가기
+    btn_home_image, btn_home_rect = load_image('main_button.png', 70, 62, -1)
+    r_btn_home_image, r_btn_home_rect = load_image(*resize('main_button.png', 70, 62, -1))
 
+    # 버튼 이미지
+    # classic button
+    btn_classicmode_image, btn_classicmode_rect = load_image('btn_classic.png', 135, 45, -1)
+    r_btn_classicmode_image, r_btn_classicmode_rect = load_image(*resize('btn_classic.png', 135, 45, -1))
+    # arcade button
+    btn_arcademode_image, btn_arcademode_rect = load_image('btn_arcade.png', 135, 45, -1)
+    r_btn_arcademode_image, r_btn_arcademode_rect = load_image(*resize('btn_arcade.png', 135, 45, -1))
+    # multi button
+    btn_multimode_image, btn_multimode_rect = load_image('btn_multi.png', 135, 45, -1)
+    r_btn_multimode_image, r_btn_multimode_rect = load_image(*resize('btn_multi.png', 135, 45, -1))
 
-    easymode_btn_rect.center = (width * 0.5, height * 0.5)
-    btn_hardmode_rect.center = (width * 0.5, height * 0.75)
+    #버튼 위치
+    btn_classicmode_rect.center = (width * 0.3, height * 0.7)
+    btn_arcademode_rect.center = (width * 0.5, height * 0.7)
+    btn_multimode_rect.center = (width * 0.7, height * 0.7)
+    btn_home_rect.center = (width * 0.9, height * 0.15)
 
 
     while not gameStart:
@@ -265,24 +284,37 @@ def selectMode():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     x, y = event.pos
-                    if r_easy_btn_rect.collidepoint(x, y):
+                    if r_btn_home_rect.collidepoint(x, y):
+                        gameStart = True
+                        introscreen()
+
+                    if r_btn_classicmode_rect.collidepoint(x, y):
+                        gameStart = True
                         gameplay_easy()
 
-                    if r_btn_hardmode_rect.collidepoint(x, y):
+                    if r_btn_arcademode_rect.collidepoint(x, y):
+                        gameStart = True
                         #남현 - 211104 게임시작부분
                         gameplay_hard()
                         # gameplay_bonus(1, 5, 4, 0)
 
+                    # if r_btn_multimode_rect.collidepoint(x, y): 멀티모드 추가예정
+                    #    gameStart = True
+                    #    gameplay_multi()
+
             if event.type == pygame.VIDEORESIZE:
                 checkscrsize(event.w, event.h)
 
-        r_easy_btn_rect.centerx, r_easy_btn_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height() * 0.5
-        r_btn_hardmode_rect.centerx, r_btn_hardmode_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height() * (
-                0.5 + button_offset)
+        r_btn_classicmode_rect.centerx, r_btn_classicmode_rect.centery = resized_screen.get_width() * 0.3, resized_screen.get_height() * 0.7
+        r_btn_arcademode_rect.centerx, r_btn_arcademode_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height()*0.7
+        r_btn_multimode_rect.centerx, r_btn_multimode_rect.centery = resized_screen.get_width() * 0.7, resized_screen.get_height()*0.7
+        r_btn_home_rect.centerx, r_btn_home_rect.centery = resized_screen.get_width() * 0.9, resized_screen.get_height() * 0.15
 
         screen.blit(Background, Background_rect)
-        screen.blit(easymode_btn_image, easymode_btn_rect)
-        screen.blit(btn_hardmode, btn_hardmode_rect)
+        screen.blit(btn_classicmode_image, btn_classicmode_rect)
+        screen.blit(btn_arcademode_image, btn_arcademode_rect)
+        screen.blit(btn_multimode_image, btn_multimode_rect)
+        screen.blit(btn_home_image, btn_home_rect)
 
 
         resized_screen.blit(
@@ -976,25 +1008,29 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                         playerDino.isJumping = True
                         playerDino.movement[1] = -1 * playerDino.superJumpSpeed
 
-                # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일.
-                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 20) == 0):
+                # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일(pm)
+                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 10) == 0):
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.xmove = random.randint(0,15)
-                    pm.ymove = random.randint(1,3)
+                    if (stage == 1):
+                        pm.xmove = random.randint(0,15) #총알 움직이는 방향 및 속도 
+                        pm.ymove = random.randint(1,3)
+                    elif (stage == 2):
+                        pm.xmove = random.randint(0,20) 
+                        pm.ymove = random.randint(1,7)
 
                     pm_list.append(pm)
                 pm_pattern0_count += 1
-                pd_list = []
+                pd_list = []        #보스 익룡 미사일 중에 이상한거는 삭제할려고
 
                 for i in range(len(pm_list)):
                     pm = pm_list[i]
                     pm.x -= pm.xmove
                     pm.y += pm.ymove
-                    if pm.y > height or pm.x < 0:
+                    if pm.y > height or pm.x < 0:   #화면보다 높거나 0보다 작은 애들은 저장해둠????????
                         pd_list.append(i)
                 pd_list.reverse()
                 for d in pd_list:
@@ -1004,14 +1040,18 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                 #
 
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
-                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
+                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 10) == 0):
                     # print(pm_list)
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.move = 3
+                    if (stage == 2):
+                        pm.move = 5
+                    elif (stage == 1) or (stage == 3):
+                        pm.move =7
+                    
                     pm_list.append(pm)
                 pm_pattern1_count += 1
                 pd_list = []
