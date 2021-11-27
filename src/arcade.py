@@ -45,7 +45,10 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     new_ground = Ground(-1 * gamespeed)
     p1_heart = HeartIndicator(max_life, p1_life)
     p2_heart = HeartIndicator(max_life, p2_life, player_num = 1)
-    speed_indicator = Scoreboard(width * 0.12, height * 0.15)
+
+    #SPEED TEXT(width * 0.75, height * 0.05) 
+    #TODO: 숫자 settings로 옮기기
+    speed_indicator = Scoreboard(width * 0.88, height * 0.07)
     counter = 0
 
 
@@ -788,7 +791,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                     clouds.draw(screen)
                     #scb.draw()
                     speed_indicator.draw()
-                    screen.blit(speed_text, (width * 0.01, height * 0.13))
+                    screen.blit(speed_text, (width * 0.75, height * 0.05))
 
                     # 경과 시간 계산
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
