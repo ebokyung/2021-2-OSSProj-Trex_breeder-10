@@ -172,6 +172,7 @@ def option():
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     x, y = event.pos
                     if r_btn_home_rect.collidepoint(x, y):
+                        done = True
                         introscreen()
 
                     if r_btn_bgm_on_rect.collidepoint(x, y) and bgm_on:
@@ -908,12 +909,18 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
 
             if not paused:
 
-                # 방향키 추가 (현재 여기 근데 수정더):
+                # 방향키
                 if goLeft:
-                    playerDino.rect.left= playerDino.rect.left -(gamespeed)
+                    if playerDino.rect.left <= 0:
+                        playerDino.rect.left =0
+                    else:
+                        playerDino.rect.left = playerDino.rect.left -(gamespeed)
 
                 if goRight:
-                    playerDino.rect.left = playerDino.rect.left + gamespeed
+                    if playerDino.rect.right >= width:
+                        playerDino.rect.right = width
+                    else:
+                        playerDino.rect.right = playerDino.rect.right +(gamespeed)
                 #
 
                 # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다.
@@ -1715,12 +1722,18 @@ def gameplay_bonus(cur_stage, cur_life, cur_speed, cur_score):
 
             if not paused:
 
-                # 방향키 추가 (현재 여기 근데 수정더):
+                # 방향키
                 if goLeft:
-                    playerDino.rect.left = playerDino.rect.left - (gamespeed)
+                    if playerDino.rect.left <= 0:
+                        playerDino.rect.left =0
+                    else:
+                        playerDino.rect.left = playerDino.rect.left -(gamespeed)
 
                 if goRight:
-                    playerDino.rect.left = playerDino.rect.left + gamespeed
+                    if playerDino.rect.right >= width:
+                        playerDino.rect.right = width
+                    else:
+                        playerDino.rect.right = playerDino.rect.right +(gamespeed)
                 #
 
                 # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다.
@@ -2152,6 +2165,7 @@ def pausing():
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         x, y = event.pos
                         if resized_retbutton_rect.collidepoint(x, y):
+                            gameQuit = True
                             introscreen()
 
                         if resized_resume_rect.collidepoint(x, y):
