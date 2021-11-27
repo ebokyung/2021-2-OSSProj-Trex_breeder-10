@@ -46,18 +46,17 @@ class Cloud(pygame.sprite.Sprite):
 class Heart:
 
     def __init__(self, sizex=-1, sizey=-1, x=-1, y=-1):
-        self.image, self.rect = load_image("hpbar.png", sizex, sizey)
         basic_location = 0.04
-
+        if y == basic_location:
+            self.image, self.rect = load_image("hpbar.png", sizex, sizey)
+            self.rect.top = height * basic_location
+        else:
+            self.image, self.rect = load_image("heart_bullet.png", sizex, sizey)
+            self.rect.top = height * basic_location * 3
         if x == -1:
             self.rect.left = width * 0.01
         else:
             self.rect.left = x
-        print(y)
-        if y == basic_location:
-            self.rect.top = height * basic_location
-        else:
-            self.rect.top = height * basic_location * 3
 
     def draw(self):
         screen.blit(self.image, self.rect)

@@ -459,26 +459,6 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         if p2_immune_time - p2_collision_time > collision_immune_time:
                             player2.collision_immune = False
 
-                for l in life_items:
-                    l.movement[0] = -1 * gamespeed
-                    if pygame.sprite.collide_mask(player1, l):
-                        if pygame.mixer.get_init() is not None:
-                            checkPoint_sound.play()
-                        if p1_life < max_life: # 보경
-                            p1_life += 1
-                        player1.score += 10
-                        l.kill()
-                    elif l.rect.right < 0:
-                        l.kill()
-                    if pygame.sprite.collide_mask(player2, l):
-                        if pygame.mixer.get_init() is not None:
-                            checkPoint_sound.play()
-                        if p2_life < max_life: # 보경
-                            p2_life += 1
-                        player2.score += 10
-                        l.kill()
-                    elif l.rect.right < 0:
-                        l.kill()
 
                 for f in fire_cacti:
                     f.movement[0] = -1 * gamespeed
@@ -511,7 +491,6 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         if p2_immune_time - p2_collision_time > collision_immune_time:
                             player2.collision_immune = False
 
-
                 for p in pteras:
                     p.movement[0] = -1 * gamespeed
 
@@ -541,7 +520,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             boom.change_size(200,100)
                             boom.x=p.rect.centerx-round(p.rect.width)*2.5
                             boom.y=p.rect.centery-round(p.rect.height)*1.5
-                            # playerDino.score+=30
+                            # player1.score+=30
                             p.kill()
 
                     
@@ -600,6 +579,109 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                                 player2.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
+                #p1
+                if not player1.isSuper:
+                    for s in shield_items:
+                        s.movement[0] = -1 * gamespeed
+                        if pygame.sprite.collide_mask(player1, s):
+                            if pygame.mixer.get_init() is not None:
+                                checkPoint_sound.play()
+                            player1.collision_immune = True
+                            player1.isSuper = True
+                            s.kill()
+                            item_time = pygame.time.get_ticks()
+                        elif s.rect.right < 0:
+                            s.kill()
+                else:
+                    for s in shield_items:
+                        s.movement[0] = -1 * gamespeed
+                        if pygame.sprite.collide_mask(player1, s):
+                            if pygame.mixer.get_init() is not None:
+                                checkPoint_sound.play()
+                            player1.collision_immune = True
+                            player1.isSuper = True
+                            s.kill()
+                            item_time = pygame.time.get_ticks()
+                        elif s.rect.right < 0:
+                            s.kill()
+
+                    if pygame.time.get_ticks() - item_time > shield_time:
+                        player1.collision_immune = False
+                        player1.isSuper = False
+
+                for l in life_items:
+                    l.movement[0] = -1 * gamespeed
+                    if pygame.sprite.collide_mask(player1, l):
+                        if pygame.mixer.get_init() is not None:
+                            checkPoint_sound.play()
+                        if p1_life < max_life:
+                            p1_life += 1
+                        l.kill()
+                    elif l.rect.right < 0:
+                        l.kill()
+
+                for k in slow_items:
+                    k.movement[0] = -1 * gamespeed
+                    if pygame.sprite.collide_mask(player1, k):
+                        if pygame.mixer.get_init() is not None:
+                            checkPoint_sound.play()
+                        gamespeed -= 1
+                        new_ground.speed += 1
+                        k.kill()
+                    elif k.rect.right < 0:
+                        k.kill()
+                #p2
+                if not player2.isSuper:
+                    for s in shield_items:
+                        s.movement[0] = -1 * gamespeed
+                        if pygame.sprite.collide_mask(player2, s):
+                            if pygame.mixer.get_init() is not None:
+                                checkPoint_sound.play()
+                            player2.collision_immune = True
+                            player2.isSuper = True
+                            s.kill()
+                            item_time = pygame.time.get_ticks()
+                        elif s.rect.right < 0:
+                            s.kill()
+                else:
+                    for s in shield_items:
+                        s.movement[0] = -1 * gamespeed
+                        if pygame.sprite.collide_mask(player2, s):
+                            if pygame.mixer.get_init() is not None:
+                                checkPoint_sound.play()
+                            player2.collision_immune = True
+                            player2.isSuper = True
+                            s.kill()
+                            item_time = pygame.time.get_ticks()
+                        elif s.rect.right < 0:
+                            s.kill()
+
+                    if pygame.time.get_ticks() - item_time > shield_time:
+                        player2.collision_immune = False
+                        player2.isSuper = False
+
+                for l in life_items:
+                    l.movement[0] = -1 * gamespeed
+                    if pygame.sprite.collide_mask(player2, l):
+                        if pygame.mixer.get_init() is not None:
+                            checkPoint_sound.play()
+                        if p2_life < max_life:
+                            p2_life += 1
+                        l.kill()
+                    elif l.rect.right < 0:
+                        l.kill()
+
+                for k in slow_items:
+                    k.movement[0] = -1 * gamespeed
+                    if pygame.sprite.collide_mask(player1, k):
+                        if pygame.mixer.get_init() is not None:
+                            checkPoint_sound.play()
+                        gamespeed -= 1
+                        new_ground.speed += 1
+                        k.kill()
+                    elif k.rect.right < 0:
+                        k.kill()
+                
 
                 ###removed all items
 
@@ -608,9 +690,9 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                 # Ptera Frequency+
                 PTERA_INTERVAL = 12
                 CLOUD_INTERVAL = 300
-                SHIELD_INTERVAL = 500
-                LIFE_INTERVAL = 1000
-                SLOW_INTERVAL = 1000
+                SHIELD_INTERVAL = 10
+                LIFE_INTERVAL = 10
+                SLOW_INTERVAL = 10
 
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
@@ -895,8 +977,8 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                 if player1.isDead and player2.isDead:
                     gameOver = True
                     pygame.mixer.music.stop()  # 죽으면 배경음악 멈춤
-                    # if playerDino.score > high_score:
-                    #     high_score = playerDino.score
+                    # if player1.score > high_score:
+                    #     high_score = player1.score
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
 
@@ -930,10 +1012,10 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                             gameOver = False
                             gameQuit = True
-                            # typescore(playerDino.score)
-                            # if not db.is_limit_data(playerDino.score):
+                            # typescore(player1.score)
+                            # if not db.is_limit_data(player1.score):
                             #     db.query_db(
-                            #         f"insert into user(username, score) values ('{gamername}', '{playerDino.score}');")
+                            #         f"insert into user(username, score) values ('{gamername}', '{player1.score}');")
                             #     db.commit()
                             #     board()
                             # else:
@@ -942,10 +1024,10 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                     # if event.type == pygame.MOUSEBUTTONDOWN:
                     #     gameOver = False
                     #     gameQuit = True
-                    #     typescore(playerDino.score)
-                    #     if not db.is_limit_data(playerDino.score):
+                    #     typescore(player1.score)
+                    #     if not db.is_limit_data(player1.score):
                     #         db.query_db(
-                    #             f"insert into user(username, score) values ('{gamername}', '{playerDino.score}');")
+                    #             f"insert into user(username, score) values ('{gamername}', '{player1.score}');")
                     #         db.commit()
                     #         board()
                     #     else:
