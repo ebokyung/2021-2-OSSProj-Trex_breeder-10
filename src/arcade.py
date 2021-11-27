@@ -40,7 +40,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     paused = False
 
     player1 = Dino(dino_size[0], dino_size[1], type = dino_type[0])
-    player2 = Dino(dino_size[0], dino_size[1], type = dino_type[3], player_num= 1)
+    player2 = Dino(dino_size[0], dino_size[1], type = dino_type[4], player_num= 1)
 
     new_ground = Ground(-1 * gamespeed)
     p1_heart = HeartIndicator(max_life, p1_life)
@@ -145,7 +145,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     # 타이머기능 추가
     start_ticks = pygame.time.get_ticks()  
     
-    total_time = 30
+    total_time = 100
 
     #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
     elapsed_time = 0    
@@ -673,7 +673,7 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
 
                 for k in slow_items:
                     k.movement[0] = -1 * gamespeed
-                    if pygame.sprite.collide_mask(player1, k):
+                    if pygame.sprite.collide_mask(player2, k):
                         if pygame.mixer.get_init() is not None:
                             checkPoint_sound.play()
                         gamespeed -= 1
@@ -690,9 +690,9 @@ def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                 # Ptera Frequency+
                 PTERA_INTERVAL = 12
                 CLOUD_INTERVAL = 300
-                SHIELD_INTERVAL = 10
-                LIFE_INTERVAL = 10
-                SLOW_INTERVAL = 10
+                SHIELD_INTERVAL = 50
+                LIFE_INTERVAL = 50
+                SLOW_INTERVAL = 50
 
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
