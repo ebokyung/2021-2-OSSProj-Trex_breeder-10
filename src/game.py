@@ -2,8 +2,8 @@ from src.dino import *
 from src.obstacle import *
 from src.item import *
 from src.interface import *
+from src.arcade import *
 from db.db_interface import InterfDB
-
 
 db = InterfDB("db/score.db")
 
@@ -284,6 +284,7 @@ def selectMode():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if pygame.mouse.get_pressed() == (1, 0, 0):
                     x, y = event.pos
+
                     if r_btn_home_rect.collidepoint(x, y):
                         gameStart = True
                         introscreen()
@@ -294,13 +295,11 @@ def selectMode():
 
                     if r_btn_arcademode_rect.collidepoint(x, y):
                         gameStart = True
-                        #남현 - 211104 게임시작부분
-                        gameplay_hard(2)
-                        # gameplay_bonus(1, 5, 4, 0)
+                        gameplay_hard()
 
-                    # if r_btn_multimode_rect.collidepoint(x, y): 멀티모드 추가예정
-                    #    gameStart = True
-                    #    gameplay_multi()
+                    if r_btn_multimode_rect.collidepoint(x, y):
+                        gameStart = True
+                        gameplay_multi()
 
             if event.type == pygame.VIDEORESIZE:
                 checkscrsize(event.w, event.h)

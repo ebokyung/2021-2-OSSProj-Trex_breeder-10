@@ -46,40 +46,49 @@ class Cloud(pygame.sprite.Sprite):
 class Heart:
 
     def __init__(self, sizex=-1, sizey=-1, x=-1, y=-1):
-        self.image, self.rect = load_image("hpbar.png", sizex, sizey)
-        
+        basic_location = 0.04
+        if y == basic_location:
+            self.image, self.rect = load_image("hpbar.png", sizex, sizey)
+            self.rect.top = height * basic_location
+        else:
+            self.image, self.rect = load_image("heart_bullet.png", sizex, sizey)
+            self.rect.top = height * basic_location * 3
         if x == -1:
             self.rect.left = width * 0.01
         else:
             self.rect.left = x
 
-        if y == -1:
-            self.rect.top = height * 0.04
-        else:
-            self.rect.top = y
-
     def draw(self):
         screen.blit(self.image, self.rect)
-
+        #draw 를 쓴다면 그 헬스바를 만들어야...?!?!
 
 class HeartIndicator:
 
-    def __init__(self, max_life, life):
-        self.heart_size = [20,30]
-        self.max_life = max_life
-        self.current_life = life
-        self.life_set = []
+    def __init__(self, max_life, life, player_num = 0):
+        self.player_num = 0 
+        if player_num == 0:
+            self.heart_size = [20,30,0.04]
+            self.max_life = max_life
+            self.current_life = life
+            self.life_set = []
+            self.y_location = 0.04
+        else:
+            self.player_num = 1
+            self.heart_size = [20,30,0.04*3]
+            self.max_life = max_life
+            self.current_life = life
+            self.life_set = []
+            self.y_location = 0.04 * 3
 
     def draw(self):
-        pygame.draw.rect(screen, black, (width * 0.01, height * 0.04, self.heart_size[0]*self.max_life, self.heart_size[1]), 3)
+        pygame.draw.rect(screen, black, (width * 0.01, height * self.y_location, self.heart_size[0]*self.max_life, self.heart_size[1]), 3)
         for life in self.life_set:
             life.draw()
 
     def update(self, life):
         self.current_life = life
-        self.life_set = [Heart(self.heart_size[0], self.heart_size[1], width * 0.01 + i * self.heart_size[0]) for i in range(self.current_life)]
-
-
+        self.life_set = [Heart(self.heart_size[0], self.heart_size[1], width * 0.01 + i * self.heart_size[0], self.heart_size[2]) for i in range(self.current_life)]
+      
 class Scoreboard:
 
     def __init__(self, x=-1, y=-1):
@@ -95,6 +104,7 @@ class Scoreboard:
             self.rect.top = height*0.05
         else:
             self.rect.top = y
+
 
     def draw(self):
         screen.blit(self.image, self.rect)
