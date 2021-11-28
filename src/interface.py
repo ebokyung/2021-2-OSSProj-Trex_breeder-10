@@ -60,7 +60,7 @@ class Heart:
 
     def draw(self):
         screen.blit(self.image, self.rect)
-
+        #draw 를 쓴다면 그 헬스바를 만들어야...?!?!
 
 class HeartIndicator:
 

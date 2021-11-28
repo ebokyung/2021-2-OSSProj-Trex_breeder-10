@@ -6,7 +6,7 @@ from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
 
-def gameplay_arcade(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
+def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     ####speed는 통합
     
     global resized_screen

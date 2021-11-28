@@ -15,6 +15,7 @@ class Dino():
         elif type == 'PINK':
             self.images, self.rect = load_sprite_sheet('pink_dino.png', 6, 1, sizex, sizey, -1)
             self.images1, self.rect1 = load_sprite_sheet('pink_dino_ducking.png', 2, 1, 59, sizey, -1)
+            
         elif type == 'RED':
             self.images, self.rect = load_sprite_sheet('red_dino.png', 6, 1, sizex, sizey, -1)
             self.images1, self.rect1 = load_sprite_sheet('red_dino_ducking.png', 2, 1, 59, sizey, -1)    
