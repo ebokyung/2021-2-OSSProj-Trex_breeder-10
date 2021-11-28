@@ -769,6 +769,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                                 p1_collision_time = pygame.time.get_ticks()
                                 if p1_life <= 0:
                                     player1.isDead = True
+                                pm_list.remove(pm)
                             #p2
                             if (pm.x>=player2.rect.left)and(pm.x<=player2.rect.right)and(pm.y>player2.rect.top)and(pm.y<player2.rect.bottom):
                                 print("공격에 맞음.")
@@ -960,7 +961,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         else: 
                             if (stage == 1):
                                 pygame.time.wait(500)
-                                gameplay_arcade(stage + 1, p1_life, p2_life, gamespeed)
+                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed)
 
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
