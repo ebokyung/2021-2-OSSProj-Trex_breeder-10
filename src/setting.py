@@ -52,7 +52,7 @@ checkPoint_sound = pygame.mixer.Sound('sprites/checkPoint.wav')
 # HERE: REMOVE SOUND!!
 # pygame.mixer.music.load('sprites/t-rex_bgm1.mp3')
 
-
+temp_dino_size =[70,77] #배경화면에 dino크기
 dino_size = [44, 47]
 object_size = [40, 40]
 ptera_size = [46, 40]
