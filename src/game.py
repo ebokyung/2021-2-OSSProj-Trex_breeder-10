@@ -297,7 +297,7 @@ def selectMode():
                         gameStart = True
                         gameplay_hard()
 
-                    if r_btn_multimode_rect.collidepoint(x, y): 멀티모드 추가예정
+                    if r_btn_multimode_rect.collidepoint(x, y):
                         gameStart = True
                         gameplay_multi()
 
