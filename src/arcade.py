@@ -1,3 +1,5 @@
+import pygame
+
 from src.dino import *
 from src.obstacle import *
 from src.item import *
@@ -6,7 +8,7 @@ from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
 
-def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
+def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4):
     ####speed는 통합
     
     global resized_screen
@@ -57,6 +59,8 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     if(stage == 2) :
         speed_text = font.render("SPEED", True, white)
 
+
+
     cacti = pygame.sprite.Group()
     fire_cacti = pygame.sprite.Group()
     pteras = pygame.sprite.Group()
@@ -83,6 +87,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     # 스테이지 다 꺠면 축하메시지 출력
     you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
     you_won = False
+
 
     # temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
     # HI_image = pygame.Surface((30, int(15 * 6 / 5)))
@@ -145,7 +150,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     # 타이머기능 추가
     start_ticks = pygame.time.get_ticks()  
     
-    total_time = 100
+    total_time = 30
 
     #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
     elapsed_time = 0    
@@ -183,7 +188,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         if event.key == pygame.K_RIGHT:
                             p1_goRight=True
 
-                        if event.key == pygame.K_LCTRL:
+                        if event.key == pygame.K_SLASH:
                             p1_space_go = True
                             p1_bk = 0
 
@@ -208,7 +213,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         if event.key == pygame.K_d:
                             p2_goRight = True
 
-                        if event.key == pygame.K_LALT:
+                        if event.key == pygame.K_LCTRL:
                             p2_space_go = True
                             p2_bk = 0
       
@@ -225,7 +230,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             player1.isDucking = False
 
                         # 키에서 손을 떼면, 미사일이 발사 되지 않습니다.
-                        if event.key == pygame.K_LCTRL:
+                        if event.key == pygame.K_SLASH:
                             p1_space_go = False
 
                         # 방향키 추가
@@ -240,7 +245,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             player2.isDucking = False
 
                         # 키에서 손을 떼면, 미사일이 발사 되지 않습니다.
-                        if event.key == pygame.K_LALT:
+                        if event.key == pygame.K_LCTRL:
                             p2_space_go = False
 
                         # 방향키 추가
@@ -625,8 +630,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                     if pygame.sprite.collide_mask(player1, k):
                         if pygame.mixer.get_init() is not None:
                             checkPoint_sound.play()
-                        gamespeed -= 1
-                        new_ground.speed += 1
+                        if gamespeed > 4:
+                            gamespeed -= 1
+                            new_ground.speed += 1
                         k.kill()
                     elif k.rect.right < 0:
                         k.kill()
@@ -839,6 +845,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
 
                 player1.update()
                 player2.update()
+
+
+
                 cacti.update()
                 fire_cacti.update()
                 stones.update()
@@ -943,6 +952,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             boomCount=0
                             isDown=False
                     #
+
                     if not player1.isDead:
                         player1.draw()
                     if not player2.isDead:
@@ -959,7 +969,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         if isBossKilled == False :
                             gameOver = True
                         else: 
-                            if (stage == 1):
+                            if (stage == 1 or stage == 2):
                                 pygame.time.wait(500)
                                 gameplay_multi(stage + 1, p1_life, p2_life, gamespeed)
 
@@ -974,6 +984,8 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
 
                     pygame.display.update()
                 clock.tick(FPS)
+
+
 
                 if player1.isDead and player2.isDead:
                     gameOver = True
