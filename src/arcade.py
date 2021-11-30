@@ -6,10 +6,11 @@ from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
 
-def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
+def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, score=0):
     ####speed는 통합
     
     global resized_screen
+    global players_score 
     global high_score
     dino_type = ['ORIGINAL','RED','ORANGE','YELLOW','GREEN','PURPLE','BLACK','PINK']
     result = db.query_db("select score from user order by score desc;", one=True)
@@ -20,7 +21,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
 
     global gamespeed 
     gamespeed = cur_speed
-    
+    players_score = 0
     #작은익룡이랑 보스 총알 맞으면 감속
     #게임을 실행하면 실제 움직이는 initial gamespeed는 4(4~13)이고, 사용자에게는 가장 낮은 speed인 1(1~10)로 인식하는 값임
     def gamespeed_down():
@@ -41,14 +42,17 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
 
     player1 = Dino(dino_size[0], dino_size[1], type = dino_type[0])
     player2 = Dino(dino_size[0], dino_size[1], type = dino_type[4], player_num= 1)
+    
 
     new_ground = Ground(-1 * gamespeed)
+    scb = Scoreboard()
+    highsc = Scoreboard(width * 0.78)
     p1_heart = HeartIndicator(max_life, p1_life)
     p2_heart = HeartIndicator(max_life, p2_life, player_num = 1)
 
     #SPEED TEXT(width * 0.75, height * 0.05) 
     #TODO: 숫자 settings로 옮기기
-    speed_indicator = Scoreboard(width * 0.88, height * 0.07)
+    speed_indicator = Scoreboard(width * 0.88, height * 0.15)
     counter = 0
 
 
@@ -145,7 +149,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
     # 타이머기능 추가
     start_ticks = pygame.time.get_ticks()  
     
-    total_time = 100
+    total_time = 60
 
     #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
     elapsed_time = 0    
@@ -521,7 +525,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             boom.change_size(200,100)
                             boom.x=p.rect.centerx-round(p.rect.width)*2.5
                             boom.y=p.rect.centery-round(p.rect.height)*1.5
-                            # player1.score+=30
+                            player1.score += 30 #임의로 1플레이어에게 배당
                             p.kill()
 
                     
@@ -744,6 +748,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             boom.change_size(200,100)
                             boom.x=pking.rect.centerx-round(pking.rect.width)
                             boom.y=pking.rect.centery-round(pking.rect.height/2)
+                            player1.score += 100
                             pking.get_damage(1)
 
                             if pking.current_health == 0:
@@ -853,7 +858,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                 life_items.update()
 
                 new_ground.update()
-
+                players_score = player1.score + player2.score + score
+                scb.update(players_score, stage)
+                highsc.update(high_score, stage)
                 # 현재 stage를 파라미터로 넘김
                 speed_indicator.update(gamespeed - 3, stage)
 
@@ -877,9 +884,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         screen.fill(background_col3)
                     new_ground.draw()
                     clouds.draw(screen)
-                    #scb.draw()
+                    scb.draw()
                     speed_indicator.draw()
-                    screen.blit(speed_text, (width * 0.75, height * 0.05))
+                    screen.blit(speed_text, (width * 0.75, height * 0.13))
 
                     # 경과 시간 계산
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
@@ -911,9 +918,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
 
                     p1_heart.draw()
                     p2_heart.draw()
-                    # if high_score != 0:
-                    #     highsc.draw()
-                    #     screen.blit(HI_image, HI_rect)
+                    if high_score != 0:
+                        highsc.draw()
+                        screen.blit(HI_image, HI_rect)
                     cacti.draw(screen)
                     fire_cacti.draw(screen)
                     stones.draw(screen)
@@ -966,7 +973,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         else: 
                             if (stage == 1):
                                 pygame.time.wait(500)
-                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed)
+                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed, players_score)
                             elif (stage == 2):
                                 pygame.time.wait(500)
                                 # gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
@@ -1045,8 +1052,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)
 
-            # highsc.update(high_score, stage)
-
+            highsc.update(high_score)
             if pygame.display.get_surface() != None:
                 # print Gameover status
                 if (you_won == True) :
