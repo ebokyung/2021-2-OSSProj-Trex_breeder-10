@@ -81,6 +81,16 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
     SlowItem.containers = slow_items
     Stone.containers = stones 
 
+    temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
+    HI_image = pygame.Surface((30, int(15 * 6 / 5)))
+    HI_rect = HI_image.get_rect()
+    HI_image.fill(background_col)
+    HI_image.blit(temp_images[10], temp_rect)
+    temp_rect.left += temp_rect.width
+    HI_image.blit(temp_images[11], temp_rect)
+    HI_rect.top = height * 0.05
+    HI_rect.left = width * 0.73
+
     # BUTTON IMG LOAD
     gameover_image, gameover_rect = load_image('game_over.png', 380, 22, -1)
 
