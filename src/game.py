@@ -208,7 +208,7 @@ def option():
                     if r_btn_credit_rect.collidepoint(x, y):
                         done = True
                         credit()
-
+                        
             # if event.type == pygame.VIDEORESIZE:
             #     checkscrsize(event.w, event.h)
 
@@ -300,9 +300,6 @@ def selectMode():
                     if r_btn_multimode_rect.collidepoint(x, y):
                         gameStart = True
                         gameplay_multi()
-
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
 
         r_btn_classicmode_rect.centerx, r_btn_classicmode_rect.centery = resized_screen.get_width() * 0.3, resized_screen.get_height() * 0.7
         r_btn_arcademode_rect.centerx, r_btn_arcademode_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height()*0.7
@@ -453,8 +450,6 @@ def gameplay_easy():
                     if event.type == pygame.MOUSEBUTTONUP:
                         playerDino.isDucking = False
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             if not paused:
 
@@ -681,9 +676,6 @@ def gameplay_easy():
                             board()
                         else:
                             board()
-
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             highsc.update(high_score)
             if pygame.display.get_surface() != None:
@@ -932,9 +924,6 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
 
                     if event.type == pygame.MOUSEBUTTONUP:
                         playerDino.isDucking = False
-
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             if not paused:
 
@@ -1563,8 +1552,6 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                         else:
                             board()
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             # 남현 - 211121 현재 stage를 파라미터로 넘김
             highsc.update(high_score, stage)
@@ -1774,8 +1761,6 @@ def gameplay_bonus(cur_stage, cur_life, cur_speed, cur_score):
                     if event.type == pygame.MOUSEBUTTONUP:
                         playerDino.isDucking = False
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             if not paused:
 
@@ -2050,9 +2035,6 @@ def gameplay_bonus(cur_stage, cur_life, cur_speed, cur_score):
                         else:
                             board()
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
-
             highsc.update(high_score)
             if pygame.display.get_surface() != None:
                 disp_gameOver_msg(gameover_image)
@@ -2077,10 +2059,7 @@ def board():
     max_per_screen = 10
     results = db.query_db("select username, score from user order by score desc;")
     screen_board_height = resized_screen.get_height()+(len(results)//max_per_screen)*resized_screen.get_height()
-    screen_board = pygame.surface.Surface((
-        resized_screen.get_width(),
-        screen_board_height
-        ))
+    screen_board = pygame.surface.Surface( (resized_screen.get_width(),screen_board_height) )
 
     title_image, title_rect = load_image("ranking.png", 360, 75, -1)
     title_rect.centerx = width * 0.5
@@ -2119,8 +2098,7 @@ def board():
                     if event.button == 1:
                         gameQuit = True
                         introscreen()
-                if event.type == pygame.VIDEORESIZE:
-                    checkscrsize(event.w, event.h)
+
 
             screen.blit(screen_board, (0, scroll_y))
             resized_screen.blit(
@@ -2188,9 +2166,6 @@ def gamerule(page = 1):
                         gameQuit = True
                         # introscreen()
                         option()
-                if event.type == pygame.VIDEORESIZE:
-                    checkscrsize(event.w, event.h)
-
 
             screen.blit(screen_board, (0,0))
             resized_screen.blit(
@@ -2257,9 +2232,6 @@ def pausing():
 
                             return False
 
-                if event.type == pygame.VIDEORESIZE:
-                    checkscrsize(event.w, event.h)
-
             screen.fill(white)
             screen.blit(pause_pic, pause_pic_rect)
             screen.blit(retbutton_image, retbutton_rect)
@@ -2310,9 +2282,6 @@ def typescore(score):
                         if len(text) < letternum_restriction:
                             text += event.unicode
 
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
-
         screen.fill(white)
         txt_surface = textsize(50).render(text.upper(), True, color)
         input_box.w = typebox_size
@@ -2347,8 +2316,7 @@ def credit():
                     return False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 return False
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
+
         screen.fill(white)
         screen.blit(creditimg, creditimg_rect)
         resized_screen.blit(
