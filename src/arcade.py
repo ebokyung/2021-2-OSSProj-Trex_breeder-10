@@ -500,8 +500,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                         pass
                     else:
                         #p1
+                        ptera_hit = False
+                        
                         if len(p1_m_list)!= 0:
-                            ptera_hit = False
                             if (p1_m.x>=p.rect.left)and(p1_m.x<=p.rect.right)and(p1_m.y>p.rect.top)and(p1_m.y<p.rect.bottom):
                                 ptera_hit = True
                                 p1_m_list.remove(p1_m)
@@ -625,7 +626,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                     if pygame.sprite.collide_mask(player1, k):
                         if pygame.mixer.get_init() is not None:
                             checkPoint_sound.play()
-                        gamespeed -= 1
+                        gamespeed_down()
                         new_ground.speed += 1
                         k.kill()
                     elif k.rect.right < 0:
@@ -676,7 +677,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                     if pygame.sprite.collide_mask(player2, k):
                         if pygame.mixer.get_init() is not None:
                             checkPoint_sound.play()
-                        gamespeed -= 1
+                        gamespeed_down()
                         new_ground.speed += 1
                         k.kill()
                     elif k.rect.right < 0:
@@ -962,6 +963,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4):
                             if (stage == 1):
                                 pygame.time.wait(500)
                                 gameplay_multi(stage + 1, p1_life, p2_life, gamespeed)
+                            elif (stage == 2):
+                                pygame.time.wait(500)
+                                # gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
 
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
