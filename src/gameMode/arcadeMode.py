@@ -7,7 +7,7 @@ from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
 
-def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
+def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     global resized_screen
     global high_score
@@ -47,7 +47,7 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
 
     
     # 디노 타입 때문에 변경된 부분
-    playerDino = Dino(dino_size[0], dino_size[1], type = dino_type[type_idx])
+    playerDino = player
     # 
     
     # 남현 - 211104 전 스테이지의 스코어 유지
@@ -584,12 +584,6 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                                 isPkingAlive=False
                                 isBossKilled = True
 
-
-
-
-
-                                
-
                     #
                     if (len(pm_list)==0):
                         pass
@@ -784,12 +778,12 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                         else: 
                             if (stage == 1):
                                 pygame.time.wait(500)
-                                gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
+                                # gameplay_hard(stage + 1, life, gamespeed, playerDino.score, playerDino)
 
                             elif (stage == 2):
                                 pygame.time.wait(500)
                                 # gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
-                                gameplay_bonus(stage, life, gamespeed, playerDino.score)
+                                # gameplay_bonus(stage, life, gamespeed, playerDino.score)
 
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")

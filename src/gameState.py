@@ -111,7 +111,6 @@ def gamerule(page = 1):
                         option()
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
-                    # 남현 - 211126 다음 튜토리얼 버튼
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         x, y = event.pos
                         if r_btn_nexttutorial_rect.collidepoint(x, y):

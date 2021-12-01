@@ -20,6 +20,10 @@ def call_game(game_mode):
     if game_mode_number == 1:
         return gameplay_easy(playerDino)
     elif game_mode_number == 2:
-        gameplay_hard(playerDino)
+        init_stage = 1
+        init_life = 15
+        init_speed = 4
+        init_score = 0
+        gameplay_hard(init_stage, init_life, init_speed, init_score, playerDino)
     else:
         gameplay_multi()
