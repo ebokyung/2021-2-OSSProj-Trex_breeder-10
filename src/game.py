@@ -1211,7 +1211,7 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                     if pygame.sprite.collide_mask(playerDino, k):
                         if pygame.mixer.get_init() is not None:
                             checkPoint_sound.play()
-                        gamespeed -= 1
+                        gamespeed_down()
                         new_ground.speed += 1
                         k.kill()
                     elif k.rect.right < 0:

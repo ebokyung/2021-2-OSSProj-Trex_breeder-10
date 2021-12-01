@@ -110,7 +110,7 @@ class Scoreboard:
         screen.blit(self.image, self.rect)
 
     # 남현 - 211121 현재 stage를 파라미터로 받아옴
-    def update(self,score, stage = 1):
+    def update(self, score, stage = 1):
         score_digits = extractDigits(score)
         if(stage == 1):
             self.image.fill(background_col)
@@ -123,3 +123,4 @@ class Scoreboard:
             self.image.blit(self.tempimages[s], self.temprect)
             self.temprect.left += self.temprect.width
         self.temprect.left = 0
+            

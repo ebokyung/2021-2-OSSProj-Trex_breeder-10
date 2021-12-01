@@ -67,10 +67,10 @@ class PteraKing(pygame.sprite.Sprite):
         self.goleft=True
         self.reached_leftmost=False
         self.reached_rightmost=False
-        self.pattern0_time=200
+        self.pattern0_time=50
         self.pattern0_counter=0
 
-        self.pattern1_time=200
+        self.pattern1_time=50
         self.pattern1_counter=0
         self.pattern1_speed=15
         self.pattern1_lastmove=False
