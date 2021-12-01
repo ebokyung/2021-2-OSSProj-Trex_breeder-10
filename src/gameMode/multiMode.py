@@ -12,6 +12,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
     global resized_screen
     global players_score 
     global high_score
+    global introFlag
     dino_type = ['ORIGINAL','RED','ORANGE','YELLOW','GREEN','PURPLE','BLACK','PINK']
     result = db.query_db("select score from user order by score desc;", one=True)
     if result is not None:
@@ -32,6 +33,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
     startMenu = False
     gameOver = False
     gameQuit = False
+    introFlag = False
 
     max_life = 15
 
@@ -1038,7 +1040,8 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                         if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                             gameOver = False
                             gameQuit = True
-                            # typescore(player1.score)
+                            typescore(player1.score)
+                            introFlag = board()
                             # if not db.is_limit_data(player1.score):
                             #     db.query_db(
                             #         f"insert into user(username, score) values ('{gamername}', '{player1.score}');")
@@ -1077,12 +1080,13 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                     resized_screen_centerpos)
                 pygame.display.update()
             clock.tick(FPS)
-
+    return introFlag
     pygame.quit()
     quit()
 
 def pausing():
     global resized_screen
+    global introFlag
     gameQuit = False
     pause_pic, pause_pic_rect = load_image('paused.png', 360, 75, -1)
     pause_pic_rect.centerx = width * 0.5
@@ -1126,7 +1130,7 @@ def pausing():
                     if pygame.mouse.get_pressed() == (1, 0, 0):
                         x, y = event.pos
                         if resized_retbutton_rect.collidepoint(x, y):
-                            introscreen()
+                            introFlag = True
 
                         if resized_resume_rect.collidepoint(x, y):
                             pygame.mixer.music.unpause()  # pausing상태에서 오른쪽의 아이콘 클릭하면 배경음악 일시정지 해제
