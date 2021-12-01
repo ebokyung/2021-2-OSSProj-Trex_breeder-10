@@ -41,17 +41,32 @@ class fire_Cactus(pygame.sprite.Sprite):
 # pteraking 클래스
 class PteraKing(pygame.sprite.Sprite):
     
-    def __init__(self, speed=0, sizex=-1, sizey=-1, health=2):
+    def __init__(self, speed=0, sizex=-1, sizey=-1, health=2, cur_stage=1):
         pygame.sprite.Sprite.__init__(self)
-        self.images, self.rect = load_sprite_sheet('pteraking.png', 2, 1, sizex, sizey, -1)
-        # self.ptera_height = [height*0.82, height*0.75, height*0.60]
-        self.ptera_height=height*0.3
-        # self.rect.centery = self.ptera_height[random.randrange(0, 3)]
-        self.rect.centery = self.ptera_height
-        self.rect.left = width - self.rect.width -50
+        self.stage = cur_stage
+        if (self.stage ==1):
+            ## dinoKing
+            self.images, self.rect = load_sprite_sheet('red_dinoking.png', 5, 1, 80,90, -1)
+            self.dinoking_height = height*0.87
+            self.rect.centery = self.dinoking_height
+            self.rect.left = width - self.rect.width -50
+        elif(self.stage ==2):
+            ## pteraKing
+            self.images, self.rect = load_sprite_sheet('pteraking.png', 2, 1, sizex, sizey, -1)
+            self.ptera_height=height*0.3
+            self.rect.centery = self.ptera_height
+            self.rect.left = width - self.rect.width -50
+        else:
+            ## final pteraKing
+            self.images, self.rect = load_sprite_sheet('pteraking_angry.png', 2, 1, sizex, sizey, -1)
+            self.ptera_height=height*0.3
+            self.rect.centery = self.ptera_height
+            self.rect.left = width - self.rect.width -50
+            
         self.image = self.images[0]
+
         self.movement = [-1*speed, 0]
-        # 
+        #         
         self.down_speed=2
         self.down_movement=[0,self.down_speed]
         self.up_speed=2
@@ -67,12 +82,19 @@ class PteraKing(pygame.sprite.Sprite):
         self.goleft=True
         self.reached_leftmost=False
         self.reached_rightmost=False
-        self.pattern0_time=50
+
+        if (self.stage == 1):
+            self.pattern0_time = 300
+        else:
+            self.pattern0_time= 50
         self.pattern0_counter=0
 
         self.pattern1_time=50
         self.pattern1_counter=0
-        self.pattern1_speed=15
+        if (self.stage ==1):
+            self.pattern1_speed = 5
+        else:
+            self.pattern1_speed = 15
         self.pattern1_lastmove=False
 
         self.pattern2_counter=0
@@ -98,8 +120,8 @@ class PteraKing(pygame.sprite.Sprite):
 
     def bos_health(self):
         #pygame.draw.rect(self.image, color, [position_x,position_y, width, height], border)
-        pygame.draw.rect(screen, bright_red, (self.rect[0],self.rect[1],self.current_health/self.health_ratio,10)) 
-        pygame.draw.rect(screen, white, (self.rect[0],self.rect[1],self.health_bar_length,10),2)
+        pygame.draw.rect(screen, bright_red, (self.rect[0],self.rect[1]-7,self.current_health/self.health_ratio,10)) 
+        pygame.draw.rect(screen, white, (self.rect[0],self.rect[1]-7,self.health_bar_length,10),2)
 
 
     def draw(self):
@@ -111,8 +133,12 @@ class PteraKing(pygame.sprite.Sprite):
         self.pattern1_lastmove=False
         self.pattern0_counter+=1
         self.movement[0]=0  
-        if self.counter %10==0:                     
-            self.index = (self.index+1) % 2         
+        if(self.stage == 2 or self.stage == 3):
+            if self.counter %10==0:                     
+                self.index = (self.index+1) % 2        
+        else:
+            if self.counter %10==0:                     
+                self.index = (self.index+1) % 4
         self.image = self.images[self.index]        
         self.rect = self.rect.move(self.movement)   
         if self.pattern0_counter % self.pattern0_time == 0:
@@ -122,18 +148,28 @@ class PteraKing(pygame.sprite.Sprite):
         
         self.pattern1_counter+=1
 
-        if self.counter % 10 == 0:                  
-            self.index = (self.index+1) % 2         
+        if(self.stage == 2 or self.stage == 3):
+            if self.counter %10==0:                     
+                self.index = (self.index+1) % 2        
+        else:
+            if self.counter %10==0:                     
+                self.index = (self.index+1) % 5      
         self.image = self.images[self.index]        
 
         if (self.goleft == True) and (self.reached_leftmost == False):
             self.movement[0] = -1 * self.pattern1_speed     
             self.rect = self.rect.move(self.movement)
 
-            if self.rect.left < 0:      
-                self.goleft = False     
-                self.reached_leftmost = True    
-                self.reached_rightmost = False  
+            if self.stage ==1:  
+                if self.rect.left < width*0.5:      #stage1에서 공룡보스는 반정도만 왔다갔다
+                    self.goleft = False     
+                    self.reached_leftmost = True    
+                    self.reached_rightmost = False  
+            else:
+                if self.rect.left < 0:      
+                    self.goleft = False     
+                    self.reached_leftmost = True    
+                    self.reached_rightmost = False  
         
         else:                           
             self.movement[0] = self.pattern1_speed  
@@ -144,8 +180,10 @@ class PteraKing(pygame.sprite.Sprite):
                         self.goleft = True
                         self.reached_rightmost = True
                         self.reached_leftmost = False
-
-                        self.pattern_idx = 2   
+                        if (self.stage == 1):
+                            self.pattern_idx = 0    #stage1에서는 익룡보스처럼 아래로 내려오지 않아도 공격가능, pattern0,1만 반복
+                        else:
+                            self.pattern_idx = 2
             else:                       
                 if self.rect.left > width - self.rect.width -50:    
                         self.goleft = True
@@ -159,8 +197,12 @@ class PteraKing(pygame.sprite.Sprite):
 
     def pattern2(self):
     
-        if self.counter % 10 ==0:   
-            self.index = (self.index+1) % 2
+        if(self.stage == 2 or self.stage == 3):
+            if self.counter %10==0:                     
+                self.index = (self.index+1) % 2        
+        else:
+            if self.counter %10==0:                     
+                self.index = (self.index+1) % 6
         self.image = self.images[self.index]     
         
         if self.godown:     

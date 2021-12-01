@@ -208,7 +208,7 @@ def option():
                     if r_btn_credit_rect.collidepoint(x, y):
                         done = True
                         credit()
-
+                        
             # if event.type == pygame.VIDEORESIZE:
             #     checkscrsize(event.w, event.h)
 
@@ -295,14 +295,11 @@ def selectMode():
 
                     if r_btn_arcademode_rect.collidepoint(x, y):
                         gameStart = True
-                        gameplay_hard()
+                        gameplay_hard(3)
 
                     if r_btn_multimode_rect.collidepoint(x, y):
                         gameStart = True
                         gameplay_multi()
-
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
 
         r_btn_classicmode_rect.centerx, r_btn_classicmode_rect.centery = resized_screen.get_width() * 0.3, resized_screen.get_height() * 0.7
         r_btn_arcademode_rect.centerx, r_btn_arcademode_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height()*0.7
@@ -453,8 +450,6 @@ def gameplay_easy():
                     if event.type == pygame.MOUSEBUTTONUP:
                         playerDino.isDucking = False
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             if not paused:
 
@@ -682,9 +677,6 @@ def gameplay_easy():
                         else:
                             board()
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
-
             highsc.update(high_score)
             if pygame.display.get_surface() != None:
                 disp_gameOver_msg(gameover_image)
@@ -827,7 +819,7 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
     # 보스몬스터 변수설정
     isPkingTime=False
     isPkingAlive=True
-    pking=PteraKing()
+    pking=PteraKing(cur_stage = stage)
     pm_list = []
     pm_vector = []
     pm_pattern0_count = 0
@@ -933,9 +925,6 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                     if event.type == pygame.MOUSEBUTTONUP:
                         playerDino.isDucking = False
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
-
             if not paused:
 
                 # 방향키
@@ -1008,6 +997,8 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                 # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일(pm)
                 # 패턴0일때 미사일 쏘는 주기
                 if (stage == 1):
+                    cycle0 = 75
+                elif(stage ==2):
                     cycle0 = 20
                 else:
                     cycle0 = 15
@@ -1018,11 +1009,13 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.xmove = random.randint(0,15)     #총알 움직이는 방향 및 속도 
+                    #총알 움직이는 방향 및 속도 
                     if (stage == 1):
-                        pm.ymove = random.randint(1,3)
+                        pm.xmove = 3
+                        pm.ymove = 0
                     else:
-                        pm.ymove = random.randint(1,5)  # stage 2,3에서는 총알이 더 빨리 떨어짐
+                        pm.xmove = random.randint(0,15) 
+                        pm.ymove = random.randint(1,5)  
 
                     pm_list.append(pm)
                 pm_pattern0_count += 1
@@ -1039,14 +1032,13 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                     del pm_list[d]
 
 
-                #
-
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
                 # 패턴1일때 미사일 쏘는 주기
-                if (stage == 1 or stage == 3):  #stage 3에서는 보스가 움직이면서 총알 방향도 랜덤으로 쏘기 때문에 주기를 낮춤
+                if (stage == 1):     
+                    cycle1 = 70
+                else:               #stage 3에서는 보스가 움직이면서 총알 방향도 랜덤으로 쏘기 때문에 주기를 낮춤
                     cycle1 = 20
-                else:
-                    cycle1 = 15
+
                 if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % cycle1) == 0):
                     # print(pm_list)
                     pm=obj()
@@ -1054,14 +1046,15 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
+                    # 총알 움직이는 방향 및 속도
                     if (stage == 1):
-                        pm.xmove = 0    #아래로 뚝 떨어짐
-                        pm.ymove = 5
+                        pm.xmove = 3    
+                        pm.ymove = 0
                     elif (stage ==2):
                         pm.xmove = 0
                         pm.ymove = 7    
-                    elif (stage ==3):
-                        pm.xmove = random.randint(0,7) #랜덤 발사
+                    else:
+                        pm.xmove = random.randint(0,5) #랜덤 발사
                         pm.ymove = random.randint(1,5)
                     
                     pm_list.append(pm)
@@ -1559,8 +1552,6 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                         else:
                             board()
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             # 남현 - 211121 현재 stage를 파라미터로 넘김
             highsc.update(high_score, stage)
@@ -1770,8 +1761,6 @@ def gameplay_bonus(cur_stage, cur_life, cur_speed, cur_score):
                     if event.type == pygame.MOUSEBUTTONUP:
                         playerDino.isDucking = False
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             if not paused:
 
@@ -2046,9 +2035,6 @@ def gameplay_bonus(cur_stage, cur_life, cur_speed, cur_score):
                         else:
                             board()
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
-
             highsc.update(high_score)
             if pygame.display.get_surface() != None:
                 disp_gameOver_msg(gameover_image)
@@ -2073,10 +2059,7 @@ def board():
     max_per_screen = 10
     results = db.query_db("select username, score from user order by score desc;")
     screen_board_height = resized_screen.get_height()+(len(results)//max_per_screen)*resized_screen.get_height()
-    screen_board = pygame.surface.Surface((
-        resized_screen.get_width(),
-        screen_board_height
-        ))
+    screen_board = pygame.surface.Surface( (resized_screen.get_width(),screen_board_height) )
 
     title_image, title_rect = load_image("ranking.png", 360, 75, -1)
     title_rect.centerx = width * 0.5
@@ -2115,8 +2098,7 @@ def board():
                     if event.button == 1:
                         gameQuit = True
                         introscreen()
-                if event.type == pygame.VIDEORESIZE:
-                    checkscrsize(event.w, event.h)
+
 
             screen.blit(screen_board, (0, scroll_y))
             resized_screen.blit(
@@ -2184,9 +2166,6 @@ def gamerule(page = 1):
                         gameQuit = True
                         # introscreen()
                         option()
-                if event.type == pygame.VIDEORESIZE:
-                    checkscrsize(event.w, event.h)
-
 
             screen.blit(screen_board, (0,0))
             resized_screen.blit(
@@ -2253,9 +2232,6 @@ def pausing():
 
                             return False
 
-                if event.type == pygame.VIDEORESIZE:
-                    checkscrsize(event.w, event.h)
-
             screen.fill(white)
             screen.blit(pause_pic, pause_pic_rect)
             screen.blit(retbutton_image, retbutton_rect)
@@ -2306,9 +2282,6 @@ def typescore(score):
                         if len(text) < letternum_restriction:
                             text += event.unicode
 
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
-
         screen.fill(white)
         txt_surface = textsize(50).render(text.upper(), True, color)
         input_box.w = typebox_size
@@ -2343,8 +2316,7 @@ def credit():
                     return False
             if event.type == pygame.MOUSEBUTTONDOWN:
                 return False
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
+
         screen.fill(white)
         screen.blit(creditimg, creditimg_rect)
         resized_screen.blit(
