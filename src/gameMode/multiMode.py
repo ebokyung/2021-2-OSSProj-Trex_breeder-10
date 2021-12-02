@@ -879,7 +879,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                 last_obstacle.empty()
                                 last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
 
-                # 남현 - 211129 플레이어 둘 중 한명만 살 때 대비
                 if (player1.isDead == True) and (player2.isDead == False) :
                     player2.update()
                     player1.rect.left = player1.rect.left - resized_screen.get_width()
@@ -903,21 +902,18 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 players_score = player1.score + player2.score + score
                 scb.update(players_score, stage)
                 highsc.update(high_score, stage)
-                # 현재 stage를 파라미터로 넘김
                 speed_indicator.update(gamespeed - 3, stage)
 
                 p1_heart.update(p1_life)
                 p2_heart.update(p2_life)
                 slow_items.update()
 
-                # 보스몬스터 타임이면,
                 if isPkingTime:
                     pking.update()
                 #
 
                 if pygame.display.get_surface() != None:
                     
-                    #남현 - 211104 스테이지에 맞춰 배경색 변경
                     if(stage == 1):
                         screen.fill(background_col)
                     elif(stage == 2):
@@ -973,7 +969,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
                     # pkingtime이면, 보스몬스터를 보여줘라.
                     if isPkingTime:
-                        # print(pking.pattern_idx)
                         pking.draw()
                         pking.bos_health()
 
@@ -1000,11 +995,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     player1.draw()
                     player2.draw()
 
-                    # 남현 - 211129 임시 주석처리
-                    # if not player1.isDead:
-                    #     player1.draw()
-                    # if not player2.isDead:
-                    #     player2.draw()
                     resized_screen.blit(
                         pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
                         resized_screen_centerpos)
@@ -1026,7 +1016,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
                                 
-                                # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
+                                # 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
                                 you_won = True
 
                                 gameOver = True
@@ -1039,8 +1029,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 if player1.isDead and player2.isDead:
                     gameOver = True
                     pygame.mixer.music.stop()  # 죽으면 배경음악 멈춤
-                    # if player1.score > high_score:
-                    #     high_score = player1.score
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
 
@@ -1080,17 +1068,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                 introFlag = board()
                             else:
                                 introFlag = board()
-                    # if event.type == pygame.MOUSEBUTTONDOWN:
-                    #     gameOver = False
-                    #     gameQuit = True
-                    #     typescore(player1.score)
-                    #     if not db.is_limit_data(player1.score):
-                    #         db.query_db(
-                    #             f"insert into user(username, score) values ('{gamername}', '{player1.score}');")
-                    #         db.commit()
-                    #         board()
-                    #     else:
-                    #         board()
 
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)

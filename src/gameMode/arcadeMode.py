@@ -11,6 +11,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     global resized_screen
     global high_score
+    global introFlag
     result = db.query_db("select score from user order by score desc;", one=True)
     if result is not None:
         high_score = result['score']
@@ -36,6 +37,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     startMenu = False
     gameOver = False
     gameQuit = False
+    introFlag = False
 
     #보경 - max life 고정
     max_life = 15
@@ -190,7 +192,12 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
                         if event.key == pygame.K_ESCAPE:
                             paused = not paused
-                            paused = pausing()
+                            pause_value, return_home_value = pausing()
+                            if pause_value != None:
+                                paused = pause_value
+                            else:
+                                introFlag = return_home_value
+                                return introFlag
 
                         # jumping x2 ( press key s)
                         if event.key == pygame.K_s:
@@ -838,30 +845,16 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                         if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                             gameOver = False
                             gameQuit = True
-                            typescore(playerDino.score)
+                            name = typescore(playerDino.score)
                             if not db.is_limit_data(playerDino.score):
                                 db.query_db(
-                                    f"insert into user(username, score) values ('{gamername}', '{playerDino.score}');")
+                                    f"insert into user(username, score) values ('{name}', '{playerDino.score}');")
                                 db.commit()
-                                board()
+                                introFlag = board()
                             else:
-                                board()
-
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        gameOver = False
-                        gameQuit = True
-                        typescore(playerDino.score)
-                        if not db.is_limit_data(playerDino.score):
-                            db.query_db(
-                                f"insert into user(username, score) values ('{gamername}', '{playerDino.score}');")
-                            db.commit()
-                            board()
-                        else:
-                            board()
-
+                                introFlag = board()
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)
-
             # 남현 - 211121 현재 stage를 파라미터로 넘김
             highsc.update(high_score, stage)
 
@@ -880,6 +873,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     resized_screen_centerpos)
                 pygame.display.update()
             clock.tick(FPS)
-
+    return introFlag
     pygame.quit()
     quit()
