@@ -1085,6 +1085,7 @@ def gameplay_hard(cur_stage=1, cur_life=15, cur_speed=4, cur_score=0):
                                 playerDino.isDead = True
                             if pygame.mixer.get_init() is not None:
                                 die_sound.play()
+                                die_sound.play()
 
                     elif not playerDino.isSuper:
                         immune_time = pygame.time.get_ticks()
