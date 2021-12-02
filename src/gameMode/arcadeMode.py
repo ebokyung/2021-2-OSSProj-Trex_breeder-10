@@ -835,10 +835,18 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 gameQuit = True
                 gameOver = False
             else:
+                if high_score != 0:
+                    highsc.draw()
+                    screen.blit(HI_image, HI_rect)
+                if (you_won == True) :
+                    disp_gameOver_msg(you_won_image)
+                else :
+                    disp_gameOver_msg(gameover_image)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         gameQuit = True
                         gameOver = False
+                        
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_ESCAPE:
                             gameQuit = True
@@ -860,17 +868,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
             highsc.update(high_score, stage)
 
             if pygame.display.get_surface() != None:
-                # 게임오버가 아니라 스테이지를 다 깬거면 축하메시지
-                # 아니면 그냥 GameOver
-                if (you_won == True) :
-                    disp_gameOver_msg(you_won_image)
-                    gameQuit = True
-                else :
-                    disp_gameOver_msg(gameover_image)
-                    gameQuit = True
-                if high_score != 0:
-                    highsc.draw()
-                    screen.blit(HI_image, HI_rect)
                 resized_screen.blit(
                     pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
                     resized_screen_centerpos)
