@@ -207,7 +207,9 @@ def option():
 
                     if r_btn_gamerule_rect.collidepoint(x, y):
                         done = True
-                        gamerule()
+                        optionFlag = gamerule()
+                        if optionFlag:
+                            option()
 
                     if r_btn_credit_rect.collidepoint(x, y):
                         done = True

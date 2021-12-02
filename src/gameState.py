@@ -1,5 +1,4 @@
 from src.setting import *
-from src.game import *
 from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
@@ -107,8 +106,7 @@ def gamerule(page = 1):
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                         gameQuit = True
-                        # introscreen()
-                        option()
+                        return True
                 if event.type == pygame.MOUSEBUTTONDOWN:
 
                     if pygame.mouse.get_pressed() == (1, 0, 0):
@@ -117,12 +115,11 @@ def gamerule(page = 1):
                             if (page == 1):
                                 gamerule(2)
                             else:
-                                gamerule()
+                                return True
 
                     if event.button == 1:
                         gameQuit = True
-                        # introscreen()
-                        option()
+                        return True
                 if event.type == pygame.VIDEORESIZE:
                     checkscrsize(event.w, event.h)
 
