@@ -268,7 +268,7 @@ def credit():
     done = False
 
     # 남현 - 211127 credit 이미지 수정
-    creditimg, creditimg_rect = load_image('credit.png', width, height, -1)
+    creditimg, creditimg_rect = load_image('credit_T-Rex_Breeder.png', width, height, -1)
 
 
     while not done:
