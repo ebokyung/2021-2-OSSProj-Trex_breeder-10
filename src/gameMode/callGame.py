@@ -16,14 +16,15 @@ def call_game(game_mode):
     game_mode_number = game_mode_dict[str(game_mode)]
 
     playerDino = Dino(dino_size[0], dino_size[1], type=dino_type[type_idx])
+    init_stage = 1
+    init_life = 15
+    init_speed = 4
+    init_score = 0
 
     if game_mode_number == 1:
         return gameplay_easy(playerDino)
     elif game_mode_number == 2:
-        init_stage = 1
-        init_life = 15
-        init_speed = 4
-        init_score = 0
-        gameplay_hard(init_stage, init_life, init_speed, init_score, playerDino)
-    else:
-        gameplay_multi()
+        return gameplay_hard(init_stage, init_life, init_speed, init_score, playerDino)
+    else: 
+        playerDino2 = Dino(dino_size[0], dino_size[1], type = dino_type[4], player_num= 1)
+        return gameplay_multi(init_stage, init_life, init_life, init_speed, init_score, playerDino, playerDino2)

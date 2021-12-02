@@ -4,6 +4,7 @@ from src.item import *
 from src.interface import *
 from src.gameMode.callGame import *
 from db.db_interface import InterfDB
+from src.gameState import *
 
 db = InterfDB("db/score.db")
 
@@ -77,8 +78,11 @@ def introscreen():
                         #board button
                         if r_btn_board_rect.collidepoint(x, y):
                             gameStart = True
-                            board()
-                        # option button
+                            introFlag = board()
+                            if introFlag == True:
+                                introscreen()
+                            
+                        # option button         
                         if r_btn_option_rect.collidepoint(x, y):
                             gameStart = True
                             option()
@@ -308,8 +312,8 @@ def selectMode():
                         gameStart = True
                         gameReset = call_game("multi")
                         if gameReset == True:
-                                gameStart = True
-                                introscreen()
+                            gameStart = True
+                            introscreen()
 
         r_btn_classicmode_rect.centerx, r_btn_classicmode_rect.centery = resized_screen.get_width() * 0.3, resized_screen.get_height() * 0.7
         r_btn_arcademode_rect.centerx, r_btn_arcademode_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height()*0.7

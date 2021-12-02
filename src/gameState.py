@@ -234,7 +234,7 @@ def typescore(score):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 done = True
-                introscreen()
+                introFlag = True
             if event.type == pygame.KEYDOWN:
                 # if active:
                 if event.key == pygame.K_RETURN:
@@ -263,6 +263,8 @@ def typescore(score):
 
         pygame.display.flip()
         clock.tick(FPS)
+    
+    return gamername
 
 def credit():
     global resized_screen
