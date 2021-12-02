@@ -250,6 +250,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                 paused = pause_value
                             else:
                                 introFlag = return_home_value
+                                gameQuit = True
                                 return introFlag
 
                     if event.type == pygame.KEYUP:
@@ -1066,26 +1067,20 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                     f"insert into user(username, score) values ('{name}', '{players_score}');")
                                 db.commit()
                                 introFlag = board()
+                                gameQuit = True
                             else:
                                 introFlag = board()
+                                gameQuit = True
 
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)
 
             highsc.update(high_score)
-            if pygame.display.get_surface() != None:
-                # print Gameover status
-                if (you_won == True) :
-                    disp_gameOver_msg(you_won_image)
-                else :
-                    disp_gameOver_msg(gameover_image)
-                # if high_score != 0:
-                #     highsc.draw()
-                #     screen.blit(HI_image, HI_rect)
-                resized_screen.blit(
-                    pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-                    resized_screen_centerpos)
-                pygame.display.update()
+
+            resized_screen.blit(
+                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
+                resized_screen_centerpos)
+            pygame.display.update()
             clock.tick(FPS)
     return introFlag
     pygame.quit()
