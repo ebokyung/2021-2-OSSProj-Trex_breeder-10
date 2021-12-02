@@ -899,7 +899,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 life_items.update()
 
                 new_ground.update()
-                players_score = ((player1.score + player2.score)/2) + score
+                players_score = int((player1.score + player2.score)/2) + score
                 scb.update(players_score, stage)
                 highsc.update(high_score, stage)
                 speed_indicator.update(gamespeed - 3, stage)
