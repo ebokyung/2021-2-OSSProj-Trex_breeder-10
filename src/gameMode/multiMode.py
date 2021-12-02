@@ -4,17 +4,21 @@ from src.dino import *
 from src.obstacle import *
 from src.item import *
 from src.interface import *
+from src.gameState import *
 from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
 
 
-def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, score=0, p1_isDead=False, p2_isDead=False):
+def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2):
     ####speed는 통합
     
     global resized_screen
     global players_score 
     global high_score
+    global introFlag
+    global playerDead
+
     dino_type = ['ORIGINAL','RED','ORANGE','YELLOW','GREEN','PURPLE','BLACK','PINK']
     result = db.query_db("select score from user order by score desc;", one=True)
     if result is not None:
@@ -35,6 +39,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
     startMenu = False
     gameOver = False
     gameQuit = False
+    introFlag = False
 
     max_life = 15
 
@@ -43,8 +48,8 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
 
     paused = False
 
-    player1 = Dino(dino_size[0], dino_size[1], type = dino_type[0])
-    player2 = Dino(dino_size[0], dino_size[1], type = dino_type[4], player_num= 1)
+    player1 = p1
+    player2 = p2
     
 
     new_ground = Ground(-1 * gamespeed)
@@ -63,10 +68,6 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
     speed_text = font.render("SPEED", True, black)
     if(stage == 2) :
         speed_text = font.render("SPEED", True, white)
-
-    # 남현 - 211129 전 스테이지에서 각 플레이어별 isDead값 넘겨줌
-    player1.isDead = p1_isDead
-    player2.isDead = p2_isDead
 
     cacti = pygame.sprite.Group()
     fire_cacti = pygame.sprite.Group()
@@ -105,25 +106,23 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
     you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
     you_won = False
 
-    # 남현 - 211129
-    ptera_hit = False
 
-    # temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
-    # HI_image = pygame.Surface((30, int(15 * 6 / 5)))
-    # HI_rect = HI_image.get_rect()
+    temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
+    HI_image = pygame.Surface((30, int(15 * 6 / 5)))
+    HI_rect = HI_image.get_rect()
     
     
-    # #남현 - 211104 스테이지에 맞게 배경색 설정
-    # HI_image.fill(background_col)
-    # if (stage == 2):
-    #     HI_image.fill(background_col2)
-    # if (stage == 3):
-    #     HI_image.fill(background_col3)
-    # HI_image.blit(temp_images[10], temp_rect)
-    # temp_rect.left += temp_rect.width
-    # HI_image.blit(temp_images[11], temp_rect)
-    # HI_rect.top = height * 0.05
-    # HI_rect.left = width * 0.73
+    if (stage == 1) or (stage ==0):
+        HI_image.fill(background_col)
+    elif (stage == 2):
+        HI_image.fill(background_col2)
+    elif (stage == 3):
+        HI_image.fill(background_col3)
+    HI_image.blit(temp_images[10], temp_rect)
+    temp_rect.left += temp_rect.width
+    HI_image.blit(temp_images[11], temp_rect)
+    HI_rect.top = height * 0.05
+    HI_rect.left = width * 0.73
 
     isBossKilled = False
 
@@ -195,7 +194,6 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                         if event.key == pygame.K_SPACE or event.key == pygame.K_UP:  # 스페이스 누르는 시점에 공룡이 땅에 닿아있으면 점프한다.
                             if player1.rect.bottom == int(0.98 * height):
                                 player1.isJumping = True
-                                # 남현 - 211129 죽으면 소리 안나게 추가
                                 if pygame.mixer.get_init() != None and player1.isDead == False:
                                     jump_sound.play()
                                 player1.movement[1] = -1 * player1.jumpSpeed
@@ -247,7 +245,13 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
 
                         if event.key == pygame.K_ESCAPE:
                             paused = not paused
-                            paused = pausing()
+                            pause_value, return_home_value = pausing()
+                            if pause_value != None:
+                                paused = pause_value
+                            else:
+                                introFlag = return_home_value
+                                gameQuit = True
+                                return introFlag
 
                     if event.type == pygame.KEYUP:
                         #p1
@@ -457,6 +461,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                 for d in pd_list:
                     del pm_list[d]
                 #
+                global p1_collision_time
+                global p2_collision_time
+                global item_time
 
                 for c in cacti:
                     c.movement[0] = -1 * gamespeed
@@ -719,7 +726,6 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
 
                 STONE_INTERVAL = 100
                 CACTUS_INTERVAL = 50
-                # Ptera Frequency+
                 PTERA_INTERVAL = 12
                 CLOUD_INTERVAL = 300
                 SHIELD_INTERVAL = 50
@@ -874,14 +880,11 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                                 last_obstacle.empty()
                                 last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
 
-                # 남현 - 211129 플레이어 둘 중 한명만 살 때 대비
                 if (player1.isDead == True) and (player2.isDead == False) :
-                    # player1.update()
                     player2.update()
                     player1.rect.left = player1.rect.left - resized_screen.get_width()
                 elif (player1.isDead == False) and (player2.isDead == True) :
                     player1.update()
-                    # player2.update()
                     player2.rect.left = player1.rect.left - resized_screen.get_width()
                 else :
                     player1.update()
@@ -897,24 +900,21 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                 life_items.update()
 
                 new_ground.update()
-                players_score = player1.score + player2.score + score
+                players_score = int((player1.score + player2.score)/2) + score
                 scb.update(players_score, stage)
                 highsc.update(high_score, stage)
-                # 현재 stage를 파라미터로 넘김
                 speed_indicator.update(gamespeed - 3, stage)
 
                 p1_heart.update(p1_life)
                 p2_heart.update(p2_life)
                 slow_items.update()
 
-                # 보스몬스터 타임이면,
                 if isPkingTime:
                     pking.update()
                 #
 
                 if pygame.display.get_surface() != None:
                     
-                    #남현 - 211104 스테이지에 맞춰 배경색 변경
                     if(stage == 1):
                         screen.fill(background_col)
                     elif(stage == 2):
@@ -970,7 +970,6 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
 
                     # pkingtime이면, 보스몬스터를 보여줘라.
                     if isPkingTime:
-                        # print(pking.pattern_idx)
                         pking.draw()
                         pking.bos_health()
 
@@ -997,11 +996,6 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                     player1.draw()
                     player2.draw()
 
-                    # 남현 - 211129 임시 주석처리
-                    # if not player1.isDead:
-                    #     player1.draw()
-                    # if not player2.isDead:
-                    #     player2.draw()
                     resized_screen.blit(
                         pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
                         resized_screen_centerpos)
@@ -1016,15 +1010,14 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                         else: 
                             if (stage == 1 or stage == 2):
                                 pygame.time.wait(500)
-                                # 남현 - 211129 현재 각 디노별 isDead값 넘겨줌
-                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed, players_score, player1.isDead, player2.isDead)
+                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed, players_score, player1, player2)
 
 
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
                                 
-                                # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
+                                # 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
                                 you_won = True
 
                                 gameOver = True
@@ -1037,8 +1030,6 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                 if player1.isDead and player2.isDead:
                     gameOver = True
                     pygame.mixer.music.stop()  # 죽으면 배경음악 멈춤
-                    # if player1.score > high_score:
-                    #     high_score = player1.score
 
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
 
@@ -1048,8 +1039,6 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                     checkPoint_sound.play()
 
                 counter = (counter + 1)
-
-
 
         if gameQuit:
             break
@@ -1072,113 +1061,27 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, sco
                         if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                             gameOver = False
                             gameQuit = True
-                            # typescore(player1.score)
-                            # if not db.is_limit_data(player1.score):
-                            #     db.query_db(
-                            #         f"insert into user(username, score) values ('{gamername}', '{player1.score}');")
-                            #     db.commit()
-                            #     board()
-                            # else:
-                            #     board()
-
-                    # if event.type == pygame.MOUSEBUTTONDOWN:
-                    #     gameOver = False
-                    #     gameQuit = True
-                    #     typescore(player1.score)
-                    #     if not db.is_limit_data(player1.score):
-                    #         db.query_db(
-                    #             f"insert into user(username, score) values ('{gamername}', '{player1.score}');")
-                    #         db.commit()
-                    #         board()
-                    #     else:
-                    #         board()
+                            name = typescore(players_score)
+                            if not db.is_limit_data(players_score):
+                                db.query_db(
+                                    f"insert into user(username, score) values ('{name}', '{players_score}');")
+                                db.commit()
+                                introFlag = board()
+                                gameQuit = True
+                            else:
+                                introFlag = board()
+                                gameQuit = True
 
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)
 
             highsc.update(high_score)
-            if pygame.display.get_surface() != None:
-                # print Gameover status
-                if (you_won == True) :
-                    disp_gameOver_msg(you_won_image)
-                else :
-                    disp_gameOver_msg(gameover_image)
-                # if high_score != 0:
-                #     highsc.draw()
-                #     screen.blit(HI_image, HI_rect)
-                resized_screen.blit(
-                    pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-                    resized_screen_centerpos)
-                pygame.display.update()
-            clock.tick(FPS)
 
-    pygame.quit()
-    quit()
-
-def pausing():
-    global resized_screen
-    gameQuit = False
-    pause_pic, pause_pic_rect = load_image('paused.png', 360, 75, -1)
-    pause_pic_rect.centerx = width * 0.5
-    pause_pic_rect.centery = height * 0.2
-
-    pygame.mixer.music.pause()  # 일시정지상태가 되면 배경음악도 일시정지
-
-    # BUTTON IMG LOAD
-    retbutton_image, retbutton_rect = load_image('main_button.png', 70, 62, -1)
-    resume_image, resume_rect = load_image('continue_button.png', 70, 62, -1)
-
-    resized_retbutton_image, resized_retbutton_rect = load_image(*resize('main_button.png', 70, 62, -1))
-    resized_resume_image, resized_resume_rect = load_image(*resize('continue_button.png', 70, 62, -1))
-
-    # BUTTONPOS
-    retbutton_rect.centerx = width * 0.4;
-    retbutton_rect.top = height * 0.52
-    resume_rect.centerx = width * 0.6;
-    resume_rect.top = height * 0.52
-
-    resized_retbutton_rect.centerx = resized_screen.get_width() * 0.4
-    resized_retbutton_rect.top = resized_screen.get_height() * 0.52
-    resized_resume_rect.centerx = resized_screen.get_width() * 0.6
-    resized_resume_rect.top = resized_screen.get_height() * 0.52
-
-    while not gameQuit:
-        if pygame.display.get_surface() is None:
-            print("Couldn't load display surface")
-            gameQuit = True
-        else:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    gameQuit = True
-
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        pygame.mixer.music.unpause()  # pausing상태에서 다시 esc누르면 배경음악 일시정지 해제
-                        return False
-
-                if event.type == pygame.MOUSEBUTTONDOWN:
-                    if pygame.mouse.get_pressed() == (1, 0, 0):
-                        x, y = event.pos
-                        if resized_retbutton_rect.collidepoint(x, y):
-                            introscreen()
-
-                        if resized_resume_rect.collidepoint(x, y):
-                            pygame.mixer.music.unpause()  # pausing상태에서 오른쪽의 아이콘 클릭하면 배경음악 일시정지 해제
-
-                            return False
-
-                if event.type == pygame.VIDEORESIZE:
-                    checkscrsize(event.w, event.h)
-
-            screen.fill(white)
-            screen.blit(pause_pic, pause_pic_rect)
-            screen.blit(retbutton_image, retbutton_rect)
-            screen.blit(resume_image, resume_rect)
             resized_screen.blit(
                 pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
                 resized_screen_centerpos)
             pygame.display.update()
-        clock.tick(FPS)
-
+            clock.tick(FPS)
+    return introFlag
     pygame.quit()
     quit()

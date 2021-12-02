@@ -51,7 +51,7 @@ class Heart:
             self.image, self.rect = load_image("hpbar.png", sizex, sizey)
             self.rect.top = height * basic_location
         else:
-            self.image, self.rect = load_image("heart_bullet.png", sizex, sizey)
+            self.image, self.rect = load_image("hpbar_green.png", sizex, sizey)
             self.rect.top = height * basic_location * 3
         if x == -1:
             self.rect.left = width * 0.01
