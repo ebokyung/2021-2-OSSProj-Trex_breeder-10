@@ -107,22 +107,22 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     you_won = False
 
 
-    # temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
-    # HI_image = pygame.Surface((30, int(15 * 6 / 5)))
-    # HI_rect = HI_image.get_rect()
+    temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
+    HI_image = pygame.Surface((30, int(15 * 6 / 5)))
+    HI_rect = HI_image.get_rect()
     
     
-    # #남현 - 211104 스테이지에 맞게 배경색 설정
-    # HI_image.fill(background_col)
-    # if (stage == 2):
-    #     HI_image.fill(background_col2)
-    # if (stage == 3):
-    #     HI_image.fill(background_col3)
-    # HI_image.blit(temp_images[10], temp_rect)
-    # temp_rect.left += temp_rect.width
-    # HI_image.blit(temp_images[11], temp_rect)
-    # HI_rect.top = height * 0.05
-    # HI_rect.left = width * 0.73
+    if (stage == 1) or (stage ==0):
+        HI_image.fill(background_col)
+    elif (stage == 2):
+        HI_image.fill(background_col2)
+    elif (stage == 3):
+        HI_image.fill(background_col3)
+    HI_image.blit(temp_images[10], temp_rect)
+    temp_rect.left += temp_rect.width
+    HI_image.blit(temp_images[11], temp_rect)
+    HI_rect.top = height * 0.05
+    HI_rect.left = width * 0.73
 
     isBossKilled = False
 

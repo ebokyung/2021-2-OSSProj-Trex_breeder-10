@@ -112,7 +112,7 @@ class Scoreboard:
     # 남현 - 211121 현재 stage를 파라미터로 받아옴
     def update(self, score, stage = 1):
         score_digits = extractDigits(score)
-        if(stage == 1):
+        if(stage == 1) or (stage == 0):
             self.image.fill(background_col)
         elif(stage == 2):
             self.image.fill(background_col2)

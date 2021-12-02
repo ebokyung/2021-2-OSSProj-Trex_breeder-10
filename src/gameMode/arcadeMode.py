@@ -3,6 +3,7 @@ from src.dino import *
 from src.obstacle import *
 from src.item import *
 from src.interface import *
+from src.gameState import *
 from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
@@ -101,13 +102,13 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     HI_image = pygame.Surface((30, int(15 * 6 / 5)))
     HI_rect = HI_image.get_rect()
     
-    
-    #남현 - 211104 스테이지에 맞게 배경색 설정
-    HI_image.fill(background_col)
-    if (stage == 2):
+    if (stage == 1) or (stage ==0):
+        HI_image.fill(background_col)
+    elif (stage == 2):
         HI_image.fill(background_col2)
-    if (stage == 3):
+    elif (stage == 3):
         HI_image.fill(background_col3)
+
     HI_image.blit(temp_images[10], temp_rect)
     temp_rect.left += temp_rect.width
     HI_image.blit(temp_images[11], temp_rect)
@@ -149,11 +150,11 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     #
     jumpingx2 = False
 
-    # 남현 - 211030 타이머기능 추가
-    # 시작 시간 정보
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
-    # total time
-    total_time = 40
+    if (stage == 0):
+        total_time = 20
+    else:
+        total_time = 40
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -318,11 +319,13 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                         playerDino.isJumping = True
                         playerDino.movement[1] = -1 * playerDino.superJumpSpeed
 
-                # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일(pm)
+                # 보스 총알쏘는 패턴0(위에서 가만히 있을때): 보스 익룡이 쏘는 미사일(pm)
                 # 패턴0일때 미사일 쏘는 주기
                 if (stage == 1):
+                    cycle0 = 75
+                elif(stage ==2):
                     cycle0 = 20
-                else:
+                elif (stage ==3):
                     cycle0 = 15
 
                 if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % cycle0) == 0):
@@ -351,15 +354,13 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 for d in pd_list:
                     del pm_list[d]
 
-
-                #
-
-                # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
+                # 보스 총알쏘는 패턴1(좌우로 왔다갔다 할때)
                 # 패턴1일때 미사일 쏘는 주기
-                if (stage == 1 or stage == 3):  #stage 3에서는 보스가 움직이면서 총알 방향도 랜덤으로 쏘기 때문에 주기를 낮춤
+                if (stage == 1):     
+                    cycle1 = 70
+                elif (stage ==2) or (stage==3):
                     cycle1 = 20
-                else:
-                    cycle1 = 15
+
                 if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % cycle1) == 0):
                     # print(pm_list)
                     pm=obj()
@@ -514,6 +515,8 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                             checkPoint_sound.play()
                         if life < max_life:
                             life += 1
+                        if (stage == 0):    #보너스 스테이지에서만 포인트도 증가
+                            playerDino.score += 10                            
                         l.kill()
                     elif l.rect.right < 0:
                         l.kill()
@@ -543,12 +546,8 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
 
-                # print(pking.hp)
-                
-                # 남현 - 211031 보스 등장 조건을 플레이어점수>보스등장점수 가 아닌
-                # 경과된시간>보스등장시간 으로 바꿈
-                #if (isPkingAlive)and(playerDino.score>pking_appearance_score):
-                if (isPkingAlive) and (elapsed_time > pking_appearance_time):
+                #보너스 스테이지가 아니면 보스 등장
+                if (stage != 0) and (isPkingAlive) and (elapsed_time > pking_appearance_time):
                     isPkingTime=True
                 else:
                     isPkingTime = False
@@ -610,88 +609,99 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                 if life <= 0:
                                     playerDino.isDead = True
                                 pm_list.remove(pm)
-                    #
-                else:
-                    if len(cacti) < 2:
-                        if len(cacti) == 0:
+                else:   #보스 등장아니고
+                    if (stage ==0): #보너스 스테이지면 구름이랑 life아이템만 나옴
+                        if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
+                            Cloud(width, random.randrange(height / 5, height / 2))
+
+                        if len(life_items) == 0:
                             last_obstacle.empty()
-                            last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
+                            last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
                         else:
                             for l in last_obstacle:
-                                if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL) == MAGIC_NUM:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
                                     last_obstacle.empty()
-                                    last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
+                                    last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
+                    else:
 
-                    if len(fire_cacti) < 2:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL * 5) == MAGIC_NUM:
+                        if len(cacti) < 2:
+                            if len(cacti) == 0:
                                 last_obstacle.empty()
-                                last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
+                                last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
+                            else:
+                                for l in last_obstacle:
+                                    if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL) == MAGIC_NUM:
+                                        last_obstacle.empty()
+                                        last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
 
-                    if len(stones) < 2:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
-                                last_obstacle.empty()
-                                last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
+                        if len(fire_cacti) < 2:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL * 5) == MAGIC_NUM:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
+
+                        if len(stones) < 2:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
 
 
-                    if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(Ptera(gamespeed, ptera_size[0], ptera_size[1]))
+                        if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(Ptera(gamespeed, ptera_size[0], ptera_size[1]))
 
-                    if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
-                        Cloud(width, random.randrange(height / 5, height / 2))
+                        if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
+                            Cloud(width, random.randrange(height / 5, height / 2))
 
-                    if len(shield_items) == 0 and random.randrange(
-                            SHIELD_INTERVAL) == MAGIC_NUM and counter > SHIELD_INTERVAL:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(ShieldItem(gamespeed, object_size[0], object_size[1]))
+                        if len(shield_items) == 0 and random.randrange(
+                                SHIELD_INTERVAL) == MAGIC_NUM and counter > SHIELD_INTERVAL:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(ShieldItem(gamespeed, object_size[0], object_size[1]))
 
-                    if len(life_items) == 0 and random.randrange(
-                            LIFE_INTERVAL) == MAGIC_NUM and counter > LIFE_INTERVAL * 2:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
+                        if len(life_items) == 0 and random.randrange(
+                                LIFE_INTERVAL) == MAGIC_NUM and counter > LIFE_INTERVAL * 2:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
 
-                    if len(slow_items) == 0 and random.randrange(SLOW_INTERVAL) == MAGIC_NUM and counter > SLOW_INTERVAL:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
+                        if len(slow_items) == 0 and random.randrange(SLOW_INTERVAL) == MAGIC_NUM and counter > SLOW_INTERVAL:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
 
                 playerDino.update()
                 cacti.update()
-                fire_cacti.update()
-                stones.update()
-                pteras.update()
                 clouds.update()
-                shield_items.update()
                 life_items.update()
+                if (stage != 0):
+                    fire_cacti.update()
+                    stones.update()
+                    pteras.update()
+                    shield_items.update()
+                    slow_items.update()
 
                 new_ground.update()
-
                 # 남현 - 211121 현재 stage를 파라미터로 넘김
                 scb.update(playerDino.score, stage)
                 highsc.update(high_score, stage)
                 speed_indicator.update(gamespeed - 3, stage)
-
                 heart.update(life)
-                slow_items.update()
 
                 # 보스몬스터 타임이면,
                 if isPkingTime:
                     pking.update()
                 #
-
                 if pygame.display.get_surface() != None:
-                    
+
                     #남현 - 211104 스테이지에 맞춰 배경색 변경
-                    if(stage == 1):
+                    if(stage == 1) or (stage ==0):
                         screen.fill(background_col)
                     elif(stage == 2):
                         screen.fill(background_col2)
@@ -703,57 +713,56 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     speed_indicator.draw()
                     screen.blit(speed_text, (width * 0.01, height * 0.13))
 
-                    # 남현 - 211030 타이머 추가
-                    # 타이머 집어 넣기
-                    # 경과 시간 계산
-                    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
-                    # 경과 시간(ms)을 1000으로 나누어서 초(s) 단위로 표시
-                    timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (0, 0, 0))
+                    elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000   # 경과 시간(ms)을 1000으로 나누어서 초(s) 단위로 표시
+
                     #남현 - 211104 - 스테이지 별 타이머 글씨체 다르게 설정
                     if(stage == 2):
                         timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (255, 255, 255))
-                    # 출력할 글자, True, 글자 색상
+                    else:
+                        timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (0, 0, 0))
                     screen.blit(timer, (width * 0.01, height * 0.2))
 
-                    # 남현 - 211031 게임시작 시 스테이지 글자 표시
                     # 남현 - 211104 게임시작 시 스테이지 별 글자 표시하도록 함
                     if elapsed_time <= 3:
-                        if (stage == 1):
-                            stage_info = pygame.font.Font(None, 120).render(str("STAGE 1"), True, (0, 0, 0))
+                        if (stage == 0):
                             # 출력할 글자, True, 글자 색상
+                            stage_info = pygame.font.Font(None, 100).render(str("BONUS STAGE"), True, (0, 0, 0))
+                            screen.blit(stage_info, (width * 0.20, height * 0.4))
+                        elif (stage == 1):
+                            stage_info = pygame.font.Font(None, 120).render(str("STAGE 1"), True, (0, 0, 0)) 
                             screen.blit(stage_info, (width * 0.275, height * 0.4))
                         elif (stage == 2):
                             stage_info = pygame.font.Font(None, 120).render(str("STAGE 2"), True, (255, 255, 255))
-                            # 출력할 글자, True, 글자 색상
                             screen.blit(stage_info, (width * 0.275, height * 0.4))
                         elif (stage == 3):
                             stage_info = pygame.font.Font(None, 120).render(str("STAGE 3"), True, (0, 0, 0))
-                            # 출력할 글자, True, 글자 색상
                             screen.blit(stage_info, (width * 0.275, height * 0.4))
-
-
 
                     heart.draw()
                     if high_score != 0:
                         highsc.draw()
                         screen.blit(HI_image, HI_rect)
-                    cacti.draw(screen)
-                    fire_cacti.draw(screen)
-                    stones.draw(screen)
-                    pteras.draw(screen)
-                    shield_items.draw(screen)
+
                     life_items.draw(screen)
-                    slow_items.draw(screen)
+                    if (stage!=0):
+                        cacti.draw(screen)
+                        fire_cacti.draw(screen)
+                        stones.draw(screen)
+                        pteras.draw(screen)
+                        shield_items.draw(screen)
+                        slow_items.draw(screen)
 
-                    # pkingtime이면, 보스몬스터를 보여줘라.
-                    if isPkingTime:
-                        # print(pking.pattern_idx)
-                        pking.draw()
-                        pking.bos_health()
 
-                        # 보스 익룡이 쏘는 미사일을 보여준다.
-                        for pm in pm_list:
-                            pm.show()
+                        # pkingtime이면, 보스몬스터를 보여줘라.
+                        if isPkingTime:
+                            # print(pking.pattern_idx)
+                            pking.draw()
+                            pking.bos_health()
+
+                            # 보스 익룡이 쏘는 미사일을 보여준다.
+                            for pm in pm_list:
+                                pm.show()
+                        #
                     #
 
                     # 5. 미사일 배열에 저장된 미사일들을 게임 스크린에 그려줍니다.
@@ -779,49 +788,41 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     if total_time - elapsed_time <= 0:
                         print("타임아웃")
                         
-                        # 남현 - 211117 보스를 죽였을때만 다음 스테이지로 넘어가도록
-                        if isBossKilled == False :
+                        # 보스를 죽이면 다음 스테이지로 넘어감, 보너스 스테이지에서는 그냥 넘어감
+                        if (isBossKilled == False) and (stage!=0):
                             gameOver = True
                         else: 
                             if (stage == 1):
                                 pygame.time.wait(500)
-                                # gameplay_hard(stage + 1, life, gamespeed, playerDino.score, playerDino)
-
+                                gameplay_hard( stage+1, life, gamespeed, playerDino.score, player )
                             elif (stage == 2):
                                 pygame.time.wait(500)
-                                # gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
-                                # gameplay_bonus(stage, life, gamespeed, playerDino.score)
-
+                                gameplay_hard( stage-2, life, gamespeed, playerDino.score, player )
+                            elif (stage == 0):
+                                pygame.time.wait(500)
+                                gameplay_hard( stage+3, life, gamespeed, playerDino.score, player )
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
                                 
                                 # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
                                 you_won = True
-
                                 gameOver = True
-
                     pygame.display.update()
                 clock.tick(FPS)
-
                 if playerDino.isDead:
                     gameOver = True
                     pygame.mixer.music.stop()  # 죽으면 배경음악 멈춤
                     if playerDino.score > high_score:
                         high_score = playerDino.score
-
                 if counter % speed_up_limit_count == speed_up_limit_count - 1:
-
                     new_ground.speed -= 1
                     if gamespeed < 13:
                         gamespeed += 1
-                    # 남현 - 211120 속도 증가 시 체크포인트 소리
-                    checkPoint_sound.play()
+
+                    checkPoint_sound.play()#속도 증가 시 체크포인트 소리
 
                 counter = (counter + 1)
-
-
-
 
 
         if gameQuit:
@@ -841,7 +842,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                         if event.key == pygame.K_ESCAPE:
                             gameQuit = True
                             gameOver = False
-
                         if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                             gameOver = False
                             gameQuit = True
@@ -853,13 +853,11 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                 introFlag = board()
                             else:
                                 introFlag = board()
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
-            # 남현 - 211121 현재 stage를 파라미터로 넘김
+
             highsc.update(high_score, stage)
 
             if pygame.display.get_surface() != None:
-                # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 축하메시지
+                # 게임오버가 아니라 스테이지를 다 깬거면 축하메시지
                 # 아니면 그냥 GameOver
                 if (you_won == True) :
                     disp_gameOver_msg(you_won_image)
