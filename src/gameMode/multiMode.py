@@ -1,3 +1,5 @@
+import pygame
+
 from src.dino import *
 from src.obstacle import *
 from src.item import *
@@ -6,7 +8,8 @@ from db.db_interface import InterfDB
 
 db = InterfDB("db/score.db")
 
-def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, score=0):
+
+def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=3, cur_speed =4, score=0, p1_isDead=False, p2_isDead=False):
     ####speed는 통합
     
     global resized_screen
@@ -63,6 +66,10 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
     if(stage == 2) :
         speed_text = font.render("SPEED", True, white)
 
+    # 남현 - 211129 전 스테이지에서 각 플레이어별 isDead값 넘겨줌
+    player1.isDead = p1_isDead
+    player2.isDead = p2_isDead
+
     cacti = pygame.sprite.Group()
     fire_cacti = pygame.sprite.Group()
     pteras = pygame.sprite.Group()
@@ -99,6 +106,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
     # 스테이지 다 꺠면 축하메시지 출력
     you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
     you_won = False
+
+    # 남현 - 211129
+    ptera_hit = False
 
     # temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
     # HI_image = pygame.Surface((30, int(15 * 6 / 5)))
@@ -161,7 +171,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
     # 타이머기능 추가
     start_ticks = pygame.time.get_ticks()  
     
-    total_time = 60
+
+    total_time = 30
+
 
     #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
     elapsed_time = 0    
@@ -185,7 +197,8 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                         if event.key == pygame.K_SPACE or event.key == pygame.K_UP:  # 스페이스 누르는 시점에 공룡이 땅에 닿아있으면 점프한다.
                             if player1.rect.bottom == int(0.98 * height):
                                 player1.isJumping = True
-                                if pygame.mixer.get_init() != None:
+                                # 남현 - 211129 죽으면 소리 안나게 추가
+                                if pygame.mixer.get_init() != None and player1.isDead == False:
                                     jump_sound.play()
                                 player1.movement[1] = -1 * player1.jumpSpeed
 
@@ -199,7 +212,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                         if event.key == pygame.K_RIGHT:
                             p1_goRight=True
 
-                        if event.key == pygame.K_LCTRL:
+                        if event.key == pygame.K_SLASH:
                             p1_space_go = True
                             p1_bk = 0
 
@@ -211,6 +224,9 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                             # 스페이스 누르는 시점에 공룡이 땅에 닿아있으면 점프한다.
                             if player2.rect.bottom == int(0.98 * height):
                                 player2.isJumping = True
+
+                                if pygame.mixer.get_init() != None and player2.isDead == False:
+                                    jump_sound.play()
                                 player2.movement[1] = -1 * player2.jumpSpeed
 
                         if event.key == pygame.K_s:
@@ -224,7 +240,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                         if event.key == pygame.K_d:
                             p2_goRight = True
 
-                        if event.key == pygame.K_LALT:
+                        if event.key == pygame.K_LCTRL:
                             p2_space_go = True
                             p2_bk = 0
       
@@ -241,7 +257,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                             player1.isDucking = False
 
                         # 키에서 손을 떼면, 미사일이 발사 되지 않습니다.
-                        if event.key == pygame.K_LCTRL:
+                        if event.key == pygame.K_SLASH:
                             p1_space_go = False
 
                         # 방향키 추가
@@ -256,7 +272,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                             player2.isDucking = False
 
                         # 키에서 손을 떼면, 미사일이 발사 되지 않습니다.
-                        if event.key == pygame.K_LALT:
+                        if event.key == pygame.K_LCTRL:
                             p2_space_go = False
 
                         # 방향키 추가
@@ -644,6 +660,7 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                             checkPoint_sound.play()
                         gamespeed_down()
                         new_ground.speed += 1
+
                         k.kill()
                     elif k.rect.right < 0:
                         k.kill()
@@ -859,8 +876,20 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                                 last_obstacle.empty()
                                 last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
 
-                player1.update()
-                player2.update()
+                # 남현 - 211129 플레이어 둘 중 한명만 살 때 대비
+                if (player1.isDead == True) and (player2.isDead == False) :
+                    # player1.update()
+                    player2.update()
+                    player1.rect.left = player1.rect.left - resized_screen.get_width()
+                elif (player1.isDead == False) and (player2.isDead == True) :
+                    player1.update()
+                    # player2.update()
+                    player2.rect.left = player1.rect.left - resized_screen.get_width()
+                else :
+                    player1.update()
+                    player2.update()
+
+
                 cacti.update()
                 fire_cacti.update()
                 stones.update()
@@ -967,10 +996,14 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                             boomCount=0
                             isDown=False
                     #
-                    if not player1.isDead:
-                        player1.draw()
-                    if not player2.isDead:
-                        player2.draw()
+                    player1.draw()
+                    player2.draw()
+
+                    # 남현 - 211129 임시 주석처리
+                    # if not player1.isDead:
+                    #     player1.draw()
+                    # if not player2.isDead:
+                    #     player2.draw()
                     resized_screen.blit(
                         pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
                         resized_screen_centerpos)
@@ -983,12 +1016,11 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
                         if isBossKilled == False :
                             gameOver = True
                         else: 
-                            if (stage == 1):
+                            if (stage == 1 or stage == 2):
                                 pygame.time.wait(500)
-                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed, players_score)
-                            elif (stage == 2):
-                                pygame.time.wait(500)
-                                # gameplay_hard(stage + 1, life, gamespeed, playerDino.score)
+                                # 남현 - 211129 현재 각 디노별 isDead값 넘겨줌
+                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed, players_score, player1.isDead, player2.isDead)
+
 
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
@@ -1001,6 +1033,8 @@ def gameplay_multi(cur_stage=1, p1_cur_life=15, p2_cur_life=15, cur_speed =4, sc
 
                     pygame.display.update()
                 clock.tick(FPS)
+
+
 
                 if player1.isDead and player2.isDead:
                     gameOver = True

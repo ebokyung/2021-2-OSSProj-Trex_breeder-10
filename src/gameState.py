@@ -264,7 +264,6 @@ def typescore(score):
         pygame.display.flip()
         clock.tick(FPS)
 
-
 def credit():
     global resized_screen
     done = False

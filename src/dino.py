@@ -116,6 +116,8 @@ class Dino():
             self.score += 1
             if self.score % 100 == 0 and self.score != 0:
                 if pygame.mixer.get_init() != None:
-                    checkPoint_sound.play()
+                    # 남현 - 211129 점수 100점마다 나는 checkpoint 소리 없앰
+                    # checkPoint_sound.play()
+                    print()
 
         self.counter = (self.counter + 1)

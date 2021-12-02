@@ -208,7 +208,7 @@ def option():
                     if r_btn_credit_rect.collidepoint(x, y):
                         done = True
                         credit()
-
+                        
             # if event.type == pygame.VIDEORESIZE:
             #     checkscrsize(event.w, event.h)
 
@@ -310,9 +310,6 @@ def selectMode():
                         if gameReset == True:
                                 gameStart = True
                                 introscreen()
-
-            if event.type == pygame.VIDEORESIZE:
-                checkscrsize(event.w, event.h)
 
         r_btn_classicmode_rect.centerx, r_btn_classicmode_rect.centery = resized_screen.get_width() * 0.3, resized_screen.get_height() * 0.7
         r_btn_arcademode_rect.centerx, r_btn_arcademode_rect.centery = resized_screen.get_width() * 0.5, resized_screen.get_height()*0.7
