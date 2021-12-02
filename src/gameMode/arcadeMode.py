@@ -198,6 +198,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                 paused = pause_value
                             else:
                                 introFlag = return_home_value
+                                gameQuit = True
                                 return introFlag
 
                         # jumping x2 ( press key s)
@@ -851,8 +852,10 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                     f"insert into user(username, score) values ('{name}', '{playerDino.score}');")
                                 db.commit()
                                 introFlag = board()
+                                gameQuit = True
                             else:
                                 introFlag = board()
+                                gameQuit = True
 
             highsc.update(high_score, stage)
 
@@ -861,8 +864,10 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 # 아니면 그냥 GameOver
                 if (you_won == True) :
                     disp_gameOver_msg(you_won_image)
+                    gameQuit = True
                 else :
                     disp_gameOver_msg(gameover_image)
+                    gameQuit = True
                 if high_score != 0:
                     highsc.draw()
                     screen.blit(HI_image, HI_rect)
