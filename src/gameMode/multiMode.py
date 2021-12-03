@@ -294,9 +294,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                             p1_jumpingx2 = False
 
 
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
-
             if not paused:
 
                 # 방향키 추가 (현재 여기 근데 수정더):
@@ -1040,6 +1037,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                 pygame.time.wait(500)
                                 gameplay_multi( stage+3, p1_life, p2_life, gamespeed, players_score, player1, player2)
                             elif (stage == 3):
+                                print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
                                 
                                 # 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
@@ -1096,15 +1094,10 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                     f"insert into user(username, score) values ('{name}', '{players_score}');")
                                 db.commit()
                                 introFlag = board()
-                                gameQuit = True
                                 return introFlag
                             else:
                                 introFlag = board()
-                                gameQuit = True
                                 return introFlag
-
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             highsc.update(high_score)
 
@@ -1113,6 +1106,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 resized_screen_centerpos)
             pygame.display.update()
             clock.tick(FPS)
-    return introFlag
+    #return introFlag
     pygame.quit()
     quit()
