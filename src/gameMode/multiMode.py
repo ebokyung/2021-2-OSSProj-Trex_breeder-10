@@ -1068,9 +1068,11 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                 db.commit()
                                 introFlag = board()
                                 gameQuit = True
+                                return introFlag
                             else:
                                 introFlag = board()
                                 gameQuit = True
+                                return introFlag
 
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)

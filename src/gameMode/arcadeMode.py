@@ -861,9 +861,11 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                 db.commit()
                                 introFlag = board()
                                 gameQuit = True
+                                return introFlag
                             else:
                                 introFlag = board()
                                 gameQuit = True
+                                return introFlag
 
             highsc.update(high_score, stage)
 
