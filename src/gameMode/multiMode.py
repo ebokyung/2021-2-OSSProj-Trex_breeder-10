@@ -1040,7 +1040,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                 pygame.time.wait(500)
                                 gameplay_multi( stage+3, p1_life, p2_life, gamespeed, players_score, player1, player2)
                             elif (stage == 3):
-                                print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
                                 
                                 # 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
@@ -1075,6 +1074,10 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 gameQuit = True
                 gameOver = False
             else:
+                if (you_won == True) :
+                    disp_gameOver_msg(you_won_image)
+                else :
+                    disp_gameOver_msg(gameover_image)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         gameQuit = True
