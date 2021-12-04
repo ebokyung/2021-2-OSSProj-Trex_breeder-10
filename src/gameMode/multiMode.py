@@ -293,18 +293,29 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
 
             if not paused:
-
                 if p1_goLeft:
-                    player1.rect.left= player1.rect.left -(gamespeed)
+                    if player1.rect.left <= 0:
+                        player1.rect.left =0
+                    else:
+                        player1.rect.left = player1.rect.left -(gamespeed)
 
                 if p1_goRight:
-                    player1.rect.left = player1.rect.left + gamespeed
-                
+                    if player1.rect.right >= width:
+                        player1.rect.right = width
+                    else:
+                        player1.rect.right = player1.rect.right +(gamespeed)
+               
                 if p2_goLeft:
-                    player2.rect.left= player2.rect.left -(gamespeed)
+                    if player2.rect.left <= 0:
+                        player2.rect.left =0
+                    else:
+                        player2.rect.left = player2.rect.left -(gamespeed)
 
                 if p2_goRight:
-                    player2.rect.left = player2.rect.left + gamespeed
+                    if player2.rect.right >= width:
+                        player2.rect.right = width
+                    else:
+                        player2.rect.right = player2.rect.right +(gamespeed)
 
                 # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다.
                 # p1
