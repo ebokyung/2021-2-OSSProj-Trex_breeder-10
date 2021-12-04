@@ -66,7 +66,7 @@ def board():
     pygame.quit()
     quit()
 
-# 남현 - 211126 gamerule함수의 파라미터를 조정해 재귀호출 형식으로 튜토리얼 페이지 추가
+# gamerule함수의 파라미터를 조정해 재귀호출 형식으로 튜토리얼 페이지 추가
 def gamerule(page = 1):
     global resized_screen
     gameQuit = False
@@ -77,13 +77,13 @@ def gamerule(page = 1):
         screen_board_height
         ))
 
-    # 남현 - 211124 튜토리얼 이미지 변경
+    # 튜토리얼 이미지 변경
     # gamerule_image, gamerule_rect= load_image("gamerule.png",800,300,-1)
     gamerule_image, gamerule_rect = load_image("Tutorial_ppt.png", 800, 400, -1)
     if(page == 2) :
         gamerule_image, gamerule_rect = load_image("Tutorial_ppt_2.png", 800, 400, -1)
     
-    # 남현 - 211126 튜토리얼 넘어가는 버튼 추가
+    # 튜토리얼 넘어가는 버튼 추가
     r_btn_nexttutorial, r_btn_nexttutorial_rect = load_image(*resize('next_button.png', 50, 50, -1))
     r_btn_nexttutorial_rect.center = (width * 0.95, height * 0.9)
 
@@ -97,7 +97,7 @@ def gamerule(page = 1):
             screen_board.fill(background_col)
             screen_board.blit(gamerule_image,gamerule_rect)
 
-            # 남현 - 211126 버튼 추가
+
             screen_board.blit(r_btn_nexttutorial, r_btn_nexttutorial_rect)
 
             for event in pygame.event.get():
@@ -267,40 +267,10 @@ def credit():
     global resized_screen
     done = False
 
-    # 남현 - 211127 credit 이미지 수정
+
     creditimg, creditimg_rect = load_image('credit.png', width, height, -1)
 
-    # while not gameQuit:
-    #     if pygame.display.get_surface() is None:
-    #         gameQuit = True
-    #     else:
-    #         screen.fill(white)
-    #         screen.blit(creditimg, creditimg_rect)
-    #
-    #         for event in pygame.event.get():
-    #             if event.type == pygame.QUIT:
-    #                 gameQuit = True
-    #
-    #             if event.type == pygame.KEYDOWN:
-    #                 if event.key == pygame.K_ESCAPE:
-    #                     # gameQuit = False
-    #                     return True
-    #             if event.type == pygame.MOUSEBUTTONDOWN:
-    #
-    #                 if event.button == 1:
-    #                     # gameQuit = False
-    #                     return True
-    #
-    #             if event.type == pygame.VIDEORESIZE:
-    #                 checkscrsize(event.w, event.h)
-    #
-    #
-    #         resized_screen.blit(
-    #             pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-    #             resized_screen_centerpos)
-    #         pygame.display.update()
-    #
-    #     clock.tick(FPS)
+
 
     while not done:
         for event in pygame.event.get():

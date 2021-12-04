@@ -80,9 +80,9 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
     gameover_image, gameover_rect = load_image('game_over.png', 380, 22, -1)
 
-    # 남현 - 211120 스테이지 다 꺠면 축하메시지 출력
+    # 스테이지 다 꺠면 축하메시지 출력
     you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
-    # 남현 - 211120 깼는지 안깼는지 확인
+    # 깼는지 안깼는지 확인
     you_won = False
 
     temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
@@ -102,7 +102,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     HI_rect.top = height * 0.05
     HI_rect.left = width * 0.73
 
-    # 남현 - 211117 보스를 죽였는지 아닌지 판단하는 변수
+    # 보스를 죽였는지 아닌지 판단하는 변수
     isBossKilled = False
 
 
@@ -129,7 +129,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     pm_pattern0_count = 0
     pm_pattern1_count = 0
 
-    # 남현 - 211031 보스 등장 시기를 점수(100점)가 아닌 시간으로
+    # 보스 등장 시기를 점수(100점)가 아닌 시간으로
     #pking_appearance_score = 100
     pking_appearance_time = 20
     #
@@ -796,7 +796,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
                                 
-                                # 남현 - 211120 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
+                                # 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
                                 you_won = True
                                 gameOver = True
                     pygame.display.update()
