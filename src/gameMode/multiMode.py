@@ -420,24 +420,36 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     del p2_m_list[d]
 
                 # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일.
-                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 20) == 0):
+                if (stage == 1):
+                    cycle0 = 75
+                elif(stage ==2):
+                    cycle0 = 20
+                elif (stage ==3):
+                    cycle0 = 15
+
+                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % cycle0) == 0):
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.xmove = random.randint(0,15)
-                    pm.ymove = random.randint(1,3)
+                    #총알 움직이는 방향 및 속도 
+                    if (stage == 1):
+                        pm.xmove = random.randint(3,5)
+                        pm.ymove = 0
+                    else:
+                        pm.xmove = random.randint(0,15)
+                        pm.ymove = random.randint(1,5)  # stage 2,3에서는 총알이 더 빨리 떨어짐
 
                     pm_list.append(pm)
                 pm_pattern0_count += 1
-                pd_list = []
+                pd_list = []        
 
                 for i in range(len(pm_list)):
                     pm = pm_list[i]
                     pm.x -= pm.xmove
                     pm.y += pm.ymove
-                    if pm.y > height or pm.x < 0:
+                    if pm.y > height or pm.x < 0:   
                         pd_list.append(i)
                 pd_list.reverse()
                 for d in pd_list:
@@ -449,20 +461,36 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                         player2.movement[1] = -1 * player2.superJumpSpeed
 
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
-                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
+                if (stage == 1):     
+                    cycle1 = 70
+                elif (stage ==2) or (stage==3):
+                    cycle1 = 20
+
+                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % cycle1) == 0):
+                    # print(pm_list)
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.move = 3
+                    if (stage == 1):
+                        pm.xmove = random.randint(3,5)
+                        pm.ymove = 0
+                    elif (stage ==2):
+                        pm.xmove = 0
+                        pm.ymove = 7    
+                    elif (stage ==3):
+                        pm.xmove = random.randint(0,7) 
+                        pm.ymove = random.randint(1,5)
+                    
                     pm_list.append(pm)
                 pm_pattern1_count += 1
                 pd_list = []
 
                 for i in range(len(pm_list)):
                     pm=pm_list[i]
-                    pm.y +=pm.move
+                    pm.x -= pm.xmove
+                    pm.y += pm.move
                     if pm.y>height or pm.x < 0:
                         pd_list.append(i)
 
