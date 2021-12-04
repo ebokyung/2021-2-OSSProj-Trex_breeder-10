@@ -54,7 +54,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     # 
     
     # 남현 - 211104 전 스테이지의 스코어 유지
-    playerDino.score = cur_score;
+    playerDino.score = cur_score
 
     new_ground = Ground(-1 * gamespeed)
     scb = Scoreboard()
@@ -136,7 +136,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     # 보스몬스터 변수설정
     isPkingTime=False
     isPkingAlive=True
-    pking=PteraKing()
+    pking=PteraKing(cur_stage = stage)
     pm_list = []
     pm_vector = []
     pm_pattern0_count = 0
@@ -154,7 +154,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     if (stage == 0):
         total_time = 20
     else:
-        total_time = 40
+        total_time = 30
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -165,6 +165,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 print("Couldn't load display surface")
                 gameQuit = True
                 gameOver = True
+
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -860,10 +861,10 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                     f"insert into user(username, score) values ('{name}', '{playerDino.score}');")
                                 db.commit()
                                 introFlag = board()
-                                gameQuit = True
+                                return introFlag
                             else:
                                 introFlag = board()
-                                gameQuit = True
+                                return introFlag
 
             highsc.update(high_score, stage)
 
@@ -873,6 +874,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     resized_screen_centerpos)
                 pygame.display.update()
             clock.tick(FPS)
-    return introFlag
+    #return introFlag
     pygame.quit()
     quit()
