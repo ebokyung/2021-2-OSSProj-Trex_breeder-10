@@ -270,6 +270,37 @@ def credit():
     # 남현 - 211127 credit 이미지 수정
     creditimg, creditimg_rect = load_image('credit.png', width, height, -1)
 
+    # while not gameQuit:
+    #     if pygame.display.get_surface() is None:
+    #         gameQuit = True
+    #     else:
+    #         screen.fill(white)
+    #         screen.blit(creditimg, creditimg_rect)
+    #
+    #         for event in pygame.event.get():
+    #             if event.type == pygame.QUIT:
+    #                 gameQuit = True
+    #
+    #             if event.type == pygame.KEYDOWN:
+    #                 if event.key == pygame.K_ESCAPE:
+    #                     # gameQuit = False
+    #                     return True
+    #             if event.type == pygame.MOUSEBUTTONDOWN:
+    #
+    #                 if event.button == 1:
+    #                     # gameQuit = False
+    #                     return True
+    #
+    #             if event.type == pygame.VIDEORESIZE:
+    #                 checkscrsize(event.w, event.h)
+    #
+    #
+    #         resized_screen.blit(
+    #             pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
+    #             resized_screen_centerpos)
+    #         pygame.display.update()
+    #
+    #     clock.tick(FPS)
 
     while not done:
         for event in pygame.event.get():

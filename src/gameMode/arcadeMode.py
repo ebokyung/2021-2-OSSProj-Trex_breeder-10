@@ -139,7 +139,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     if (stage == 0):
-        total_time = 20
+        total_time = 10
     else:
         total_time = 30
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
