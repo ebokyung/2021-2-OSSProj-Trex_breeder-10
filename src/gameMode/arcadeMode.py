@@ -323,10 +323,12 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.xmove = random.randint(0,15)     #총알 움직이는 방향 및 속도 
+                    #총알 움직이는 방향 및 속도 
                     if (stage == 1):
-                        pm.ymove = random.randint(1,3)
+                        pm.xmove = random.randint(3,5)
+                        pm.ymove = 0
                     else:
+                        pm.xmove = random.randint(0,15)
                         pm.ymove = random.randint(1,5)  # stage 2,3에서는 총알이 더 빨리 떨어짐
 
                     pm_list.append(pm)
@@ -358,13 +360,13 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
                     if (stage == 1):
-                        pm.xmove = 0    #아래로 뚝 떨어짐
-                        pm.ymove = 5
+                        pm.xmove = random.randint(3,5)
+                        pm.ymove = 0
                     elif (stage ==2):
                         pm.xmove = 0
                         pm.ymove = 7    
                     elif (stage ==3):
-                        pm.xmove = random.randint(0,7) #랜덤 발사
+                        pm.xmove = random.randint(0,7) 
                         pm.ymove = random.randint(1,5)
                     
                     pm_list.append(pm)
