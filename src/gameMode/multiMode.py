@@ -167,7 +167,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     start_ticks = pygame.time.get_ticks()  
     
     if (stage == 0):
-        total_time = 20
+        total_time = 10
     else:
         total_time = 40
 

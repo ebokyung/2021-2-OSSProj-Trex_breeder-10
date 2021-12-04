@@ -76,13 +76,9 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     SlowItem.containers = slow_items
     Stone.containers = stones # add stone containers
 
-    # BUTTON IMG LOAD
-    # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
     gameover_image, gameover_rect = load_image('game_over.png', 380, 22, -1)
 
-    # 남현 - 211120 스테이지 다 꺠면 축하메시지 출력
     you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
-    # 남현 - 211120 깼는지 안깼는지 확인
     you_won = False
 
     temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
@@ -139,7 +135,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     if (stage == 0):
-        total_time = 20
+        total_time = 10
     else:
         total_time = 30
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가

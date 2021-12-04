@@ -84,12 +84,12 @@ class PteraKing(pygame.sprite.Sprite):
         self.reached_rightmost=False
 
         if (self.stage == 1):
-            self.pattern0_time = 300
+            self.pattern0_time = 200
         else:
-            self.pattern0_time= 50
+            self.pattern0_time= 100
         self.pattern0_counter=0
 
-        self.pattern1_time=50
+        self.pattern1_time=100
         self.pattern1_counter=0
         if (self.stage ==1):
             self.pattern1_speed = 5
