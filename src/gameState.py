@@ -278,9 +278,9 @@ def credit():
 
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
-                    return False
+                    return True
             if event.type == pygame.MOUSEBUTTONDOWN:
-                return False
+                return True
             if event.type == pygame.VIDEORESIZE:
                 checkscrsize(event.w, event.h)
         screen.fill(white)
