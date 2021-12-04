@@ -17,16 +17,9 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     if result is not None:
         high_score = result['score']
 
-
-    #남현 - 211104 스테이지 변수 추가
     stage = cur_stage
 
-    # HERE: REMOVE SOUND!!    
-    # if bgm_on:
-    #     pygame.mixer.music.play(-1)  # 배경음악 실행
-
-    #남현 - 211104 이전 스테이지에서 게임 스피드 변수 받기
-    #보경 - 작은익룡이랑 보스 총알 맞으면 감속
+    #작은익룡이랑 보스 총알 맞으면 감속
     #게임을 실행하면 실제 움직이는 initial gamespeed는 4(4~13)이고, 사용자에게는 가장 낮은 speed인 1(1~10)로 인식하는 값임
     global gamespeed 
     gamespeed = cur_speed
@@ -40,9 +33,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     gameQuit = False
     introFlag = False
 
-    #보경 - max life 고정
     max_life = 15
-    # 남현 - 211104 이전 스테이지에서 게임 life 변수 받기
     life = cur_life    
 
     paused = False
@@ -52,8 +43,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     # 디노 타입 때문에 변경된 부분
     playerDino = player
     # 
-    
-    # 남현 - 211104 전 스테이지의 스코어 유지
     playerDino.score = cur_score
 
     new_ground = Ground(-1 * gamespeed)
@@ -63,8 +52,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     speed_indicator = Scoreboard(width * 0.12, height * 0.15)
     counter = 0
 
-
-    #남현 - 211104 스테이지에 맞춰 SPEED 글씨 색상 변경
     speed_text = font.render("SPEED", True, black)
     if(stage == 2) :
         speed_text = font.render("SPEED", True, white)
@@ -596,16 +583,14 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     if (len(pm_list)==0):
                         pass
                     else:
-                        # print("x: ",pm.x,"y: ",pm.y)
                         for pm in pm_list:
                             if (pm.x>=playerDino.rect.left)and(pm.x<=playerDino.rect.right)and(pm.y>playerDino.rect.top)and(pm.y<playerDino.rect.bottom):
                                 print("공격에 맞음.")
-                                # if pygame.sprite.collide_mask(playerDino, pm):
                                 playerDino.collision_immune = True
                                 life -= 2
                                 gamespeed_down()
                                 
-                                # 남현 - 211113 보스의 총알에 맞으면 사운드 추가
+                                # 보스의 총알에 맞으면 사운드 추가
                                 die_sound.play()
                                 collision_time = pygame.time.get_ticks()
                                 if life <= 0:
@@ -690,7 +675,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     slow_items.update()
 
                 new_ground.update()
-                # 남현 - 211121 현재 stage를 파라미터로 넘김
                 scb.update(playerDino.score, stage)
                 highsc.update(high_score, stage)
                 speed_indicator.update(gamespeed - 3, stage)
@@ -702,7 +686,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 #
                 if pygame.display.get_surface() != None:
 
-                    #남현 - 211104 스테이지에 맞춰 배경색 변경
                     if(stage == 1) or (stage ==0):
                         screen.fill(background_col)
                     elif(stage == 2):
@@ -717,14 +700,12 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000   # 경과 시간(ms)을 1000으로 나누어서 초(s) 단위로 표시
 
-                    #남현 - 211104 - 스테이지 별 타이머 글씨체 다르게 설정
                     if(stage == 2):
                         timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (255, 255, 255))
                     else:
                         timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (0, 0, 0))
                     screen.blit(timer, (width * 0.01, height * 0.2))
 
-                    # 남현 - 211104 게임시작 시 스테이지 별 글자 표시하도록 함
                     if elapsed_time <= 3:
                         if (stage == 0):
                             # 출력할 글자, True, 글자 색상
@@ -785,7 +766,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                         pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
                         resized_screen_centerpos)
 
-                    # 남현 - 211030 타이머 추가
                     # 만약 시간이 0 이하이면 게임 종료
                     if total_time - elapsed_time <= 0:
                         print("타임아웃")
