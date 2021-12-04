@@ -18,9 +18,9 @@ monitor_size = (monitor_width, monitor_height) = (pygame.display.Info().current_
 black = (0,0,0)
 white = (255,255,255)
 background_col = (235,235,235)
-#남현 - 211031 background_col2 정의(stage 2)
+# background_col2 정의(stage 2)
 background_col2 = (0, 0, 102)
-#남현 - 211104 background_col2 정의(stage 3)
+# background_col2 정의(stage 3)
 background_col3 = (255, 255, 255)
 
 green = (0,200,0)
