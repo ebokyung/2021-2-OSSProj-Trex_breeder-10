@@ -41,7 +41,7 @@ class fire_Cactus(pygame.sprite.Sprite):
 # pteraking 클래스
 class PteraKing(pygame.sprite.Sprite):
     
-    def __init__(self, speed=0, sizex=-1, sizey=-1, health=4, cur_stage=1):
+    def __init__(self, speed=0, sizex=-1, sizey=-1, health=8, cur_stage=1):
         pygame.sprite.Sprite.__init__(self)
         self.stage = cur_stage
         if (self.stage ==1):
@@ -84,12 +84,12 @@ class PteraKing(pygame.sprite.Sprite):
         self.reached_rightmost=False
 
         if (self.stage == 1):
-            self.pattern0_time = 100
+            self.pattern0_time = 200
         else:
-            self.pattern0_time= 50
+            self.pattern0_time= 100
         self.pattern0_counter=0
 
-        self.pattern1_time=50
+        self.pattern1_time=100
         self.pattern1_counter=0
         if (self.stage ==1):
             self.pattern1_speed = 5
