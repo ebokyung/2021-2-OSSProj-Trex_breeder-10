@@ -167,11 +167,9 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     start_ticks = pygame.time.get_ticks()  
     
     if (stage == 0):
-        total_time = 10
+        total_time = 15
     else:
         total_time = 40
-
-    total_time = 30
 
 
     #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
@@ -430,6 +428,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % cycle0) == 0):
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
+                    pm.change_size(15,15)
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
@@ -769,9 +768,9 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 CACTUS_INTERVAL = 50
                 PTERA_INTERVAL = 12
                 CLOUD_INTERVAL = 300
-                SHIELD_INTERVAL = 50
-                LIFE_INTERVAL = 50
-                SLOW_INTERVAL = 50
+                SHIELD_INTERVAL = 400
+                LIFE_INTERVAL = 1000
+                SLOW_INTERVAL = 1000
 
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10

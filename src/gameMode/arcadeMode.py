@@ -131,7 +131,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     # 남현 - 211031 보스 등장 시기를 점수(100점)가 아닌 시간으로
     #pking_appearance_score = 100
-    pking_appearance_time = 10
+    pking_appearance_time = 5
     #
 
     #
@@ -139,9 +139,9 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     if (stage == 0):
-        total_time = 20
+        total_time = 15
     else:
-        total_time = 30
+        total_time = 40
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -384,7 +384,8 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 for d in pd_list:
                     del pm_list[d]
                 #
-
+                global collision_time
+                global item_time
 
                 for c in cacti:
                     c.movement[0] = -1 * gamespeed
@@ -530,7 +531,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 PTERA_INTERVAL = 12
                 #
                 CLOUD_INTERVAL = 300
-                SHIELD_INTERVAL = 500
+                SHIELD_INTERVAL = 400
                 LIFE_INTERVAL = 1000
                 SLOW_INTERVAL = 1000
 
