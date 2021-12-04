@@ -131,7 +131,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     # 남현 - 211031 보스 등장 시기를 점수(100점)가 아닌 시간으로
     #pking_appearance_score = 100
-    pking_appearance_time = 5
+    pking_appearance_time = 10
     #
 
     #
@@ -139,9 +139,9 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
 
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     if (stage == 0):
-        total_time = 5
+        total_time = 20
     else:
-        total_time = 10
+        total_time = 30
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -323,12 +323,10 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    #총알 움직이는 방향 및 속도
+                    pm.xmove = random.randint(0,15)     #총알 움직이는 방향 및 속도 
                     if (stage == 1):
-                        pm.xmove = random.randint(3, 5)
-                        pm.ymove = 0
+                        pm.ymove = random.randint(1,3)
                     else:
-                        pm.xmove = random.randint(0, 15)
                         pm.ymove = random.randint(1,5)  # stage 2,3에서는 총알이 더 빨리 떨어짐
 
                     pm_list.append(pm)
@@ -360,8 +358,8 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
                     if (stage == 1):
-                        pm.xmove = random.randint(3, 5)
-                        pm.ymove = 0
+                        pm.xmove = 0    #아래로 뚝 떨어짐
+                        pm.ymove = 5
                     elif (stage ==2):
                         pm.xmove = 0
                         pm.ymove = 7    
