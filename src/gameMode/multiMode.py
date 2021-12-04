@@ -155,7 +155,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     # 보스몬스터 변수설정
     isPkingTime=False
     isPkingAlive=True
-    pking=PteraKing()
+    pking=PteraKing(cur_stage = stage)
     pm_list = []
     pm_vector = []
     pm_pattern0_count = 0
