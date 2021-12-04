@@ -165,6 +165,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 print("Couldn't load display surface")
                 gameQuit = True
                 gameOver = True
+
             else:
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -860,10 +861,10 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                     f"insert into user(username, score) values ('{name}', '{playerDino.score}');")
                                 db.commit()
                                 introFlag = board()
-                                gameQuit = True
+                                return introFlag
                             else:
                                 introFlag = board()
-                                gameQuit = True
+                                return introFlag
 
             highsc.update(high_score, stage)
 
@@ -873,6 +874,6 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     resized_screen_centerpos)
                 pygame.display.update()
             clock.tick(FPS)
-    return introFlag
+    #return introFlag
     pygame.quit()
     quit()

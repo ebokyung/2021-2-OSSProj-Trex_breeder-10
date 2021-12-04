@@ -168,6 +168,10 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     # 타이머기능 추가
     start_ticks = pygame.time.get_ticks()  
     
+    if (stage == 0):
+        total_time = 20
+    else:
+        total_time = 40
 
     total_time = 30
 
@@ -289,9 +293,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                         if event.key == pygame.K_RSHIFT:
                             p1_jumpingx2 = False
 
-
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
 
             if not paused:
 
@@ -654,6 +655,8 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                             checkPoint_sound.play()
                         if p1_life < max_life:
                             p1_life += 1
+                        if (stage == 0):    #보너스 스테이지에서만 포인트도 증가
+                            player1.score += 10
                         l.kill()
                     elif l.rect.right < 0:
                         l.kill()
@@ -706,6 +709,8 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                             checkPoint_sound.play()
                         if p2_life < max_life:
                             p2_life += 1
+                        if (stage == 0):    #보너스 스테이지에서만 포인트도 증가
+                            player2.score += 10
                         l.kill()
                     elif l.rect.right < 0:
                         l.kill()
@@ -736,7 +741,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 MAGIC_NUM = 10
 
                 # 보스 등장 조건: 경과된시간>보스등장시간
-                if (isPkingAlive) and (elapsed_time > pking_appearance_time):
+                if (stage!=0) and (isPkingAlive) and (elapsed_time > pking_appearance_time):
                     isPkingTime=True
                 else:
                     isPkingTime = False
@@ -826,59 +831,72 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                             
                             if pm_bullet_dissolve == True:    
                                 pm_list.remove(pm)
-                else:
-                    if len(cacti) < 2:
-                        if len(cacti) == 0:
+                else:   #보스등장 타임 아니고
+                    if (stage ==0): #보너스 스테이지면 구름이랑 life아이템만 나옴
+                        if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
+                            Cloud(width, random.randrange(height / 5, height / 2))
+
+                        if len(life_items) == 0:
                             last_obstacle.empty()
-                            last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
+                            last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
                         else:
                             for l in last_obstacle:
-                                if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL) == MAGIC_NUM:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
                                     last_obstacle.empty()
-                                    last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
-
-                    if len(fire_cacti) < 2:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL * 5) == MAGIC_NUM:
+                                    last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
+                    else:
+                        if len(cacti) < 2:
+                            if len(cacti) == 0:
                                 last_obstacle.empty()
-                                last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
+                                last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
+                            else:
+                                for l in last_obstacle:
+                                    if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL) == MAGIC_NUM:
+                                        last_obstacle.empty()
+                                        last_obstacle.add(Cactus(gamespeed, object_size[0], object_size[1]))
 
-                    if len(stones) < 2:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
-                                last_obstacle.empty()
-                                last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
+                        if len(fire_cacti) < 2:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(CACTUS_INTERVAL * 5) == MAGIC_NUM:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(fire_Cactus(gamespeed, object_size[0], object_size[1]))
 
-
-                    if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(Ptera(gamespeed, ptera_size[0], ptera_size[1]))
-
-                    if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
-                        Cloud(width, random.randrange(height / 5, height / 2))
-
-                    if len(shield_items) == 0 and random.randrange(
-                            SHIELD_INTERVAL) == MAGIC_NUM and counter > SHIELD_INTERVAL:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(ShieldItem(gamespeed, object_size[0], object_size[1]))
+                        if len(stones) < 2:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE and random.randrange(STONE_INTERVAL * 5) == MAGIC_NUM:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(Stone(gamespeed, object_size[0], object_size[1]))
 
 
-                    if len(life_items) == 0 and random.randrange(
-                            LIFE_INTERVAL) == MAGIC_NUM and counter > LIFE_INTERVAL * 2:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
+                        if len(pteras) == 0 and random.randrange(PTERA_INTERVAL) == MAGIC_NUM and counter > PTERA_INTERVAL:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(Ptera(gamespeed, ptera_size[0], ptera_size[1]))
 
-                    if len(slow_items) == 0 and random.randrange(SLOW_INTERVAL) == MAGIC_NUM and counter > SLOW_INTERVAL:
-                        for l in last_obstacle:
-                            if l.rect.right < OBJECT_REFRESH_LINE:
-                                last_obstacle.empty()
-                                last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
+                        if len(clouds) < 5 and random.randrange(CLOUD_INTERVAL) == MAGIC_NUM:
+                            Cloud(width, random.randrange(height / 5, height / 2))
+
+                        if len(shield_items) == 0 and random.randrange(
+                                SHIELD_INTERVAL) == MAGIC_NUM and counter > SHIELD_INTERVAL:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(ShieldItem(gamespeed, object_size[0], object_size[1]))
+
+
+                        if len(life_items) == 0 and random.randrange(
+                                LIFE_INTERVAL) == MAGIC_NUM and counter > LIFE_INTERVAL * 2:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(LifeItem(gamespeed, object_size[0], object_size[1]))
+
+                        if len(slow_items) == 0 and random.randrange(SLOW_INTERVAL) == MAGIC_NUM and counter > SLOW_INTERVAL:
+                            for l in last_obstacle:
+                                if l.rect.right < OBJECT_REFRESH_LINE:
+                                    last_obstacle.empty()
+                                    last_obstacle.add(SlowItem(gamespeed, object_size[0], object_size[1]))
 
                 if (player1.isDead == True) and (player2.isDead == False) :
                     player2.update()
@@ -892,12 +910,14 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
 
                 cacti.update()
-                fire_cacti.update()
-                stones.update()
-                pteras.update()
                 clouds.update()
-                shield_items.update()
                 life_items.update()
+                if (stage != 0):
+                    fire_cacti.update()
+                    stones.update()
+                    pteras.update()
+                    shield_items.update()
+                    slow_items.update()
 
                 new_ground.update()
                 players_score = int((player1.score + player2.score)/2) + score
@@ -915,7 +935,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
                 if pygame.display.get_surface() != None:
                     
-                    if(stage == 1):
+                    if(stage == 1) or (stage ==0):
                         screen.fill(background_col)
                     elif(stage == 2):
                         screen.fill(background_col2)
@@ -927,46 +947,45 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     speed_indicator.draw()
                     screen.blit(speed_text, (width * 0.75, height * 0.13))
 
-                    # 경과 시간 계산
+                    # 경과 시간 계산 - 1000으로 나누어서 초(s) 단위로 표시
                     elapsed_time = (pygame.time.get_ticks() - start_ticks) / 1000
-                    # 경과 시간(ms)을 1000으로 나누어서 초(s) 단위로 표시
-                    timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (0, 0, 0))
+
                     # 스테이지 별 타이머 글씨체 다르게 설정
                     if(stage == 2):
                         timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (255, 255, 255))
-                    # 출력할 글자, True, 글자 색상
+                    else:
+                        timer = pygame.font.Font(None, 40).render(str(int(total_time - elapsed_time)), True, (0, 0, 0))
                     screen.blit(timer, (width * 0.01, height * 0.2))
 
                     # 게임시작 시 스테이지별 글자 표시
-
                     if elapsed_time <= 3:
-                        if (stage == 1):
-                            stage_info = pygame.font.Font(None, 120).render(str("STAGE 1"), True, (0, 0, 0))
+                        if (stage == 0):
                             # 출력할 글자, True, 글자 색상
+                            stage_info = pygame.font.Font(None, 100).render(str("BONUS STAGE"), True, (0, 0, 0))
+                            screen.blit(stage_info, (width * 0.20, height * 0.4))
+                        elif (stage == 1):
+                            stage_info = pygame.font.Font(None, 120).render(str("STAGE 1"), True, (0, 0, 0)) 
                             screen.blit(stage_info, (width * 0.275, height * 0.4))
                         elif (stage == 2):
                             stage_info = pygame.font.Font(None, 120).render(str("STAGE 2"), True, (255, 255, 255))
-                            # 출력할 글자, True, 글자 색상
                             screen.blit(stage_info, (width * 0.275, height * 0.4))
                         elif (stage == 3):
                             stage_info = pygame.font.Font(None, 120).render(str("STAGE 3"), True, (0, 0, 0))
-                            # 출력할 글자, True, 글자 색상
                             screen.blit(stage_info, (width * 0.275, height * 0.4))
-
-
 
                     p1_heart.draw()
                     p2_heart.draw()
                     if high_score != 0:
                         highsc.draw()
                         screen.blit(HI_image, HI_rect)
-                    cacti.draw(screen)
-                    fire_cacti.draw(screen)
-                    stones.draw(screen)
-                    pteras.draw(screen)
-                    shield_items.draw(screen)
                     life_items.draw(screen)
-                    slow_items.draw(screen)
+                    if (stage!=0):
+                        cacti.draw(screen)
+                        fire_cacti.draw(screen)
+                        stones.draw(screen)
+                        pteras.draw(screen)
+                        shield_items.draw(screen)
+                        slow_items.draw(screen)
 
                     # pkingtime이면, 보스몬스터를 보여줘라.
                     if isPkingTime:
@@ -1004,15 +1023,19 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     if total_time - elapsed_time <= 0:
                         print("타임아웃")
                         
-                        # 보스를 죽였을때만 다음 스테이지로 넘어가도록
-                        if isBossKilled == False :
+                        # 보스를 죽였을때만 다음 스테이지로 넘어가도록, 보너스 스테이지에서는 그냥 넘어감
+                        if (isBossKilled == False) and (stage!=0):
                             gameOver = True
                         else: 
-                            if (stage == 1 or stage == 2):
+                            if (stage == 1):
                                 pygame.time.wait(500)
-                                gameplay_multi(stage + 1, p1_life, p2_life, gamespeed, players_score, player1, player2)
-
-
+                                gameplay_multi( stage+1, p1_life, p2_life, gamespeed, players_score, player1, player2)
+                            elif (stage == 2):
+                                pygame.time.wait(500)
+                                gameplay_multi( stage-2, p1_life, p2_life, gamespeed, players_score, player1, player2)
+                            elif (stage == 0):
+                                pygame.time.wait(500)
+                                gameplay_multi( stage+3, p1_life, p2_life, gamespeed, players_score, player1, player2)
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
@@ -1049,6 +1072,10 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 gameQuit = True
                 gameOver = False
             else:
+                if (you_won == True) :
+                    disp_gameOver_msg(you_won_image)
+                else :
+                    disp_gameOver_msg(gameover_image)
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
                         gameQuit = True
@@ -1067,13 +1094,10 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                                     f"insert into user(username, score) values ('{name}', '{players_score}');")
                                 db.commit()
                                 introFlag = board()
-                                gameQuit = True
+                                return introFlag
                             else:
                                 introFlag = board()
-                                gameQuit = True
-
-                    if event.type == pygame.VIDEORESIZE:
-                        checkscrsize(event.w, event.h)
+                                return introFlag
 
             highsc.update(high_score)
 
@@ -1082,6 +1106,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 resized_screen_centerpos)
             pygame.display.update()
             clock.tick(FPS)
-    return introFlag
+    #return introFlag
     pygame.quit()
     quit()
