@@ -213,7 +213,9 @@ def option():
 
                     if r_btn_credit_rect.collidepoint(x, y):
                         done = True
-                        credit()
+                        optionFlag = credit()
+                        if optionFlag:
+                            option()
                         
             # if event.type == pygame.VIDEORESIZE:
             #     checkscrsize(event.w, event.h)
