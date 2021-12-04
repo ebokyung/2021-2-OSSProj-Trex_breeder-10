@@ -167,11 +167,10 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     start_ticks = pygame.time.get_ticks()  
     
     if (stage == 0):
-        total_time = 20
+        total_time = 10
     else:
         total_time = 40
 
-    total_time = 30
 
 
     #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
