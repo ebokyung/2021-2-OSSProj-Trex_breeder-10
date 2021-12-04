@@ -58,8 +58,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     p1_heart = HeartIndicator(max_life, p1_life)
     p2_heart = HeartIndicator(max_life, p2_life, player_num = 1)
 
-    #SPEED TEXT(width * 0.75, height * 0.05) 
-    #TODO: 숫자 settings로 옮기기
     speed_indicator = Scoreboard(width * 0.88, height * 0.15)
     counter = 0
 
@@ -296,7 +294,6 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
             if not paused:
 
-                # 방향키 추가 (현재 여기 근데 수정더):
                 if p1_goLeft:
                     player1.rect.left= player1.rect.left -(gamespeed)
 
@@ -408,8 +405,8 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                         p2_d_list.append(i)
 
                 p2_d_list.reverse()
-                # for d in p2_d_list:
-                #     del p2_m_list[d]
+                for d in p2_d_list:
+                    del p2_m_list[d]
 
                 # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일.
                 if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 20) == 0):
