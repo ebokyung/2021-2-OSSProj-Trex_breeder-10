@@ -1110,6 +1110,9 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 gameQuit = True
                 gameOver = False
             else:
+                if high_score != 0:
+                    highsc.draw()
+                    screen.blit(HI_image, HI_rect)
                 if (you_won == True) :
                     disp_gameOver_msg(you_won_image)
                 else :
@@ -1139,10 +1142,11 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
             highsc.update(high_score)
 
-            resized_screen.blit(
-                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-                resized_screen_centerpos)
-            pygame.display.update()
+            if pygame.display.get_surface() != None:
+                resized_screen.blit(
+                    pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
+                    resized_screen_centerpos)
+                pygame.display.update()
             clock.tick(FPS)
     #return introFlag
     pygame.quit()
