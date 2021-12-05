@@ -31,7 +31,7 @@ class LifeItem(pygame.sprite.Sprite):
 
     def __init__(self, speed=5, sizex=-1, sizey=-1):
         pygame.sprite.Sprite.__init__(self, self.containers)
-        # 남현 - 이미지 변경
+
         self.images, self.rect = load_sprite_sheet("heart_bonus.png", 2, 1, sizex, sizey, -1)
         self.heart_height = [height*0.82, height*0.75, height*0.60]
         self.rect.centery = self.heart_height[random.randrange(3)]
