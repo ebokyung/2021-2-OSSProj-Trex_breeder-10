@@ -3,18 +3,18 @@
 
 # 2021-2-OSSPC-T-Rex_breeder
 ## T-Rex Rush
-<img width="599" alt="시작화면" src="https://user-images.githubusercontent.com/70673826/121240479-57b4fb80-c8d5-11eb-8ed2-fba2ba055709.PNG">
+(이미지)
 
 #### Chrome의 이스터에그 게임인 T-rex Rush에 다양한 모션과 공격 기능을 추가하여 즐거움을 더한 게임
 
 ## 주요 변경 사항
 - Intro Screen 디자인 변경 및 GUI 버그 수정
-- 창크기 조절 개선
 - 하드모드에 스테이지 구현
 - 스테이지별 보스몬스터 다양화
 - 로컬 협동 멀티모드 추가
 - 플레이어의 hp bar에 grid 추가
 - 보스몬스터 목숨 가시화
+- 기능별 코드 구조화
 
 ## 프로그램 실행 시
 To run this game:
