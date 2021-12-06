@@ -3,7 +3,7 @@
 
 # 2021-2-OSSPC-T-Rex_breeder
 ## T-Rex Rush
-![image](https://user-images.githubusercontent.com/90684277/144815346-84923132-4231-4ee4-8416-a9a466b704a9.png)
+![main](https://user-images.githubusercontent.com/90684277/144817751-9d877b9e-fbbd-47ff-8ed8-4873c2d86576.jpg)
 
 #### Chrome의 이스터에그 게임인 T-rex Rush에 다양한 모션과 공격 기능을 추가하여 즐거움을 더한 게임
 
