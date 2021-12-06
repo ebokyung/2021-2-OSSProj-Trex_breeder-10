@@ -33,6 +33,7 @@ Credits:
 - Logo : https://textcraft.net/
 - Speech Bubble : http://pixelspeechbubble.com/
 - Sounds : https://github.com/vicboma1/T-Rex-Game/tree/master/Unity/Sounds
+- Backgound Image :  https://support.freepik.com/
 - Buttons : https://www.miricanvas.com/
 
 References:
