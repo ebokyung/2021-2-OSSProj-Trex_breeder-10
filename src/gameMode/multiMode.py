@@ -160,18 +160,16 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
     pm_pattern1_count = 0
 
     # 보스 등장 시기를 점수(100점)가 아닌 시간으로
-    pking_appearance_time = 10
+    pking_appearance_time = 20
     #
 
     # 타이머기능 추가
     start_ticks = pygame.time.get_ticks()  
     
     if (stage == 0):
-        total_time = 10
+        total_time = 15
     else:
         total_time = 40
-
-    total_time = 30
 
 
     #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
@@ -293,18 +291,29 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
 
             if not paused:
-
                 if p1_goLeft:
-                    player1.rect.left= player1.rect.left -(gamespeed)
+                    if player1.rect.left <= 0:
+                        player1.rect.left =0
+                    else:
+                        player1.rect.left = player1.rect.left -(gamespeed)
 
                 if p1_goRight:
-                    player1.rect.left = player1.rect.left + gamespeed
-                
+                    if player1.rect.right >= width:
+                        player1.rect.right = width
+                    else:
+                        player1.rect.right = player1.rect.right +(gamespeed)
+               
                 if p2_goLeft:
-                    player2.rect.left= player2.rect.left -(gamespeed)
+                    if player2.rect.left <= 0:
+                        player2.rect.left =0
+                    else:
+                        player2.rect.left = player2.rect.left -(gamespeed)
 
                 if p2_goRight:
-                    player2.rect.left = player2.rect.left + gamespeed
+                    if player2.rect.right >= width:
+                        player2.rect.right = width
+                    else:
+                        player2.rect.right = player2.rect.right +(gamespeed)
 
                 # 4. space_go가 True이고, 일정 시간이 지나면, 미사일을 만들고, 이를 미사일 배열에 넣습니다.
                 # p1
@@ -409,24 +418,37 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     del p2_m_list[d]
 
                 # 보스 몬스터 패턴0(위에서 가만히 있는 패턴): 보스 익룡이 쏘는 미사일.
-                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % 20) == 0):
+                if (stage == 1):
+                    cycle0 = 75
+                elif(stage ==2):
+                    cycle0 = 20
+                elif (stage ==3):
+                    cycle0 = 15
+
+                if (isPkingTime) and (pking.pattern_idx == 0) and (int(pm_pattern0_count % cycle0) == 0):
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
+                    pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.xmove = random.randint(0,15)
-                    pm.ymove = random.randint(1,3)
+                    #총알 움직이는 방향 및 속도 
+                    if (stage == 1):
+                        pm.xmove = random.randint(3,5)
+                        pm.ymove = 0
+                    else:
+                        pm.xmove = random.randint(0,15)
+                        pm.ymove = random.randint(1,5)  # stage 2,3에서는 총알이 더 빨리 떨어짐
 
                     pm_list.append(pm)
                 pm_pattern0_count += 1
-                pd_list = []
+                pd_list = []        
 
                 for i in range(len(pm_list)):
                     pm = pm_list[i]
                     pm.x -= pm.xmove
                     pm.y += pm.ymove
-                    if pm.y > height or pm.x < 0:
+                    if pm.y > height or pm.x < 0:   
                         pd_list.append(i)
                 pd_list.reverse()
                 for d in pd_list:
@@ -438,20 +460,36 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                         player2.movement[1] = -1 * player2.superJumpSpeed
 
                 # 보스 몬스터 패턴1(좌우로 왔다갔다 하는 패턴): 보스 익룡이 쏘는 미사일.
-                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % 20) == 0):
+                if (stage == 1):     
+                    cycle1 = 70
+                elif (stage ==2) or (stage==3):
+                    cycle1 = 20
+
+                if (isPkingTime) and (pking.pattern_idx == 1) and (int(pm_pattern1_count % cycle1) == 0):
+                    # print(pm_list)
                     pm=obj()
                     pm.put_img("./sprites/pking bullet.png")
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    pm.move = 3
+                    if (stage == 1):
+                        pm.xmove = random.randint(3,5)
+                        pm.ymove = 0
+                    elif (stage ==2):
+                        pm.xmove = 0
+                        pm.ymove = 7    
+                    elif (stage ==3):
+                        pm.xmove = random.randint(0,7) 
+                        pm.ymove = random.randint(1,5)
+                    
                     pm_list.append(pm)
                 pm_pattern1_count += 1
                 pd_list = []
 
                 for i in range(len(pm_list)):
                     pm=pm_list[i]
-                    pm.y +=pm.move
+                    pm.x -= pm.xmove
+                    pm.y += pm.move
                     if pm.y>height or pm.x < 0:
                         pd_list.append(i)
 
@@ -730,9 +768,9 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 CACTUS_INTERVAL = 50
                 PTERA_INTERVAL = 12
                 CLOUD_INTERVAL = 300
-                SHIELD_INTERVAL = 50
-                LIFE_INTERVAL = 50
-                SLOW_INTERVAL = 50
+                SHIELD_INTERVAL = 400
+                LIFE_INTERVAL = 1000
+                SLOW_INTERVAL = 1000
 
                 OBJECT_REFRESH_LINE = width * 0.8
                 MAGIC_NUM = 10
@@ -917,7 +955,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     slow_items.update()
 
                 new_ground.update()
-                players_score = int((player1.score + player2.score)/2) 
+                players_score = int((player1.score + player2.score)/2)
                 scb.update(players_score, stage)
                 highsc.update(high_score, stage)
                 speed_indicator.update(gamespeed - 3, stage)
@@ -1072,6 +1110,9 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 gameQuit = True
                 gameOver = False
             else:
+                if high_score != 0:
+                    highsc.draw()
+                    screen.blit(HI_image, HI_rect)
                 if (you_won == True) :
                     disp_gameOver_msg(you_won_image)
                 else :
@@ -1101,8 +1142,9 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
 
             highsc.update(high_score)
 
-            resized_screen.blit(
-                pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
-                resized_screen_centerpos)
-            pygame.display.update()
+            if pygame.display.get_surface() != None:
+                resized_screen.blit(
+                    pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())),
+                    resized_screen_centerpos)
+                pygame.display.update()
             clock.tick(FPS)

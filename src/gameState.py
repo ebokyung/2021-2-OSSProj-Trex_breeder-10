@@ -78,13 +78,13 @@ def gamerule(page = 1):
         screen_board_height
         ))
 
-    # 남현 - 211124 튜토리얼 이미지 변경
+    # 튜토리얼 이미지 변경
     # gamerule_image, gamerule_rect= load_image("gamerule.png",800,300,-1)
     gamerule_image, gamerule_rect = load_image("Tutorial_ppt.png", 800, 400, -1)
     if(page == 2) :
         gamerule_image, gamerule_rect = load_image("Tutorial_ppt_2.png", 800, 400, -1)
     
-    # 남현 - 211126 튜토리얼 넘어가는 버튼 추가
+    # 튜토리얼 넘어가는 버튼 추가
     r_btn_nexttutorial, r_btn_nexttutorial_rect = load_image(*resize('next_button.png', 50, 50, -1))
     r_btn_nexttutorial_rect.center = (width * 0.95, height * 0.9)
 
@@ -267,8 +267,9 @@ def credit():
     global resized_screen
     done = False
 
-    # 남현 - 211127 credit 이미지 수정
+
     creditimg, creditimg_rect = load_image('credit.png', width, height, -1)
+
 
 
     while not done:

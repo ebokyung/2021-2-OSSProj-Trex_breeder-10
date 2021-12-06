@@ -41,7 +41,7 @@ class fire_Cactus(pygame.sprite.Sprite):
 # pteraking 클래스
 class PteraKing(pygame.sprite.Sprite):
     
-    def __init__(self, speed=0, sizex=-1, sizey=-1, health=2, cur_stage=1):
+    def __init__(self, speed=0, sizex=-1, sizey=-1, health=8, cur_stage=1):
         pygame.sprite.Sprite.__init__(self)
         self.stage = cur_stage
         if (self.stage ==1):

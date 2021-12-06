@@ -109,7 +109,7 @@ class Scoreboard:
     def draw(self):
         screen.blit(self.image, self.rect)
 
-    # 남현 - 211121 현재 stage를 파라미터로 받아옴
+    #현재 stage를 파라미터로 받아옴
     def update(self, score, stage = 1):
         score_digits = extractDigits(score)
         if(stage == 1) or (stage == 0):

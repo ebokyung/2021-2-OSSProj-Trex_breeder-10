@@ -355,21 +355,11 @@ def gameplay_easy(player):
                                     f"insert into user(username, score) values ('{gamername}', '{playerDino.score}');")
                                 db.commit()
                                 introFlag = board()
+                                return introFlag
                             else:
                                 introFlag = board()
-
-                    if event.type == pygame.MOUSEBUTTONDOWN:
-                        gameOver = False
-                        gameQuit = True
-                        typescore(playerDino.score)
-                        if not db.is_limit_data(playerDino.score):
-                            db.query_db(
-                                f"insert into user(username, score) values ('{gamername}', '{playerDino.score}');")
-                            db.commit()
-                            board()
-                        else:
-                            board()
-
+                                return introFlag
+                                
                     if event.type == pygame.VIDEORESIZE:
                         checkscrsize(event.w, event.h)
 
@@ -384,6 +374,6 @@ def gameplay_easy(player):
                     resized_screen_centerpos)
                 pygame.display.update()
             clock.tick(FPS)
-    return introFlag
+    #return introFlag
     pygame.quit()
     quit()

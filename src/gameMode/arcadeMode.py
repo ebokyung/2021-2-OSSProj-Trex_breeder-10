@@ -76,9 +76,13 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     SlowItem.containers = slow_items
     Stone.containers = stones # add stone containers
 
+    # BUTTON IMG LOAD
+    # retbutton_image, retbutton_rect = load_image('replay_button.png', 70, 62, -1)
     gameover_image, gameover_rect = load_image('game_over.png', 380, 22, -1)
 
+    # 스테이지 다 꺠면 축하메시지 출력
     you_won_image, you_won_rect = load_image('you_won.png', 380, 22, -1)
+    # 깼는지 안깼는지 확인
     you_won = False
 
     temp_images, temp_rect = load_sprite_sheet('numbers.png', 12, 1, 11, int(15 * 6 / 5), -1)
@@ -98,7 +102,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     HI_rect.top = height * 0.05
     HI_rect.left = width * 0.73
 
-    # 남현 - 211117 보스를 죽였는지 아닌지 판단하는 변수
+    # 보스를 죽였는지 아닌지 판단하는 변수
     isBossKilled = False
 
 
@@ -125,10 +129,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     pm_pattern0_count = 0
     pm_pattern1_count = 0
 
-    # 남현 - 211031 보스 등장 시기를 점수(100점)가 아닌 시간으로
-    #pking_appearance_score = 100
-    pking_appearance_time = 1
-    #
+    pking_appearance_time = 20
 
     #
     jumpingx2 = False
@@ -137,7 +138,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     if (stage == 0):
         total_time = 3
     else:
-        total_time = 7
+        total_time = 50
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
 
     while not gameQuit:
@@ -319,13 +320,14 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     pm.change_size(15,15)
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
-                    #총알 움직이는 방향 및 속도 
+
+
                     if (stage == 1):
-                        pm.xmove = random.randint(3,5)
+                        pm.xmove = random.randint(3, 5)
                         pm.ymove = 0
                     else:
-                        pm.xmove = random.randint(0,15)
-                        pm.ymove = random.randint(1,5)  # stage 2,3에서는 총알이 더 빨리 떨어짐
+                        pm.xmove = random.randint(0, 15)
+                        pm.ymove = random.randint(1, 5)
 
                     pm_list.append(pm)
                 pm_pattern0_count += 1
@@ -356,7 +358,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
                     if (stage == 1):
-                        pm.xmove = random.randint(3,5)
+                        pm.xmove = random.randint(3, 5)
                         pm.ymove = 0
                     elif (stage ==2):
                         pm.xmove = 0
@@ -527,7 +529,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                 PTERA_INTERVAL = 12
                 #
                 CLOUD_INTERVAL = 300
-                SHIELD_INTERVAL = 500
+                SHIELD_INTERVAL = 400
                 LIFE_INTERVAL = 1000
                 SLOW_INTERVAL = 1000
 
@@ -787,6 +789,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
+
                                 you_won = True
                                 gameOver = True
 
