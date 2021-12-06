@@ -3,7 +3,7 @@
 
 # 2021-2-OSSPC-T-Rex_breeder
 ## T-Rex Rush
-<img width="599" alt="시작화면" src="https://user-images.githubusercontent.com/70673826/121240479-57b4fb80-c8d5-11eb-8ed2-fba2ba055709.PNG">
+![image](https://user-images.githubusercontent.com/90684277/144815346-84923132-4231-4ee4-8416-a9a466b704a9.png)
 
 #### Chrome의 이스터에그 게임인 T-rex Rush에 다양한 모션과 공격 기능을 추가하여 즐거움을 더한 게임
 
@@ -15,6 +15,7 @@
 - 로컬 협동 멀티모드 추가
 - 플레이어의 hp bar에 grid 추가
 - 보스몬스터 목숨 가시화
+- 기능별 코드 구조화
 
 ## 프로그램 실행 시
 To run this game:
@@ -24,8 +25,8 @@ To run this game:
 ## Developed by:
 CSID-DGU - "T-Rex Breeder"
 - haileymoon
-- cnh12
 - ebokyung
+- cnh12
 
 Credits:
 - Sprites : https://chromedino.com/assets/offline-sprite-2x-black.png or WE MADE
