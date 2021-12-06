@@ -349,7 +349,7 @@ def gameplay_easy(player):
                         if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                             gameOver = False
                             gameQuit = True
-                            typescore(playerDino.score)
+                            gamername = typescore(playerDino.score)
                             if not db.is_limit_data(playerDino.score):
                                 db.query_db(
                                     f"insert into user(username, score) values ('{gamername}', '{playerDino.score}');")

@@ -46,6 +46,7 @@ def board():
                     if event.key == pygame.K_RETURN or event.key == pygame.K_SPACE:
                         gameQuit = True
                         introFlag = True
+                        return introFlag
                     if event.key == pygame.K_UP: scroll_y = min(scroll_y + 15, 0)
                     if event.key == pygame.K_DOWN: scroll_y = max(scroll_y - 15, -(len(results)//max_per_screen)*scr_size[1])
                 if event.type == pygame.MOUSEBUTTONDOWN:
@@ -54,6 +55,7 @@ def board():
                     if event.button == 1:
                         gameQuit = True
                         introFlag = True
+                        return introFlag
                 if event.type == pygame.VIDEORESIZE:
                     checkscrsize(event.w, event.h)
 
@@ -62,11 +64,10 @@ def board():
                 pygame.transform.scale(screen, (resized_screen.get_width(), resized_screen.get_height())), resized_screen_centerpos)
             pygame.display.update()
         clock.tick(FPS)
-    return introFlag
     pygame.quit()
     quit()
 
-# 남현 - 211126 gamerule함수의 파라미터를 조정해 재귀호출 형식으로 튜토리얼 페이지 추가
+# gamerule함수의 파라미터를 조정해 재귀호출 형식으로 튜토리얼 페이지 추가
 def gamerule(page = 1):
     global resized_screen
     gameQuit = False
@@ -97,7 +98,6 @@ def gamerule(page = 1):
             screen_board.fill(background_col)
             screen_board.blit(gamerule_image,gamerule_rect)
 
-            # 남현 - 211126 버튼 추가
             screen_board.blit(r_btn_nexttutorial, r_btn_nexttutorial_rect)
 
             for event in pygame.event.get():

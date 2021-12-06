@@ -917,7 +917,7 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     slow_items.update()
 
                 new_ground.update()
-                players_score = int((player1.score + player2.score)/2) + score
+                players_score = int((player1.score + player2.score)/2) 
                 scb.update(players_score, stage)
                 highsc.update(high_score, stage)
                 speed_indicator.update(gamespeed - 3, stage)
@@ -1027,12 +1027,15 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                             if (stage == 1):
                                 pygame.time.wait(500)
                                 gameplay_multi( stage+1, p1_life, p2_life, gamespeed, players_score, player1, player2)
+                                return True
                             elif (stage == 2):
                                 pygame.time.wait(500)
                                 gameplay_multi( stage-2, p1_life, p2_life, gamespeed, players_score, player1, player2)
+                                return True
                             elif (stage == 0):
                                 pygame.time.wait(500)
                                 gameplay_multi( stage+3, p1_life, p2_life, gamespeed, players_score, player1, player2)
+                                return True
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
@@ -1103,6 +1106,3 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                 resized_screen_centerpos)
             pygame.display.update()
             clock.tick(FPS)
-    #return introFlag
-    pygame.quit()
-    quit()
