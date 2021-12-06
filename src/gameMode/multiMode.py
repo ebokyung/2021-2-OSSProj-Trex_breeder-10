@@ -1148,6 +1148,3 @@ def gameplay_multi(cur_stage, p1_cur_life, p2_cur_life, cur_speed, score, p1, p2
                     resized_screen_centerpos)
                 pygame.display.update()
             clock.tick(FPS)
-    #return introFlag
-    pygame.quit()
-    quit()

@@ -129,17 +129,14 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
     pm_pattern0_count = 0
     pm_pattern1_count = 0
 
-    # 보스 등장 시기를 점수(100점)가 아닌 시간으로
-    #pking_appearance_score = 100
     pking_appearance_time = 20
-    #
 
     #
     jumpingx2 = False
 
     start_ticks = pygame.time.get_ticks()  # 현재 tick 을 받아옴
     if (stage == 0):
-        total_time = 10
+        total_time = 3
     else:
         total_time = 50
     elapsed_time = 0    #elapsed_time을 미리 선언+초기화를 안 하면 보스등장조건에서 사용 불가
@@ -324,6 +321,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     pm.x = round(pking.rect.centerx)
                     pm.y = round(pking.rect.centery)
 
+
                     if (stage == 1):
                         pm.xmove = random.randint(3, 5)
                         pm.ymove = 0
@@ -366,7 +364,7 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                         pm.xmove = 0
                         pm.ymove = 7    
                     elif (stage ==3):
-                        pm.xmove = random.randint(0,7) #랜덤 발사
+                        pm.xmove = random.randint(0,7) 
                         pm.ymove = random.randint(1,5)
                     
                     pm_list.append(pm)
@@ -780,26 +778,23 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                             if (stage == 1):
                                 pygame.time.wait(500)
                                 gameplay_hard( stage+1, life, gamespeed, playerDino.score, player )
-                                print("stage 2 리턴")
                                 return True
                             elif (stage == 2):
                                 pygame.time.wait(500)
                                 gameplay_hard( stage-2, life, gamespeed, playerDino.score, player )
-                                print("stage 0 리턴")
                                 return True
                             elif (stage == 0):
-                                pygame.time.wait(500)
                                 gameplay_hard( stage+3, life, gamespeed, playerDino.score, player )
-                                print("stage 3 리턴")
                                 return True
                             elif (stage == 3):
                                 print("모든 스테이지 클리어")
                                 pygame.time.wait(500)
-                                
-                                # 그냥 게임오버가 아니라 스테이지를 다 깬거면 you_won = True로
+
                                 you_won = True
                                 gameOver = True
-                    pygame.display.update()
+
+                    if pygame.display.get_surface() != None:
+                        pygame.display.update()
                 clock.tick(FPS)
                 if playerDino.isDead:
                     gameOver = True
@@ -814,10 +809,9 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     checkPoint_sound.play()#속도 증가 시 체크포인트 소리
 
                 counter = (counter + 1)
+                
 
-
-        if gameQuit:
-            break
+            highsc.update(high_score, stage)
 
         while gameOver:
             if pygame.display.get_surface() == None:
@@ -850,12 +844,11 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                     f"insert into user(username, score) values ('{name}', '{playerDino.score}');")
                                 db.commit()
                                 introFlag = board()
-                                return introFlag
                             else:
                                 introFlag = board()
-                                return introFlag
+            if gameQuit:
+                break
 
-            highsc.update(high_score, stage)
 
             if pygame.display.get_surface() != None:
                 resized_screen.blit(
@@ -863,6 +856,3 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                     resized_screen_centerpos)
                 pygame.display.update()
             clock.tick(FPS)
-    #return introFlag
-    pygame.quit()
-    quit()
