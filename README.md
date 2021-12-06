@@ -1,5 +1,6 @@
 <img alt="MIT" src ="https://img.shields.io/badge/license-MIT-green">
 <img alt="Python" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white"/>
+<img alt="Pygame" src ="https://img.shields.io/badge/Python-3776AB.svg?&style=for-the-badge&logo=Python&logoColor=white"/>
 
 # 2021-2-OSSPC-T-Rex_breeder
 ## T-Rex Rush
