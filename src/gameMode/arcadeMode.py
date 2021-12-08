@@ -844,8 +844,10 @@ def gameplay_hard(cur_stage, cur_life, cur_speed, cur_score, player):
                                     f"insert into user(username, score) values ('{name}', '{playerDino.score}');")
                                 db.commit()
                                 introFlag = board()
+                                return introFlag
                             else:
                                 introFlag = board()
+                                return introFlag
             if gameQuit:
                 break
 
