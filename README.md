@@ -19,8 +19,12 @@
 
 ## 프로그램 실행 시
 To run this game:
-- Make sure you have Python installed alongwith pygame (http://www.pygame.org/) library
-- Run run.py
+1. 가상환경 생성하기 : 터미널 창에 `python3 -m venv venv`
+2. 가상환경 활성화하기 : 터미널 창에 `source venv/bin/activate`
+3. pygame 설치하기 : `pip3 install pygame`
+4. 게임 실행하기 : `python3 run.py`
+5. 게임 종료하기 : `ctrl + c`
+6. 가상환경 비활성화 하기 : `deactivate`
 
 ## Developed by:
 CSID-DGU - "T-Rex Breeder"
